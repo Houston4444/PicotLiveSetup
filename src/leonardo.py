@@ -1,8 +1,7 @@
 from enum import IntFlag, Enum
 from typing import TYPE_CHECKING
-import time
 
-from mentat import Module, Engine
+from mentat import Module
 
 if TYPE_CHECKING:
     from sooperlooper import SooperLooper
@@ -20,10 +19,20 @@ class FsButton(IntFlag):
 
 class MultiAction(Enum):
     NONE = 0
-    MULTIPLY = 1
-    MUTE = 2
-    TRIG = 3
+    SOFTWARE_SWITCH = 1
+    MULTIPLY = 2
+    MUTE = 3
+    TRIG = 4
+
+
+class Vfs5Controls(Enum):
+    SOOPERLOOPER = 1
+    SEQ192_SEQUENCES = 2
+    SONG = 3
     
+    def next(self) -> 'Vfs5Controls':
+        return Vfs5Controls(1 + self.value % 3)
+
 
 class Leonardo(Module):
     def __init__(self, name, protocol=None, port=None, parent=None):
@@ -33,17 +42,14 @@ class Leonardo(Module):
         self._multi_action = MultiAction.NONE
         
         self._last_kick_hit = 0
+        self._seq_playing = False
+        
+        self._vfs5_controls = Vfs5Controls.SOOPERLOOPER
     
-    def _vfs5_control_sooperlooper(self, cc_num: int, cc_value: int):
-        engine = Engine.INSTANCE
-        slp: 'SooperLooper' = engine.modules['sooperlooper']
-        fsb = FsButton(2 ** (cc_num - 90))
-        fs_on = bool(cc_value > 63)
+    def _vfs5_control_sooperlooper(self, fsb: FsButton, fs_on: bool):
+        slp: 'SooperLooper' = self.engine.modules['sooperlooper']
 
-        if cc_value > 63 and fsb is not FsButton.FS_B:
-            self._pressed_buttons |= fsb
-        else:
-            self._pressed_buttons &= ~fsb
+        print('zelfkfz', fsb, fs_on)
 
         if fsb is FsButton.FS_B:
             slp.set_loop(1 if fs_on else 0)
@@ -91,40 +97,62 @@ class Leonardo(Module):
                 elif self._pressed_buttons is FsButton.FS_3|FsButton.FS_4:
                     slp.hit('mute')
                     self._multi_action = MultiAction.MUTE
+    
+    def _vfs5_control_sequences(self, fsb: FsButton, fs_on: bool):
+        if not fs_on:
+            return
+        
+        seq192: 'Seq192' = self.engine.modules['seq192']
+        
+        if fsb is FsButton.FS_1:
+            seq192.set_big_sequence(0)
+        elif fsb is FsButton.FS_2:
+            seq192.set_big_sequence(1)
+        elif fsb is FsButton.FS_3:
+            seq192.set_big_sequence(2)
+        elif fsb is FsButton.FS_4:
+            seq192.set_big_sequence(3)
+        
+    
+    def _vfs5_control_songs(self, fsb: FsButton, fs_on: bool):
+        pass
+        
+    def _vfs5_control(self, cc_num: int, cc_value: int):
+        fsb = FsButton(2 ** (cc_num - 90))
+        fs_on = bool(cc_value > 63)
+
+        if fs_on and fsb is not FsButton.FS_B:
+            self._pressed_buttons |= fsb
+        else:
+            self._pressed_buttons &= ~fsb
+
+        if fsb is FsButton.FS_B and self._pressed_buttons & FsButton.FS_4:
+            self._vfs5_controls = self._vfs5_controls.next()
+            self._multi_action = MultiAction.SOFTWARE_SWITCH
+            return
+            
+        if self._vfs5_controls is Vfs5Controls.SOOPERLOOPER:
+            self._vfs5_control_sooperlooper(fsb, fs_on)
+        elif self._vfs5_controls is Vfs5Controls.SEQ192_SEQUENCES:
+            self._vfs5_control_sequences(fsb, fs_on)
+        elif self._vfs5_controls is Vfs5Controls.SONG:
+            self._vfs5_control_songs(fsb, fs_on)
             
         if not self._pressed_buttons:
             self._multi_action = MultiAction.NONE
     
     def _kick_pressed(self, note_on: bool, note: int, velo: int):
-        engine = Engine.INSTANCE
-        seq192: 'Seq192' = engine.modules['seq192']
-
-        if note_on:
-            kick_time = time.time()
-            duration = kick_time - self._last_kick_hit
-            if duration < 2.0:
-                seq192.set_tempo(60 / duration)
-                seq192.start()
-            else:
-                self._last_kick_hit = kick_time
+        seq192: 'Seq192' = self.engine.modules['seq192']
+        seq192.kick_pressed(note_on, note, velo)
     
-    def route(self, address: str, args: list):
-        print('qpofgg', address, args)
+    def route(self, address: str, args: list[int]):
         if address == '/control_change':
-            channel: int
-            cc_num: int
-            cc_value: int
-            
             channel, cc_num, cc_value = args
             
             if channel == 15 and 90 <= cc_num <= 94:
-                self._vfs5_control_sooperlooper(cc_num, cc_value)
+                self._vfs5_control(cc_num, cc_value)
         
         elif address in ('/note_on', '/note_off'):
-            channel: int
-            note: int
-            velo: int
-            
             channel, note, velo = args
             
             if channel == 15 and note in (35, 36):
