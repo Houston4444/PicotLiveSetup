@@ -44,12 +44,10 @@ class Leonardo(Module):
         self._last_kick_hit = 0
         self._seq_playing = False
         
-        self._vfs5_controls = Vfs5Controls.SOOPERLOOPER
+        self._vfs5_controls = Vfs5Controls.SEQ192_SEQUENCES
     
     def _vfs5_control_sooperlooper(self, fsb: FsButton, fs_on: bool):
         slp: 'SooperLooper' = self.engine.modules['sooperlooper']
-
-        print('zelfkfz', fsb, fs_on)
 
         if fsb is FsButton.FS_B:
             slp.set_loop(1 if fs_on else 0)
@@ -102,24 +100,28 @@ class Leonardo(Module):
         if not fs_on:
             return
         
+        print('RIRIRI', fsb)
+        
         seq192: 'Seq192' = self.engine.modules['seq192']
         
         if fsb is FsButton.FS_1:
             seq192.set_big_sequence(0)
         elif fsb is FsButton.FS_2:
+            print('gros')
             seq192.set_big_sequence(1)
         elif fsb is FsButton.FS_3:
             seq192.set_big_sequence(2)
         elif fsb is FsButton.FS_4:
             seq192.set_big_sequence(3)
-        
     
     def _vfs5_control_songs(self, fsb: FsButton, fs_on: bool):
         pass
-        
+
     def _vfs5_control(self, cc_num: int, cc_value: int):
         fsb = FsButton(2 ** (cc_num - 90))
         fs_on = bool(cc_value > 63)
+
+        print('zoeoof', fsb.name)
 
         if fs_on and fsb is not FsButton.FS_B:
             self._pressed_buttons |= fsb
@@ -130,7 +132,7 @@ class Leonardo(Module):
             self._vfs5_controls = self._vfs5_controls.next()
             self._multi_action = MultiAction.SOFTWARE_SWITCH
             return
-            
+
         if self._vfs5_controls is Vfs5Controls.SOOPERLOOPER:
             self._vfs5_control_sooperlooper(fsb, fs_on)
         elif self._vfs5_controls is Vfs5Controls.SEQ192_SEQUENCES:
@@ -140,7 +142,7 @@ class Leonardo(Module):
             
         if not self._pressed_buttons:
             self._multi_action = MultiAction.NONE
-    
+
     def _kick_pressed(self, note_on: bool, note: int, velo: int):
         seq192: 'Seq192' = self.engine.modules['seq192']
         seq192.kick_pressed(note_on, note, velo)

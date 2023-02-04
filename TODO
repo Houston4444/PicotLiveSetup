@@ -3,8 +3,20 @@
 big sequence
 song switch
 
-partie big_sequence et pedalboard
+partie big_sequence et pedalboard (ok ?)
+
+partie velo et random à peaufiner (bloc d'autres taille que 2 colonnes)
+manger la métrique de la boucle de ref
+gérer les changements de patch foireux
 
 envoyer le click au pedalboard (leds)
+
+sauvegarder le plugin carla
+
+dans le plugin:
+    vélocité
+    temps d'ouverture
+
+
 
 
