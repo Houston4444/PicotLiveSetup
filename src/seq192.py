@@ -37,7 +37,7 @@ class BaseBeatSeq:
 
 class SongParameters:
     stop_time = 2.500 # en secondes
-    average_tempo = 90.0
+    average_tempo = 100.0
     taps_for_tempo = 1
     kick_restarts_cycle = False
     restart_precision: 1.0 # en beats
@@ -64,20 +64,19 @@ class Seq192(Module):
         self._kick36_note_on = False
 
         self._n_taps_done = 0
+        self._last_kick_velo = 100
         self._current_tempo = 120.0
         self._big_sequence = 0
-        
-        self._last_kick_velo = 100
-        self._velo_row = 2
-        self._random_row = 2
+        self._next_big_sequence = 0
 
         self._stop_timer = Timer(self._song.stop_time,
                                  self._check_for_stop)
 
-        self._sync_sequence: tuple[int, int] = (0, 0)
+        self._sync_sequence = (0, 0)
         self._base_beat_seqs = list[BaseBeatSeq]()
         self._velo_seqs = list[VeloSeq]()
         self._random_groups = list[RandomGroup]()
+        self._regular_seqs = [list[int]() for i in range(14)]
         
         self._beats_elapsed = 0.0
         self._tempo_change_step = 0.0
@@ -96,6 +95,8 @@ class Seq192(Module):
     def _read_the_map(self, sequences:list[dict[str, Union[str, int]]]):
         self._base_beat_seqs.clear()
         self._velo_seqs.clear()
+        for i in range(14):
+            self._regular_seqs[i].clear()
 
         last_vel_max = 0
         last_vel_col = -1
@@ -106,6 +107,7 @@ class Seq192(Module):
                     self._base_beat_seqs[-1].last_col = seq['col'] - 1
                 self._base_beat_seqs.append(
                     BaseBeatSeq(seq['col'], 0, seq['time']))
+                self._regular_seqs[seq['col']].append(seq['row'])
             
             elif 'VEL' in seq['name'] and seq['name'].rpartition('VEL')[2].isdigit():
                 velo_max = int(seq['name'].rpartition('VEL')[2])
@@ -128,6 +130,8 @@ class Seq192(Module):
                     self._random_groups[-1].rows.append(seq['row'])
                 else:
                     self._random_groups.append(RandomGroup(seq['col'], [seq['row']]))
+            else:
+                self._regular_seqs[seq['col']].append(seq['row'])
                             
         if sequences:
             last_col = sequences[-1]['col']
@@ -136,10 +140,6 @@ class Seq192(Module):
             
         if self._base_beat_seqs:
             self._base_beat_seqs[-1].last_col = last_col
-
-        print(self._base_beat_seqs)
-        print(self._velo_seqs)
-        print(self._random_groups)
         
     def _get_cols_for_base_seqs(self, base_seq: int) -> list[int]:        
         if len(self._base_beat_seqs) > base_seq:
@@ -147,18 +147,32 @@ class Seq192(Module):
                               self._base_beat_seqs[base_seq].last_col + 1))
         
         return []
-    
+
     def _animate_tempo(self):
+        '''scene method'''
         for i in range(self._song.tempo_animation_len):
             self.wait(self._song.tempo_animation_unit, 'beat')
             self.set_tempo(self._current_tempo + self._tempo_change_step)
-    
+
+    def _change_big_sequence_later(self):
+        '''scene method'''
+        self.wait_next_cycle()
+        if (len(self._base_beat_seqs) > self._next_big_sequence
+                and self._base_beat_seqs[self._big_sequence].signature
+                    != self._base_beat_seqs[self._next_big_sequence].signature):
+            self.engine.set_next_signature(
+                self._base_beat_seqs[self._next_big_sequence].signature)
+        self._big_sequence = self._next_big_sequence
+
     def start(self):
         self._beats_elapsed = 0.0
         self.send('/cursor', 0.0)
         self.send('/play')
         self.engine.set_tempo(self._current_tempo)
-        self.engine.set_time_signature('4/4')
+        if self._base_beat_seqs:
+            self.engine.set_time_signature(self._base_beat_seqs[0].signature)
+        else:
+            self.engine.set_time_signature('4/4')
         self.engine.start_playing()
         self._playing = True
         
@@ -166,7 +180,6 @@ class Seq192(Module):
         self.send('/stop')
         self._playing = False
         self.engine.stop_playing()
-        self._velo_row = 2
         
     def set_tempo(self, tempo: float):
         self._current_tempo = tempo
@@ -197,30 +210,37 @@ class Seq192(Module):
                 self.send('/sequence', 'off', ex_col)
             
             for new_col in new_cols:
-                self.send('/sequence', 'on', new_col, 0, 1)
+                for row in self._regular_seqs[new_col]:
+                    self.send('/sequence', 'on', new_col, row)
 
             self.switch_velo_seqs(self._last_kick_velo, big_sequence)
             self.switch_random_sequence(big_sequence)
+            self._big_sequence = big_sequence
         else:
             self._sync_sequence = (ex_cols[0], 0)
+            self._next_big_sequence = big_sequence
             self.send('/sequence', 'sync', *self._sync_sequence)
-            
+
             for ex_col in ex_cols:
                 self.send('/sequence/queue', 'off', ex_col)
-                
+
             for new_col in new_cols:
-                self.send('/sequence/queue', 'on', new_col, 0, 1)
+                for row in self._regular_seqs[new_col]:
+                    self.send('/sequence/queue', 'on', new_col, row)
 
             self.switch_velo_seqs(self._last_kick_velo, big_sequence)
             self.switch_random_sequence(big_sequence)
             
-            if (len(self._base_beat_seqs) > big_sequence
-                    and self._base_beat_seqs[self._big_sequence].signature
-                        != self._base_beat_seqs[big_sequence].signature):
-                self.engine.set_next_signature(
-                    self._base_beat_seqs[big_sequence].signature)
+            self.start_scene('switch_big_sequence',
+                             self._change_big_sequence_later)
+            
+            # if (len(self._base_beat_seqs) > big_sequence
+            #         and self._base_beat_seqs[self._big_sequence].signature
+            #             != self._base_beat_seqs[big_sequence].signature):
+            #     self.engine.set_next_signature(
+            #         self._base_beat_seqs[big_sequence].signature)
                 
-        self._big_sequence = big_sequence
+        # self._big_sequence = big_sequence
         
     def _check_for_stop(self):
         if self._kick36_note_on:
@@ -354,7 +374,6 @@ class Seq192(Module):
                     start_play = True
 
             if start_play:
-                self._random_row = 2
                 self.clear_selection()
                 for col in  self._get_cols_for_base_seqs(self._big_sequence):
                     self.send('/sequence', 'on', col, 0, 1)
