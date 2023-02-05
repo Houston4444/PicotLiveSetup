@@ -1,14 +1,31 @@
 from dataclasses import dataclass
 import time
 import random
-from typing import TYPE_CHECKING, Any, Union
+from typing import TYPE_CHECKING, Optional, Union
 import json
+from threading import Timer
 
 from mentat import Module
-from threading import Timer
 
 if TYPE_CHECKING:
     from main_engine import MainEngine
+
+
+@dataclass
+class VeloSeq:
+    col: int
+    row: int
+    vel_min: int
+    vel_max: int
+
+
+@dataclass
+class RandomGroup:
+    col: int
+    rows: list[int]
+    
+    def __post_init__(self):
+        self.playing_row_index = -1
 
 
 @dataclass
@@ -21,7 +38,7 @@ class BaseBeatSeq:
 class SongParameters:
     stop_time = 2.500 # en secondes
     average_tempo = 90.0
-    taps_for_tempo = 5
+    taps_for_tempo = 1
     kick_restarts_cycle = False
     restart_precision: 1.0 # en beats
     restart_acceptability = 0.4 # from 0.0 to 1.0
@@ -30,19 +47,7 @@ class SongParameters:
     tempo_factor = 0.5
     moving_tempo = 0.00 # en pourcents
     immediate_sequence_switch = False
-    tempo_style = 'normal'
-    
-    # 'average_tempo': 90.00,
-    #         'taps_for_tempo': 5,
-    #         'kick_restarts_cycle': False,
-    #         'restart_precision': 1.0, # en beats
-    #         'restart_acceptability': 0.4, # from 0.0 to 1.0
-    #         'tempo_animation_unit': 0.5, # en beat
-    #         'tempo_animation_len': 6,
-    #         'tempo_factor': 0.5,
-    #         'moving_tempo': 0.00, # en pourcents
-    #         'immediate_sequence_switch': False,
-    #         'tempo_style': 'beat'
+    tempo_style = 'beat'
 
 
 class Seq192(Module):
@@ -53,20 +58,6 @@ class Seq192(Module):
         self._last_kick_hit = 0
         self._last_random_change_time = 0
         self._playing = False
-        # self._params = {
-        #     'stop_time': 2.500, # en secondes
-        #     'average_tempo': 90.00,
-        #     'taps_for_tempo': 5,
-        #     'kick_restarts_cycle': False,
-        #     'restart_precision': 1.0, # en beats
-        #     'restart_acceptability': 0.4, # from 0.0 to 1.0
-        #     'tempo_animation_unit': 0.5, # en beat
-        #     'tempo_animation_len': 6,
-        #     'tempo_factor': 0.5,
-        #     'moving_tempo': 0.00, # en pourcents
-        #     'immediate_sequence_switch': False,
-        #     'tempo_style': 'beat'
-        # }
         self._song = SongParameters()
 
         self._kick35_note_on = False
@@ -75,6 +66,8 @@ class Seq192(Module):
         self._n_taps_done = 0
         self._current_tempo = 120.0
         self._big_sequence = 0
+        
+        self._last_kick_velo = 100
         self._velo_row = 2
         self._random_row = 2
 
@@ -83,6 +76,8 @@ class Seq192(Module):
 
         self._sync_sequence: tuple[int, int] = (0, 0)
         self._base_beat_seqs = list[BaseBeatSeq]()
+        self._velo_seqs = list[VeloSeq]()
+        self._random_groups = list[RandomGroup]()
         
         self._beats_elapsed = 0.0
         self._tempo_change_step = 0.0
@@ -100,11 +95,10 @@ class Seq192(Module):
     
     def _read_the_map(self, sequences:list[dict[str, Union[str, int]]]):
         self._base_beat_seqs.clear()
-        
-        if sequences:
-            last_col = sequences[-1]['col']
-        else:
-            last_col = 0
+        self._velo_seqs.clear()
+
+        last_vel_max = 0
+        last_vel_col = -1
 
         for seq in sequences:
             if seq['row'] == 0 and seq['name'].endswith(' BB'):
@@ -112,11 +106,40 @@ class Seq192(Module):
                     self._base_beat_seqs[-1].last_col = seq['col'] - 1
                 self._base_beat_seqs.append(
                     BaseBeatSeq(seq['col'], 0, seq['time']))
+            
+            elif 'VEL' in seq['name'] and seq['name'].rpartition('VEL')[2].isdigit():
+                velo_max = int(seq['name'].rpartition('VEL')[2])
+                if seq['col'] == last_vel_col:
+                    velo_min = last_vel_max + 1
+                    if velo_min > velo_max:
+                        velo_min = 0
+                else:
+                    velo_min = 0
                 
+                last_vel_max = velo_max
+                last_vel_col = seq['col']
+                self._velo_seqs.append(
+                    VeloSeq(seq['col'], seq['row'], velo_min, velo_max))
+            
+            elif seq['name'].endswith(' RD'):
+                if (self._random_groups
+                        and self._random_groups[-1].col == seq['col']
+                        and self._random_groups[-1].rows[-1] == seq['row'] - 1):
+                    self._random_groups[-1].rows.append(seq['row'])
+                else:
+                    self._random_groups.append(RandomGroup(seq['col'], [seq['row']]))
+                            
+        if sequences:
+            last_col = sequences[-1]['col']
+        else:
+            last_col = 0
+            
         if self._base_beat_seqs:
             self._base_beat_seqs[-1].last_col = last_col
 
         print(self._base_beat_seqs)
+        print(self._velo_seqs)
+        print(self._random_groups)
         
     def _get_cols_for_base_seqs(self, base_seq: int) -> list[int]:        
         if len(self._base_beat_seqs) > base_seq:
@@ -153,30 +176,22 @@ class Seq192(Module):
     def clear_selection(self):
         self.send('/panic')
     
-    def set_velo_row(self, velo: int):
-        velo_row: int
-        
-        if velo <= 32:
-            velo_row = 2
-        elif velo <= 64:
-            velo_row = 3
-        elif velo <= 96:
-            velo_row = 4
-        else:
-            velo_row = 5
+    def switch_velo_seqs(self, velo: int, big_sequence: int):
+        cols = self._get_cols_for_base_seqs(big_sequence)
+        for velo_seq in self._velo_seqs:
+            if velo_seq.col not in cols:
+                continue
             
-        if velo_row !=  self._velo_row:
-            self.send('/sequence', 'off', self._big_sequence * 2, self._velo_row)
-            self.send('/sequence', 'on', self._big_sequence * 2, velo_row)
-            self._velo_row = velo_row
+            word = 'on' if velo_seq.vel_min <= velo <= velo_seq.vel_max else 'off'
+            self.send('/sequence', word, velo_seq.col, velo_seq.row)
     
     def set_big_sequence(self, big_sequence: int):
         ex_cols = self._get_cols_for_base_seqs(self._big_sequence)
         new_cols = self._get_cols_for_base_seqs(big_sequence)
-        
+
         if not (ex_cols and new_cols):
             return
-        
+
         if self._song.immediate_sequence_switch:
             for ex_col in ex_cols:
                 self.send('/sequence', 'off', ex_col)
@@ -184,8 +199,8 @@ class Seq192(Module):
             for new_col in new_cols:
                 self.send('/sequence', 'on', new_col, 0, 1)
 
-            self.send('/sequence', 'on', big_sequence * 2, self._velo_row)
-            self.send('/sequence', 'on', 1 + big_sequence * 2, self._random_row)
+            self.switch_velo_seqs(self._last_kick_velo, big_sequence)
+            self.switch_random_sequence(big_sequence)
         else:
             self._sync_sequence = (ex_cols[0], 0)
             self.send('/sequence', 'sync', *self._sync_sequence)
@@ -196,8 +211,8 @@ class Seq192(Module):
             for new_col in new_cols:
                 self.send('/sequence/queue', 'on', new_col, 0, 1)
 
-            self.send('/sequence/queue', 'on', big_sequence * 2, self._velo_row)
-            self.send('/sequence/queue', 'on', 1 + big_sequence * 2, self._random_row)
+            self.switch_velo_seqs(self._last_kick_velo, big_sequence)
+            self.switch_random_sequence(big_sequence)
             
             if (len(self._base_beat_seqs) > big_sequence
                     and self._base_beat_seqs[self._big_sequence].signature
@@ -311,19 +326,15 @@ class Seq192(Module):
                     new_tempo = self._current_tempo / (1 - ((1 -floating_ratio) * tempo_factor)) 
 
                 if new_tempo != self._current_tempo:
-                    # self.set_tempo(new_tempo)
                     self._tempo_change_step = ((new_tempo - self._current_tempo)
                                                / self._song.tempo_animation_len)
-                    print('beats elpapsed', beats_elapsed, place)
-                    print('neuue tempo', self._current_tempo, new_tempo, self._tempo_change_step)
                     self.start_scene('animate_tempo', self._animate_tempo)
                     
                     self.send('/cursor', place)
                     self._beats_elapsed = place
                     self.engine.start_cycle()
-                    print('SPZ', place, self.engine.tempo)
         else:
-            aver_bpm: self._song.average_tempo
+            aver_bpm = self._song.average_tempo
             taps_for_tempo = self._song.taps_for_tempo
             start_play = False
 
@@ -345,25 +356,35 @@ class Seq192(Module):
             if start_play:
                 self._random_row = 2
                 self.clear_selection()
-                self.send('/sequence', 'on', self._big_sequence * 2, 0, 1)
-                self.send('/sequence', 'on', 1 + self._big_sequence * 2, 0, 1)
-                self.send('/sequence', 'on',
-                          1 + self._big_sequence * 2, self._random_row)
+                for col in  self._get_cols_for_base_seqs(self._big_sequence):
+                    self.send('/sequence', 'on', col, 0, 1)
+                self.switch_random_sequence(self._big_sequence)
                 self.start()
         
-        self.set_velo_row(velo)
+        self.switch_velo_seqs(velo, self._big_sequence)
         self._last_kick_hit = kick_time
         
-    def change_random_sequence(self):
+    def switch_random_sequence(self, big_sequence: Optional[int]=None):
         if time.time() - self._last_random_change_time < 0.5:
             return
-        
-        random_row = self._random_row
-        while random_row == self._random_row:
-            random_row = random.randint(2, 6)
-        
-        self.send('/sequence', 'off',
-                  1 + self._big_sequence * 2, self._random_row)
-        self.send('/sequence', 'on', 1 + self._big_sequence * 2, random_row)
-        self._random_row = random_row
+
+        if big_sequence is None:
+            big_sequence = self._big_sequence
+
+        cols = self._get_cols_for_base_seqs(big_sequence)
+
+        for random_gp in self._random_groups:
+            if random_gp.col not in cols:
+                continue
+
+            random_index = random_gp.playing_row_index
+            while random_index == random_gp.playing_row_index:
+                random_index = random.randint(0, len(random_gp.rows) - 1)
+
+            self.send('/sequence', 'off', random_gp.col,
+                      random_gp.rows[random_gp.playing_row_index])
+            self.send('/sequence', 'on', random_gp.col,
+                      random_gp.rows[random_index])
+            random_gp.playing_row_index = random_index 
+
         self._last_random_change_time = time.time()

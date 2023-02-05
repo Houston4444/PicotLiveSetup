@@ -13,4 +13,4 @@ class RandomListener(Module):
             channel, cc, value = args
             if cc == 30:
                 seq192: Seq192 = self.engine.modules['seq192']
-                seq192.change_random_sequence()
+                seq192.switch_random_sequence()

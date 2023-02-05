@@ -107,7 +107,6 @@ class Leonardo(Module):
         if fsb is FsButton.FS_1:
             seq192.set_big_sequence(0)
         elif fsb is FsButton.FS_2:
-            print('gros')
             seq192.set_big_sequence(1)
         elif fsb is FsButton.FS_3:
             seq192.set_big_sequence(2)
