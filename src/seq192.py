@@ -33,6 +33,9 @@ class BaseBeatSeq:
     first_col: int
     last_col: int
     signature: str
+    
+    def get_n_beats(self) -> float:
+        return float(self.signature.split('/')[0])
 
 
 class SongParameters:
@@ -57,6 +60,7 @@ class Seq192(Module):
         super().__init__('seq192', protocol='osc', port=2354)
         self._last_kick_hit = 0
         self._last_random_change_time = 0
+        self._last_random_change_big_seq = 0
         self._playing = False
         self._song = SongParameters()
 
@@ -162,7 +166,17 @@ class Seq192(Module):
                     != self._base_beat_seqs[self._next_big_sequence].signature):
             self.engine.set_next_signature(
                 self._base_beat_seqs[self._next_big_sequence].signature)
+
         self._big_sequence = self._next_big_sequence
+        
+        cols = self._get_cols_for_base_seqs(self._big_sequence)
+        
+        # normally, /sequence/queue made the origin sequence 'off'
+        # but in case user press on many sequences changes
+        # we need to set off all the non playing sequences
+        for i in range(14):
+            if i not in cols:
+                self.send('/sequence', 'off', i)
 
     def start(self):
         self._beats_elapsed = 0.0
@@ -199,13 +213,26 @@ class Seq192(Module):
             self.send('/sequence', word, velo_seq.col, velo_seq.row)
     
     def set_big_sequence(self, big_sequence: int):
+        if big_sequence == self._big_sequence:
+            return
+        
         ex_cols = self._get_cols_for_base_seqs(self._big_sequence)
         new_cols = self._get_cols_for_base_seqs(big_sequence)
 
         if not (ex_cols and new_cols):
             return
 
-        if self._song.immediate_sequence_switch:
+        immediate = self._song.immediate_sequence_switch
+
+        if not immediate:
+            beats_elapsed = self.engine.get_beats_elapsed()
+            if (beats_elapsed 
+                        % self._base_beat_seqs[self._big_sequence].get_n_beats() < 1.0
+                    and beats_elapsed
+                        % self._base_beat_seqs[big_sequence].get_n_beats() < 1.0):
+                immediate = True 
+
+        if immediate:
             for ex_col in ex_cols:
                 self.send('/sequence', 'off', ex_col)
             
@@ -300,7 +327,8 @@ class Seq192(Module):
         return valid_bpm, bpm
     
     def kick_pressed(self, note_on: int, note: int, velo: int):
-        self._kick36_note_on = note_on        
+        self._kick36_note_on = note_on
+        print('Yahhoo', note_on, note, velo)    
         if not note_on:
             self._stop_timer.cancel()
             return
@@ -382,18 +410,22 @@ class Seq192(Module):
         
         self.switch_velo_seqs(velo, self._big_sequence)
         self._last_kick_hit = kick_time
-        
-    def switch_random_sequence(self, big_sequence: Optional[int]=None):
-        if time.time() - self._last_random_change_time < 0.5:
-            return
 
+    def switch_random_sequence(self, big_sequence: Optional[int]=None):        
         if big_sequence is None:
             big_sequence = self._big_sequence
+
+        if (big_sequence == self._last_random_change_big_seq
+                and time.time() - self._last_random_change_time < 0.5):
+            return
 
         cols = self._get_cols_for_base_seqs(big_sequence)
 
         for random_gp in self._random_groups:
             if random_gp.col not in cols:
+                continue
+
+            if len(random_gp.rows) <= 1:
                 continue
 
             random_index = random_gp.playing_row_index
@@ -407,3 +439,4 @@ class Seq192(Module):
             random_gp.playing_row_index = random_index 
 
         self._last_random_change_time = time.time()
+        self._last_random_change_big_seq = big_sequence

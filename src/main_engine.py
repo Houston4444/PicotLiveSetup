@@ -74,7 +74,6 @@ class MainEngine(Engine):
         
     def get_beats_elapsed(self) -> float:
         time_point: int
-        tempo: float
         
         beats_elapsed = 0.0
             
