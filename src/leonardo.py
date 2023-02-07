@@ -144,6 +144,8 @@ class Leonardo(Module):
 
     def _kick_pressed(self, note_on: bool, note: int, velo: int):
         seq192: 'Seq192' = self.engine.modules['seq192']
+        if note_on:
+            print('veloo', velo)
         seq192.kick_pressed(note_on, note, velo)
     
     def route(self, address: str, args: list[int]):

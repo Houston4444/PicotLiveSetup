@@ -9,6 +9,7 @@ from mentat import Module
 
 if TYPE_CHECKING:
     from main_engine import MainEngine
+    from carla_multip import CarlaMultip
 
 
 @dataclass
@@ -23,9 +24,11 @@ class VeloSeq:
 class RandomGroup:
     col: int
     rows: list[int]
+    cc: int
     
     def __post_init__(self):
         self.playing_row_index = -1
+        self.last_switch_time = 0.0
 
 
 @dataclass
@@ -38,10 +41,17 @@ class BaseBeatSeq:
         return float(self.signature.split('/')[0])
 
 
+class MultipParameters:
+    play_kick = 1
+    double_kick_allowed = 100
+    upper_demuter_note = 43
+    drum_channel_max = 2
+
+
 class SongParameters:
     stop_time = 2.500 # en secondes
-    average_tempo = 100.0
-    taps_for_tempo = 1
+    average_tempo = 140.0
+    taps_for_tempo = 5
     kick_restarts_cycle = False
     restart_precision: 1.0 # en beats
     restart_acceptability = 0.4 # from 0.0 to 1.0
@@ -50,7 +60,8 @@ class SongParameters:
     tempo_factor = 0.5
     moving_tempo = 0.00 # en pourcents
     immediate_sequence_switch = False
-    tempo_style = 'beat'
+    tempo_style = ''
+    mul = MultipParameters()
 
 
 class Seq192(Module):
@@ -59,8 +70,6 @@ class Seq192(Module):
     def __init__(self):
         super().__init__('seq192', protocol='osc', port=2354)
         self._last_kick_hit = 0
-        self._last_random_change_time = 0
-        self._last_random_change_big_seq = 0
         self._playing = False
         self._song = SongParameters()
 
@@ -72,6 +81,7 @@ class Seq192(Module):
         self._current_tempo = 120.0
         self._big_sequence = 0
         self._next_big_sequence = 0
+        self._switching_big_sequence = False
 
         self._stop_timer = Timer(self._song.stop_time,
                                  self._check_for_stop)
@@ -85,20 +95,44 @@ class Seq192(Module):
         self._beats_elapsed = 0.0
         self._tempo_change_step = 0.0
         
+        self._map = {}
         self.send('/status/extended')
+
+    def change_song(self, song_parameters: SongParameters):
+        self._song = song_parameters
+        
+        carla_multip: 'CarlaMultip' = self.engine.modules['carla_multip']
+        m = self._song.mul
+        i = 0
+
+        for param in (m.play_kick,
+                      m.double_kick_allowed,
+                      m.upper_demuter_note,
+                      m.drum_channel_max):
+            carla_multip.send(
+                '/Carla_Multi_Client_multip/0/set_parameter_value',
+                i, float(param))
+            i += 1
 
     def route(self, address: str, args: list):
         if address == '/status/extended':
             status_str: str = args[0]
             status_dict: dict = json.loads(status_str)
             
+            if status_dict == self._map:
+                return
+            
+            self._map = status_dict.copy()
+            
             sequences: list[dict[str, Union[str, int]]] = status_dict.get('sequences')
             if sequences is not None:
                 self._read_the_map(sequences)
-    
+
     def _read_the_map(self, sequences:list[dict[str, Union[str, int]]]):
         self._base_beat_seqs.clear()
         self._velo_seqs.clear()
+        self._random_groups.clear()
+
         for i in range(14):
             self._regular_seqs[i].clear()
 
@@ -113,27 +147,30 @@ class Seq192(Module):
                     BaseBeatSeq(seq['col'], 0, seq['time']))
                 self._regular_seqs[seq['col']].append(seq['row'])
             
-            elif 'VEL' in seq['name'] and seq['name'].rpartition('VEL')[2].isdigit():
-                velo_max = int(seq['name'].rpartition('VEL')[2])
+            elif ' VEL' in seq['name'] and seq['name'].rpartition(' VEL')[2].isdigit():
+                velo_max = int(seq['name'].rpartition(' VEL')[2])
                 if seq['col'] == last_vel_col:
                     velo_min = last_vel_max + 1
                     if velo_min > velo_max:
                         velo_min = 0
                 else:
                     velo_min = 0
-                
+
                 last_vel_max = velo_max
                 last_vel_col = seq['col']
                 self._velo_seqs.append(
                     VeloSeq(seq['col'], seq['row'], velo_min, velo_max))
-            
-            elif seq['name'].endswith(' RD'):
+
+            elif ' RD' in seq['name'] and seq['name'].rpartition(' RD')[2].isdigit():
+                cc_num = 30 + int(seq['name'].rpartition(' RD')[2])
                 if (self._random_groups
                         and self._random_groups[-1].col == seq['col']
-                        and self._random_groups[-1].rows[-1] == seq['row'] - 1):
+                        and self._random_groups[-1].rows[-1] == seq['row'] - 1
+                        and cc_num == self._random_groups[-1].cc):
                     self._random_groups[-1].rows.append(seq['row'])
                 else:
-                    self._random_groups.append(RandomGroup(seq['col'], [seq['row']]))
+                    self._random_groups.append(
+                        RandomGroup(seq['col'], [seq['row']], cc_num))
             else:
                 self._regular_seqs[seq['col']].append(seq['row'])
                             
@@ -144,6 +181,12 @@ class Seq192(Module):
             
         if self._base_beat_seqs:
             self._base_beat_seqs[-1].last_col = last_col
+        
+        print(self._random_groups)
+
+        timer = Timer(1.0, self.send, ['/status/extended'])
+        timer.start()
+        
         
     def _get_cols_for_base_seqs(self, base_seq: int) -> list[int]:        
         if len(self._base_beat_seqs) > base_seq:
@@ -160,6 +203,7 @@ class Seq192(Module):
 
     def _change_big_sequence_later(self):
         '''scene method'''
+        self._switching_big_sequence = True
         self.wait_next_cycle()
         if (len(self._base_beat_seqs) > self._next_big_sequence
                 and self._base_beat_seqs[self._big_sequence].signature
@@ -168,7 +212,7 @@ class Seq192(Module):
                 self._base_beat_seqs[self._next_big_sequence].signature)
 
         self._big_sequence = self._next_big_sequence
-        
+        self._switching_big_sequence = False        
         cols = self._get_cols_for_base_seqs(self._big_sequence)
         
         # normally, /sequence/queue made the origin sequence 'off'
@@ -252,22 +296,23 @@ class Seq192(Module):
                 self.send('/sequence/queue', 'off', ex_col)
 
             for new_col in new_cols:
-                for row in self._regular_seqs[new_col]:
-                    self.send('/sequence/queue', 'on', new_col, row)
+                if self._regular_seqs[new_col]:
+                    self.send('/sequence/queue', 'on', new_col,
+                              *self._regular_seqs[new_col])
+                    
+            for random_gp in self._random_groups:
+                if len(random_gp.rows) >= 2 and random_gp.col in new_cols:
+                    random_gp.playing_row_index = 0
+                    self.send('/sequence/queue', 'on',
+                              random_gp.col, random_gp.rows[0])
+                    self.send('/sequence/queue', 'off',
+                              random_gp.col, *random_gp.rows[1:])
 
             self.switch_velo_seqs(self._last_kick_velo, big_sequence)
-            self.switch_random_sequence(big_sequence)
+            # self.switch_random_sequence(big_sequence)
             
             self.start_scene('switch_big_sequence',
                              self._change_big_sequence_later)
-            
-            # if (len(self._base_beat_seqs) > big_sequence
-            #         and self._base_beat_seqs[self._big_sequence].signature
-            #             != self._base_beat_seqs[big_sequence].signature):
-            #     self.engine.set_next_signature(
-            #         self._base_beat_seqs[big_sequence].signature)
-                
-        # self._big_sequence = big_sequence
         
     def _check_for_stop(self):
         if self._kick36_note_on:
@@ -328,7 +373,7 @@ class Seq192(Module):
     
     def kick_pressed(self, note_on: int, note: int, velo: int):
         self._kick36_note_on = note_on
-        print('Yahhoo', note_on, note, velo)    
+        
         if not note_on:
             self._stop_timer.cancel()
             return
@@ -340,7 +385,7 @@ class Seq192(Module):
         self._stop_timer.cancel()
         del self._stop_timer
         self._stop_timer = Timer(self._song.stop_time,
-                                    self._check_for_stop)
+                                 self._check_for_stop)
         self._stop_timer.start()
 
         if self._playing:
@@ -403,29 +448,38 @@ class Seq192(Module):
 
             if start_play:
                 self.clear_selection()
-                for col in  self._get_cols_for_base_seqs(self._big_sequence):
-                    self.send('/sequence', 'on', col, 0, 1)
-                self.switch_random_sequence(self._big_sequence)
+                cols = self._get_cols_for_base_seqs(self._big_sequence)
+                for col in cols:
+                    if self._regular_seqs[col]:
+                        self.send('/sequence', 'on', col,
+                                  *self._regular_seqs[col])
+
+                for random_gp in self._random_groups:
+                    if random_gp.col in cols:
+                        random_gp.playing_row_index = 0
+                        self.send('/sequence', 'on',
+                                  random_gp.col, random_gp.rows[0])
                 self.start()
         
         self.switch_velo_seqs(velo, self._big_sequence)
         self._last_kick_hit = kick_time
 
-    def switch_random_sequence(self, big_sequence: Optional[int]=None):        
+    def switch_random_sequence(self, big_sequence: Optional[int]=None,
+                               cc_num: Optional[int]=None):
+        if self._switching_big_sequence:
+            print('cahne interdit')
+            return
+            
         if big_sequence is None:
             big_sequence = self._big_sequence
-
-        if (big_sequence == self._last_random_change_big_seq
-                and time.time() - self._last_random_change_time < 0.5):
-            return
 
         cols = self._get_cols_for_base_seqs(big_sequence)
 
         for random_gp in self._random_groups:
-            if random_gp.col not in cols:
-                continue
-
-            if len(random_gp.rows) <= 1:
+            if (len(random_gp.rows) <= 1
+                    or random_gp.col not in cols
+                    or time.time() - random_gp.last_switch_time < 0.5
+                    or (cc_num is not None and random_gp.cc != cc_num)):
                 continue
 
             random_index = random_gp.playing_row_index
@@ -437,6 +491,4 @@ class Seq192(Module):
             self.send('/sequence', 'on', random_gp.col,
                       random_gp.rows[random_index])
             random_gp.playing_row_index = random_index 
-
-        self._last_random_change_time = time.time()
-        self._last_random_change_big_seq = big_sequence
+            random_gp.last_switch_time = time.time()
