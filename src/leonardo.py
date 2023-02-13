@@ -1,11 +1,14 @@
 from enum import IntFlag, Enum
 from typing import TYPE_CHECKING
+from impact import Impact
 
 from mentat import Module
 
 if TYPE_CHECKING:
+    from main_engine import MainEngine
     from sooperlooper import SooperLooper
     from seq192 import Seq192
+    from carla_multip import CarlaMultip
 
 
 class FsButton(IntFlag):
@@ -35,6 +38,8 @@ class Vfs5Controls(Enum):
 
 
 class Leonardo(Module):
+    engine: 'MainEngine'
+    
     def __init__(self, name, protocol=None, port=None, parent=None):
         super().__init__(name, protocol, port, parent)
         
@@ -114,7 +119,22 @@ class Leonardo(Module):
             seq192.set_big_sequence(3)
     
     def _vfs5_control_songs(self, fsb: FsButton, fs_on: bool):
-        pass
+        if not fs_on:
+            return
+
+        seq192: 'Seq192' = self.engine.modules['seq192']
+        
+        if fsb is FsButton.FS_1:
+            self.engine.set_song(0)
+        elif fsb is FsButton.FS_2:
+            self.engine.set_song(1)
+        elif fsb is FsButton.FS_3:
+            self.engine.set_song(2)
+        elif fsb is FsButton.FS_4:
+            self.engine.set_song(3)
+            
+        print('SONG IS ', seq192._song)
+        
 
     def _vfs5_control(self, cc_num: int, cc_value: int):
         fsb = FsButton(2 ** (cc_num - 90))
@@ -144,20 +164,27 @@ class Leonardo(Module):
 
     def _kick_pressed(self, note_on: bool, note: int, velo: int):
         seq192: 'Seq192' = self.engine.modules['seq192']
-        if note_on:
-            print('veloo', velo)
+        impact: 'Impact' = self.engine.modules['impact']
+        multip: 'CarlaMultip' = self.engine.modules['carla_multip']
+        multip.kick_pressed(note_on, note, velo)
         seq192.kick_pressed(note_on, note, velo)
+        impact.kick_pressed(note_on, note, velo)
     
     def route(self, address: str, args: list[int]):
         if address == '/control_change':
             channel, cc_num, cc_value = args
             
-            if channel == 15 and 90 <= cc_num <= 94:
-                self._vfs5_control(cc_num, cc_value)
-        
+            if channel == 15:
+                if 90 <= cc_num <= 94:
+                    self._vfs5_control(cc_num, cc_value)
+
+                elif cc_num == 23 and cc_value > 0:
+                    self._vfs5_controls = self._vfs5_controls.next()
+                    print('VFS Controls', self._vfs5_controls)                
+
         elif address in ('/note_on', '/note_off'):
             channel, note, velo = args
-            
+
             if channel == 15 and note in (35, 36):
                 self._kick_pressed(address == '/note_on', note, velo)
             

@@ -6,18 +6,15 @@ import json
 from threading import Timer
 
 from mentat import Module
+from songs import SongParameters
+from seq192_base import VeloSeq, Seq192Base
 
 if TYPE_CHECKING:
     from main_engine import MainEngine
     from carla_multip import CarlaMultip
 
 
-@dataclass
-class VeloSeq:
-    col: int
-    row: int
-    vel_min: int
-    vel_max: int
+
 
 
 @dataclass
@@ -32,6 +29,15 @@ class RandomGroup:
 
 
 @dataclass
+class CondSeq:
+    col: int
+    row: int
+    starts: bool
+    regular: bool
+    ends: bool
+
+
+@dataclass
 class BaseBeatSeq:
     first_col: int
     last_col: int
@@ -41,34 +47,12 @@ class BaseBeatSeq:
         return float(self.signature.split('/')[0])
 
 
-class MultipParameters:
-    play_kick = 1
-    double_kick_allowed = 100
-    upper_demuter_note = 43
-    drum_channel_max = 2
-
-
-class SongParameters:
-    stop_time = 2.500 # en secondes
-    average_tempo = 140.0
-    taps_for_tempo = 5
-    kick_restarts_cycle = False
-    restart_precision: 1.0 # en beats
-    restart_acceptability = 0.4 # from 0.0 to 1.0
-    tempo_animation_unit = 0.5 # en beats
-    tempo_animation_len = 6
-    tempo_factor = 0.5
-    moving_tempo = 0.00 # en pourcents
-    immediate_sequence_switch = False
-    tempo_style = ''
-    mul = MultipParameters()
-
-
-class Seq192(Module):
+class Seq192(Seq192Base):
     engine: 'MainEngine'
-    
+
     def __init__(self):
-        super().__init__('seq192', protocol='osc', port=2354)
+        super().__init__('seq192', 2354)
+        # super().__init__('seq192', protocol='osc', port=2354)
         self._last_kick_hit = 0
         self._playing = False
         self._song = SongParameters()
@@ -90,48 +74,32 @@ class Seq192(Module):
         self._base_beat_seqs = list[BaseBeatSeq]()
         self._velo_seqs = list[VeloSeq]()
         self._random_groups = list[RandomGroup]()
-        self._regular_seqs = [list[int]() for i in range(14)]
+        self._cond_seqs = list[CondSeq]()
         
         self._beats_elapsed = 0.0
         self._tempo_change_step = 0.0
         
-        self._map = {}
-        self.send('/status/extended')
-
-    def change_song(self, song_parameters: SongParameters):
-        self._song = song_parameters
+    def set_song(self, song: SongParameters):
+        self._song = song
         
         carla_multip: 'CarlaMultip' = self.engine.modules['carla_multip']
         m = self._song.mul
         i = 0
 
-        for param in (m.play_kick,
-                      m.double_kick_allowed,
-                      m.upper_demuter_note,
-                      m.drum_channel_max):
+        for param_value in (m.double_kick_allowed, False, 127):
             carla_multip.send(
                 '/Carla_Multi_Client_multip/0/set_parameter_value',
-                i, float(param))
+                i, float(param_value))
             i += 1
-
-    def route(self, address: str, args: list):
-        if address == '/status/extended':
-            status_str: str = args[0]
-            status_dict: dict = json.loads(status_str)
-            
-            if status_dict == self._map:
-                return
-            
-            self._map = status_dict.copy()
-            
-            sequences: list[dict[str, Union[str, int]]] = status_dict.get('sequences')
-            if sequences is not None:
-                self._read_the_map(sequences)
+        
+        self.send('/screenset', song.seq_page)
+        self.send('/status/extended')
 
     def _read_the_map(self, sequences:list[dict[str, Union[str, int]]]):
         self._base_beat_seqs.clear()
         self._velo_seqs.clear()
         self._random_groups.clear()
+        self._cond_seqs.clear()
 
         for i in range(14):
             self._regular_seqs[i].clear()
@@ -171,6 +139,17 @@ class Seq192(Module):
                 else:
                     self._random_groups.append(
                         RandomGroup(seq['col'], [seq['row']], cc_num))
+            
+            elif seq['name'].endswith(
+                    (' ___', ' X__', ' XX_', ' X_X', ' _X_', ' _XX', ' __X')):
+                cond_str = seq['name'][-3:]
+                starts_x, regular_x, ends_x = cond_str
+                self._cond_seqs.append(
+                    CondSeq(seq['col'],
+                            seq['row'],
+                            starts_x == 'X',
+                            regular_x == 'X',
+                            ends_x == 'X'))
             else:
                 self._regular_seqs[seq['col']].append(seq['row'])
                             
@@ -181,12 +160,9 @@ class Seq192(Module):
             
         if self._base_beat_seqs:
             self._base_beat_seqs[-1].last_col = last_col
-        
-        print(self._random_groups)
 
         timer = Timer(1.0, self.send, ['/status/extended'])
         timer.start()
-        
         
     def _get_cols_for_base_seqs(self, base_seq: int) -> list[int]:        
         if len(self._base_beat_seqs) > base_seq:
@@ -215,12 +191,26 @@ class Seq192(Module):
         self._switching_big_sequence = False        
         cols = self._get_cols_for_base_seqs(self._big_sequence)
         
+        self._sync_sequence = (self._base_beat_seqs[self._big_sequence].first_col, 0)
+        self.send('/sequence', 'sync', *self._sync_sequence)
+        
         # normally, /sequence/queue made the origin sequence 'off'
         # but in case user press on many sequences changes
         # we need to set off all the non playing sequences
         for i in range(14):
             if i not in cols:
                 self.send('/sequence', 'off', i)
+                
+        self.wait(0.125, 'beat')
+        
+        for cond_seq in self._cond_seqs:
+            if cond_seq.col in cols:
+                if cond_seq.starts and not cond_seq.regular:
+                    self.send('/sequence/queue', 'off',
+                              cond_seq.col, cond_seq.row)
+                elif not cond_seq.starts and cond_seq.regular:
+                    self.send('/sequence/queue', 'on',
+                              cond_seq.col, cond_seq.row)
 
     def start(self):
         self._beats_elapsed = 0.0
@@ -238,14 +228,13 @@ class Seq192(Module):
         self.send('/stop')
         self._playing = False
         self.engine.stop_playing()
+        multip: 'CarlaMultip' = self.engine.modules['carla_multip']
+        multip.demute(force=True)
         
     def set_tempo(self, tempo: float):
         self._current_tempo = tempo
         self.send('/bpm', tempo)
         self.engine.set_tempo(tempo)
-    
-    def clear_selection(self):
-        self.send('/panic')
     
     def switch_velo_seqs(self, velo: int, big_sequence: int):
         cols = self._get_cols_for_base_seqs(big_sequence)
@@ -291,6 +280,18 @@ class Seq192(Module):
             self._sync_sequence = (ex_cols[0], 0)
             self._next_big_sequence = big_sequence
             self.send('/sequence', 'sync', *self._sync_sequence)
+
+            for cond_seq in self._cond_seqs:
+                if cond_seq.col in ex_cols:
+                    if cond_seq.ends:
+                        self.send('/sequence', 'on', cond_seq.col, cond_seq.row)
+                    else:
+                        self.send('/sequence', 'off', cond_seq.col, cond_seq.row)
+                elif cond_seq.col in new_cols:
+                    if cond_seq.starts:
+                        self.send('/sequence/queue', 'on', cond_seq.col, cond_seq.row)
+                    else:
+                        self.send('/sequence/queue', 'off', cond_seq.col, cond_seq.row)
 
             for ex_col in ex_cols:
                 self.send('/sequence/queue', 'off', ex_col)

@@ -9,7 +9,7 @@ partie big_sequence et pedalboard (ok ?)
 # manger la métrique de la boucle de ref
 # gérer les changements de patch foireux
 
-envoyer le click au pedalboard (leds)
+#envoyer le click au pedalboard (leds)
 
 # sauvegarder le plugin carla
 
@@ -18,11 +18,11 @@ dans le plugin:
     temps d'ouverture
 
 # RANDOM
-Interdire le changement random quand /Sequnce/queue
-préparer le next random choisi
-plus haut en premier
+#Interdire le changement random quand /Sequnce/queue
+#préparer le next random choisi
+#plus haut en premier
 
-notion de first last (plus tard ?)
+ #notion de first last (plus tard ?)
 
-
-
+essayer rampe de velocité
+réparer seq192 sync sans changement d'état

@@ -1,8 +1,16 @@
-from typing import TYPE_CHECKING
-from mentat import Engine, Route
+from typing import TYPE_CHECKING, TypedDict, Union
 
-if TYPE_CHECKING:
-    from leonardo import Leonardo
+from mentat import Engine, Route
+from seq192 import Seq192
+from impact import Impact
+from leonardo import Leonardo
+from songs import SongParameters, SONGS
+
+
+class ModulesDict(TypedDict):
+    seq192: Seq192
+    impact: Impact
+    pedalboard: Leonardo
 
 
 class MainRoute(Route):
@@ -11,19 +19,27 @@ class MainRoute(Route):
     def __init__(self, name: str):
         super().__init__(name)
         
+        self.songs = SONGS
+        
     def led_tempo(self):
-        leonardo: 'Leonardo' = self.engine.modules['pedalboard']
+        leonardo: Leonardo = self.engine.modules['pedalboard']
         while True:
             j = 0
             while j < self.engine.cycle_length:
                 leonardo.send('/note_on', 0, 0x24, 127)
-                self.wait(0.01 if j else 0.25, 'beat')
+                if not j:
+                    leonardo.send('/note_on', 0, 0x25, 127)
+                # self.wait(0.01 if j else 0.25, 'beat')
+                self.wait(0.03125, 'beat')
                 leonardo.send('/note_off', 0, 0x24)
+                if not j:
+                    leonardo.send('/note_off', 0, 0x25)
                 
                 if j + 1 > self.engine.cycle_length:
                     self.wait_next_cycle()
                 else:
-                    self.wait(0.99 if j else 0.75, 'beat')
+                    # self.wait(0.99 if j else 0.75, 'beat')
+                    self.wait(0.96875, 'beat')
                 
                 j += 1
             
@@ -43,6 +59,8 @@ class MainRoute(Route):
 
 
 class MainEngine(Engine):
+    modules: ModulesDict
+    
     def __init__(self, name, port, folder, debug=False, tcp_port=None, unix_port=None):
         super().__init__(name, port, folder, debug, tcp_port, unix_port)
         self.playing = False
@@ -87,3 +105,14 @@ class MainEngine(Engine):
         beats_elapsed += ((self.current_time - self.tempo_map[-1][0]) / 60000000000
                           * self.tempo_map[-1][1])
         return beats_elapsed
+
+    def set_song(self, song: Union[SongParameters, int]):
+        if isinstance(song, int):
+            if song < len(SONGS):
+                song = SONGS[song]
+            else:
+                self.logger.critical(f"Song {song} n'existe pas !")
+                return
+        
+        self.modules['seq192'].set_song(song)
+        self.modules['impact'].set_song(song)
