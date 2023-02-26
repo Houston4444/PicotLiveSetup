@@ -1,4 +1,5 @@
 from enum import IntFlag, Enum
+import time
 from typing import TYPE_CHECKING
 from impact import Impact
 
@@ -8,7 +9,7 @@ if TYPE_CHECKING:
     from main_engine import MainEngine
     from sooperlooper import SooperLooper
     from seq192 import Seq192
-    from carla_multip import CarlaMultip
+    from non_multip import NonXtMultip
 
 
 class FsButton(IntFlag):
@@ -140,8 +141,6 @@ class Leonardo(Module):
         fsb = FsButton(2 ** (cc_num - 90))
         fs_on = bool(cc_value > 63)
 
-        print('zoeoof', fsb.name)
-
         if fs_on and fsb is not FsButton.FS_B:
             self._pressed_buttons |= fsb
         else:
@@ -162,13 +161,28 @@ class Leonardo(Module):
         if not self._pressed_buttons:
             self._multi_action = MultiAction.NONE
 
+    def change_vfs5_controls(self, vfs5_controls: Vfs5Controls):
+        self._vfs5_controls = vfs5_controls
+        print('Vf5_controls', self._vfs5_controls)
+        self.send('/note_off', 0, 0x26)
+        self.send('/note_off', 0, 0x27)
+        
+        if self._vfs5_controls is Vfs5Controls.SONG:
+            self.send('/note_on', 0, 0x26, 100)
+        elif self._vfs5_controls is Vfs5Controls.SEQ192_SEQUENCES:
+            self.send('/note_on', 0, 0x27, 100)
+        elif self._vfs5_controls is Vfs5Controls.SOOPERLOOPER:
+            self.send('/note_on', 0, 0x26, 100)
+            self.send('/note_on', 0, 0x27, 100)
+
     def _kick_pressed(self, note_on: bool, note: int, velo: int):
         seq192: 'Seq192' = self.engine.modules['seq192']
         impact: 'Impact' = self.engine.modules['impact']
-        multip: 'CarlaMultip' = self.engine.modules['carla_multip']
-        multip.kick_pressed(note_on, note, velo)
         seq192.kick_pressed(note_on, note, velo)
         impact.kick_pressed(note_on, note, velo)
+
+        if note_on and self._vfs5_controls is Vfs5Controls.SONG:
+            self.change_vfs5_controls(Vfs5Controls.SEQ192_SEQUENCES)
     
     def route(self, address: str, args: list[int]):
         if address == '/control_change':
@@ -179,12 +193,13 @@ class Leonardo(Module):
                     self._vfs5_control(cc_num, cc_value)
 
                 elif cc_num == 23 and cc_value > 0:
-                    self._vfs5_controls = self._vfs5_controls.next()
-                    print('VFS Controls', self._vfs5_controls)                
+                    self.change_vfs5_controls(self._vfs5_controls.next())
 
         elif address in ('/note_on', '/note_off'):
             channel, note, velo = args
+            note_is_on = bool(address == '/note_on')
 
             if channel == 15 and note in (35, 36):
-                self._kick_pressed(address == '/note_on', note, velo)
+                self._kick_pressed(note_is_on, note, velo)
+                
             

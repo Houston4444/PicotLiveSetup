@@ -11,7 +11,7 @@ from seq192_base import VeloSeq, Seq192Base
 
 if TYPE_CHECKING:
     from main_engine import MainEngine
-    from carla_multip import CarlaMultip
+    from non_multip import NonXtMultip
 
 
 
@@ -81,17 +81,6 @@ class Seq192(Seq192Base):
         
     def set_song(self, song: SongParameters):
         self._song = song
-        
-        carla_multip: 'CarlaMultip' = self.engine.modules['carla_multip']
-        m = self._song.mul
-        i = 0
-
-        for param_value in (m.double_kick_allowed, False, 127):
-            carla_multip.send(
-                '/Carla_Multi_Client_multip/0/set_parameter_value',
-                i, float(param_value))
-            i += 1
-        
         self.send('/screenset', song.seq_page)
         self.send('/status/extended')
 
@@ -228,8 +217,6 @@ class Seq192(Seq192Base):
         self.send('/stop')
         self._playing = False
         self.engine.stop_playing()
-        multip: 'CarlaMultip' = self.engine.modules['carla_multip']
-        multip.demute(force=True)
         
     def set_tempo(self, tempo: float):
         self._current_tempo = tempo

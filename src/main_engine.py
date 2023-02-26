@@ -1,9 +1,11 @@
 from typing import TYPE_CHECKING, TypedDict, Union
 
 from mentat import Engine, Route
+from non_multip import NonXtMultip
 from seq192 import Seq192
 from impact import Impact
 from leonardo import Leonardo
+from ardour import Ardour
 from songs import SongParameters, SONGS
 
 
@@ -11,6 +13,8 @@ class ModulesDict(TypedDict):
     seq192: Seq192
     impact: Impact
     pedalboard: Leonardo
+    non_xt_multip: NonXtMultip
+    ardour: Ardour
 
 
 class MainRoute(Route):
@@ -29,7 +33,7 @@ class MainRoute(Route):
                 leonardo.send('/note_on', 0, 0x24, 127)
                 if not j:
                     leonardo.send('/note_on', 0, 0x25, 127)
-                # self.wait(0.01 if j else 0.25, 'beat')
+
                 self.wait(0.03125, 'beat')
                 leonardo.send('/note_off', 0, 0x24)
                 if not j:
@@ -38,7 +42,6 @@ class MainRoute(Route):
                 if j + 1 > self.engine.cycle_length:
                     self.wait_next_cycle()
                 else:
-                    # self.wait(0.99 if j else 0.75, 'beat')
                     self.wait(0.96875, 'beat')
                 
                 j += 1
@@ -116,3 +119,5 @@ class MainEngine(Engine):
         
         self.modules['seq192'].set_song(song)
         self.modules['impact'].set_song(song)
+        self.modules['non_xt_multip'].set_song(song)
+        self.modules['ardour'].set_song(song)
