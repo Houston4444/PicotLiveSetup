@@ -1,12 +1,14 @@
 from typing import TYPE_CHECKING, TypedDict, Union
 
 from mentat import Engine, Route
+from non_arch_delay import NonXtArchDelay
 from non_multip import NonXtMultip
 from seq192 import Seq192
 from impact import Impact
 from leonardo import Leonardo
 from ardour import Ardour
 from songs import SongParameters, SONGS
+from carla import Carla
 
 
 class ModulesDict(TypedDict):
@@ -14,7 +16,9 @@ class ModulesDict(TypedDict):
     impact: Impact
     pedalboard: Leonardo
     non_xt_multip: NonXtMultip
+    non_xt_archdelay: NonXtArchDelay
     ardour: Ardour
+    carla: Carla
 
 
 class MainRoute(Route):
@@ -120,4 +124,6 @@ class MainEngine(Engine):
         self.modules['seq192'].set_song(song)
         self.modules['impact'].set_song(song)
         self.modules['non_xt_multip'].set_song(song)
+        self.modules['non_xt_archdelay'].set_song(song)
         self.modules['ardour'].set_song(song)
+        self.modules['carla'].set_song(song)

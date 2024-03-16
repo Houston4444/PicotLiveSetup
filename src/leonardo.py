@@ -174,6 +174,7 @@ class Leonardo(Module):
         elif self._vfs5_controls is Vfs5Controls.SOOPERLOOPER:
             self.send('/note_on', 0, 0x26, 100)
             self.send('/note_on', 0, 0x27, 100)
+            # pass
 
     def _kick_pressed(self, note_on: bool, note: int, velo: int):
         seq192: 'Seq192' = self.engine.modules['seq192']
@@ -201,5 +202,6 @@ class Leonardo(Module):
 
             if channel == 15 and note in (35, 36):
                 self._kick_pressed(note_is_on, note, velo)
+                print('goovelo', velo)
                 
             

@@ -112,7 +112,7 @@ class Seq192(Seq192Base):
                         velo_min = 0
                 else:
                     velo_min = 0
-
+ 
                 last_vel_max = velo_max
                 last_vel_col = seq['col']
                 self._velo_seqs.append(
@@ -128,7 +128,7 @@ class Seq192(Seq192Base):
                 else:
                     self._random_groups.append(
                         RandomGroup(seq['col'], [seq['row']], cc_num))
-            
+        
             elif seq['name'].endswith(
                     (' ___', ' X__', ' XX_', ' X_X', ' _X_', ' _XX', ' __X')):
                 cond_str = seq['name'][-3:]
@@ -204,6 +204,8 @@ class Seq192(Seq192Base):
     def start(self):
         self._beats_elapsed = 0.0
         self.send('/cursor', 0.0)
+        # self.send('/swing/reference', 8)
+        # self.send('/swing', 1)
         self.send('/play')
         self.engine.set_tempo(self._current_tempo)
         if self._base_beat_seqs:
@@ -232,7 +234,7 @@ class Seq192(Seq192Base):
             word = 'on' if velo_seq.vel_min <= velo <= velo_seq.vel_max else 'off'
             self.send('/sequence', word, velo_seq.col, velo_seq.row)
     
-    def set_big_sequence(self, big_sequence: int):
+    def set_big_sequence(self, big_sequence: int):        
         if big_sequence == self._big_sequence:
             return
         
@@ -259,6 +261,9 @@ class Seq192(Seq192Base):
             for new_col in new_cols:
                 for row in self._regular_seqs[new_col]:
                     self.send('/sequence', 'on', new_col, row)
+                for cond_seq in self._cond_seqs:
+                    if cond_seq.col == new_col and cond_seq.starts:
+                        self.send('/sequence', 'on', new_col, cond_seq.row)
 
             self.switch_velo_seqs(self._last_kick_velo, big_sequence)
             self.switch_random_sequence(big_sequence)
@@ -305,6 +310,7 @@ class Seq192(Seq192Base):
     def _check_for_stop(self):
         if self._kick36_note_on:
             self.stop()
+            self.engine.modules['randomSeq'].stop()
     
     def _get_bpm_from_average(self, bpm: float) -> tuple[bool, float]:
         valid_bpm = True
@@ -448,6 +454,7 @@ class Seq192(Seq192Base):
                         self.send('/sequence', 'on',
                                   random_gp.col, random_gp.rows[0])
                 self.start()
+                self.engine.modules['randomSeq'].start()
         
         self.switch_velo_seqs(velo, self._big_sequence)
         self._last_kick_hit = kick_time
@@ -455,14 +462,13 @@ class Seq192(Seq192Base):
     def switch_random_sequence(self, big_sequence: Optional[int]=None,
                                cc_num: Optional[int]=None):
         if self._switching_big_sequence:
-            print('cahne interdit')
             return
             
         if big_sequence is None:
             big_sequence = self._big_sequence
 
         cols = self._get_cols_for_base_seqs(big_sequence)
-
+        
         for random_gp in self._random_groups:
             if (len(random_gp.rows) <= 1
                     or random_gp.col not in cols

@@ -25,6 +25,13 @@ dans le plugin:
  #notion de first last (plus tard ?)
 
 essayer rampe de velocité (param velo dans le plugin)
-réparer seq192 sync sans changement d'état
+# réparer seq192 sync sans changement d'état
 Kick muet sur tap tempo/ou ailleurs
 VFS5
+
+Faux contact USB (fait chier)
+Pédale d'expression à rebrancher dans l'Arduino
+
+XX_ et changement en début de cycle
+
+Hydrogen à remplacer (trop instable)

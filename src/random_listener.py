@@ -14,4 +14,11 @@ class RandomListener(Module):
             if 30 <= cc <= 40 and value > 0:
                 seq192: Seq192 = self.engine.modules['seq192']
                 seq192.switch_random_sequence(cc_num=cc)
+                
+    def start(self):
+        self.send('/start')
+    
+    def stop(self):
+        self.send('/stop')
+
             

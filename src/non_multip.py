@@ -19,13 +19,14 @@ OSC_SYMBOL_DICT = {
 }
 
 
+
 class NonXtMultip(Module):
     def __init__(self, name, protocol=None, port=None, parent=None):
         super().__init__(name, protocol, port, parent)
 
     def _send_pg(self, param: Param, value: Union[str, bool, int, float]):
         self.send(
-            'Non-Mixer-XT.m_xt/strip/multip/Plujain-Multipmidi/'
+            '/Non-Mixer-XT.m_xt/strip/multip/Plujain-Multipmidi/'
             f'{OSC_SYMBOL_DICT[param]}/unscaled', float(value))
 
     def set_song(self, song: SongParameters):

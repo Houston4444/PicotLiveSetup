@@ -4,7 +4,7 @@ from pathlib import Path
 from mentat import Module
 
 class NsmClient(Module):
-    def __init__(self):
+    def __init__(self, name: str, executable: str):
         NSM_URL = os.getenv('NSM_URL')
         if not NSM_URL:
             return
@@ -33,12 +33,18 @@ class NsmClient(Module):
             already_started = False
         
         if not already_started:
-            self.send('/nsm/server/announce', 'ElMentator', '',
-                      'el_mentator', 1, 0, os.getpid())
+            self.send('/nsm/server/announce', name, '',
+                      executable, 1, 0, os.getpid())
             
             with open(tmp_file, 'w') as f:
                 f.write(str(server_port))
-        
+    
+    def _reply(self, address: str, err: int, msg: str):
+        if err:
+            self.send('/error', address, err, msg)
+        else:
+            self.send('/reply', address, msg)
+    
     def route(self, address: str, args: list):
         if address == '/reply':
             reply_path = args.pop(0)
@@ -46,9 +52,16 @@ class NsmClient(Module):
                 message, sm_name, server_capabilities = args
         
         elif address == '/nsm/client/open':
-            nsm_project, display_name, client_id = args
-            self.send('/reply', address, "Ready")
+            self._reply(address, *self.open(*args))
         
         elif address == '/nsm/client/save':
-            self.send('/reply', address, "Saved")
-            
+            self._reply(address, *self.save())
+
+    # functions you can re-implement
+    def open(self, nsm_project: str, display_name: str,
+             client_id: str) -> tuple[int, str]:
+        return (0, 'Ready')
+    
+    def save(self) -> tuple[int, str]:
+        return (0, 'Saved')
+    

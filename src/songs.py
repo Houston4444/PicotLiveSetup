@@ -30,6 +30,9 @@ class SongParameters:
     open_time_beats = 1/4
     kick_snare_demute = True
 
+    def __repr__(self) -> str:
+        return self.__class__.__name__
+
 
 class Radeaux(SongParameters):
     average_tempo = 92.00
@@ -49,11 +52,19 @@ class Euclyde7(SongParameters):
     kick_snare_demute = False
 
 
+class MourirIdees(SongParameters):
+    average_tempo = 112
+    seq_page = 12
+
 class TestiSpace(SongParameters):
     average_tempo = 90
     seq_page = 7
+    
+class Orage(SongParameters):
+    average_tempo = 140
+    seq_page = 10
 
 SONGS = [Radeaux(),
          Avale(),
-         Euclyde7(),
-         TestiSpace()]
+         Orage(),
+         MourirIdees()]
