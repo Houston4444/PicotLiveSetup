@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import json
 
 from mentat import Module
 
@@ -17,18 +18,22 @@ class NsmClient(Module):
 
         super().__init__('nsm_client', protocol='osc', port=server_port)
         
+        self.client_path = Path()
+
         # for auto-start compatibility, we save the NSM port in a file in /tmp
         tmp_path = Path('/tmp/el_mentator') / str(os.getpid())
-        tmp_file = str(tmp_path / 'nsm_port')
         if not tmp_path.exists():
             tmp_path.mkdir(parents=True)
-        
+
+        tmp_file = str(tmp_path / 'nsm_port')
+                
         already_started = True
         
         try:
             with open(tmp_file, 'r') as f:
-                str_port = f.read()
-                assert int(str_port) == server_port
+                json_dict = json.load(f)
+                assert json_dict['nsm_port'] == server_port
+                self.client_path = Path(json_dict['client_path'])
         except:
             already_started = False
         
@@ -37,7 +42,8 @@ class NsmClient(Module):
                       executable, 1, 0, os.getpid())
             
             with open(tmp_file, 'w') as f:
-                f.write(str(server_port))
+                f.write(json.dumps(
+                    {'nsm_port': server_port, 'client_path': str(self.client_path)}))
     
     def _reply(self, address: str, err: int, msg: str):
         if err:
@@ -52,6 +58,8 @@ class NsmClient(Module):
                 message, sm_name, server_capabilities = args
         
         elif address == '/nsm/client/open':
+            if args and isinstance(args[0], str):
+                self.client_path = Path(args[0])
             self._reply(address, *self.open(*args))
         
         elif address == '/nsm/client/save':

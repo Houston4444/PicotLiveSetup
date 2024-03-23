@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, TypedDict, Union
 from mentat import Engine, Route
 from non_arch_delay import NonXtArchDelay
 from non_multip import NonXtMultip
+from nsm_mentator import NsmMentator
 from seq192 import Seq192
 from impact import Impact
 from leonardo import Leonardo
@@ -19,6 +20,7 @@ class ModulesDict(TypedDict):
     non_xt_archdelay: NonXtArchDelay
     ardour: Ardour
     carla: Carla
+    nsm_client: NsmMentator
 
 
 class MainRoute(Route):
@@ -28,7 +30,7 @@ class MainRoute(Route):
         super().__init__(name)
         
         self.songs = SONGS
-        
+    
     def led_tempo(self):
         leonardo: Leonardo = self.engine.modules['pedalboard']
         while True:
@@ -75,6 +77,10 @@ class MainEngine(Engine):
         
         self._route = MainRoute('routinette')
         self._route.activate()
+    
+    def stop(self):
+        self.modules['carla'].disconnect_tcp()
+        super().stop()
     
     def add_main_route(self):
         self.add_route(self._route)
