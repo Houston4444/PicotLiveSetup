@@ -12,8 +12,8 @@ from sooperlooper import SooperLooper
 from seq192 import Seq192
 from ardour import Ardour
 from carla import Carla
-from songs import SongParameters, Avale
-from nsm_mentator import NsmMentator
+from songs import SONGS
+from nsm_mentator import NsmMentator, OptionalGui
 from main_engine import MainEngine
 
 _logger = logging.getLogger(__name__)
@@ -39,10 +39,11 @@ for module in (
 
 if os.getenv('NSM_URL'):
     engine.add_module(NsmMentator())
+    engine.add_module(OptionalGui())
 
 engine.add_main_route()
 
-engine.set_song(Avale())
+engine.set_song(SONGS[0])
 engine.autorestart()
 
 # signal.signal(signal.SIGINT, signal_handler)
@@ -52,4 +53,4 @@ engine.autorestart()
 
 engine.start()
 
-engine.modules['carla'].disconnect_tcp()
+engine.modules['carla'].stop_osc_tcp()

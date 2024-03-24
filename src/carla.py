@@ -322,13 +322,19 @@ class Carla(Module):
         self._writing_preset_name = 'indéfini'
         
         self.osc_tcp_server = OscTcpServer()
+        # self.osc_tcp_server.start()
+
+    def start_osc_tcp(self):
         self.osc_tcp_server.start()
+
+    def stop_osc_tcp(self):
+        self.osc_tcp_server.stop()
 
     def set_song(self, song: SongParameters):
         client_path = self.engine.modules['nsm_client'].client_path
         
-        if isinstance(song, Orage):
-            self.osc_tcp_server.load_preset(client_path / 'rololo.json', full=True)
+        # if isinstance(song, Orage):
+        #     self.osc_tcp_server.load_preset(client_path / 'rololo.json', full=True)
 
     def start_snapshot(self, preset_name: str):
         self._writing_preset_name = preset_name
@@ -338,9 +344,7 @@ class Carla(Module):
     # def route(self, address: str, args: list):
     #     print('repmmmms', address, args)
 
-    def route(self, address: str, args: list):
-        print('aeizff', address, args)
-        
+    def route(self, address: str, args: list):        
         if address != '/reply' or not args:
             return
 
@@ -539,10 +543,6 @@ class Carla(Module):
                  
             all_plugins[pg_index] = plugin
             
-    def disconnect_tcp(self):
-        print('disconnect_tcp')
-        time.sleep(0.010)
-        self.osc_tcp_server.stop()
-        time.sleep(0.010)
+    
             
         

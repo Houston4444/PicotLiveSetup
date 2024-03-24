@@ -34,4 +34,6 @@ Pédale d'expression à rebrancher dans l'Arduino
 
 XX_ et changement en début de cycle
 
-Hydrogen à remplacer (trop instable)
+Hydrogen à gérer
+
+revoir le carla.py (effacer beaucoup)

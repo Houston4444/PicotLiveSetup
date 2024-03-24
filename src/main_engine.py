@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, TypedDict, Union
 from mentat import Engine, Route
 from non_arch_delay import NonXtArchDelay
 from non_multip import NonXtMultip
-from nsm_mentator import NsmMentator
+from nsm_mentator import NsmMentator, OptionalGui
 from seq192 import Seq192
 from impact import Impact
 from leonardo import Leonardo
@@ -21,6 +21,7 @@ class ModulesDict(TypedDict):
     ardour: Ardour
     carla: Carla
     nsm_client: NsmMentator
+    optional_gui: OptionalGui
 
 
 class MainRoute(Route):
@@ -77,9 +78,11 @@ class MainEngine(Engine):
         
         self._route = MainRoute('routinette')
         self._route.activate()
+        
+        self._song_index = 0
     
     def stop(self):
-        self.modules['carla'].disconnect_tcp()
+        self.modules['carla'].stop_osc_tcp()
         super().stop()
     
     def add_main_route(self):
@@ -122,10 +125,13 @@ class MainEngine(Engine):
     def set_song(self, song: Union[SongParameters, int]):
         if isinstance(song, int):
             if song < len(SONGS):
+                self._song_index = song
                 song = SONGS[song]
             else:
                 self.logger.critical(f"Song {song} n'existe pas !")
                 return
+        else:
+            self._song_index = SONGS.index(song)
         
         self.modules['seq192'].set_song(song)
         self.modules['impact'].set_song(song)
@@ -133,3 +139,4 @@ class MainEngine(Engine):
         self.modules['non_xt_archdelay'].set_song(song)
         self.modules['ardour'].set_song(song)
         self.modules['carla'].set_song(song)
+        self.modules['optional_gui'].set_song(song)
