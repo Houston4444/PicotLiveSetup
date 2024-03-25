@@ -3,13 +3,12 @@ import time
 from typing import TYPE_CHECKING
 from impact import Impact
 
-from mentat import Module
+from rmodule import RModule
 
 if TYPE_CHECKING:
     from main_engine import MainEngine
     from sooperlooper import SooperLooper
     from seq192 import Seq192
-    from non_multip import NonXtMultip
 
 
 class FsButton(IntFlag):
@@ -38,7 +37,7 @@ class Vfs5Controls(Enum):
         return Vfs5Controls(1 + self.value % 3)
 
 
-class Leonardo(Module):
+class Leonardo(RModule):
     engine: 'MainEngine'
     
     def __init__(self, name, protocol=None, port=None, parent=None):
@@ -106,24 +105,18 @@ class Leonardo(Module):
         if not fs_on:
             return
         
-        print('RIRIRI', fsb)
-        
-        seq192: 'Seq192' = self.engine.modules['seq192']
-        
         if fsb is FsButton.FS_1:
-            seq192.set_big_sequence(0)
+            self.engine.set_big_sequence(0)
         elif fsb is FsButton.FS_2:
-            seq192.set_big_sequence(1)
+            self.engine.set_big_sequence(1)
         elif fsb is FsButton.FS_3:
-            seq192.set_big_sequence(2)
+            self.engine.set_big_sequence(2)
         elif fsb is FsButton.FS_4:
-            seq192.set_big_sequence(3)
+            self.engine.set_big_sequence(3)
     
     def _vfs5_control_songs(self, fsb: FsButton, fs_on: bool):
         if not fs_on:
             return
-
-        seq192: 'Seq192' = self.engine.modules['seq192']
         
         if fsb is FsButton.FS_1:
             self.engine.set_song(0)
@@ -132,11 +125,11 @@ class Leonardo(Module):
         elif fsb is FsButton.FS_3:
             self.engine.set_song(2)
         elif fsb is FsButton.FS_4:
-            self.engine.set_song(3)
-            
-        print('SONG IS ', seq192._song)
-        
+            self.engine.set_song(3)        
 
+    def get_vfs5_control_name(self) -> str:
+        return self._vfs5_controls.name
+    
     def _vfs5_control(self, cc_num: int, cc_value: int):
         fsb = FsButton(2 ** (cc_num - 90))
         fs_on = bool(cc_value > 63)
@@ -174,7 +167,9 @@ class Leonardo(Module):
         elif self._vfs5_controls is Vfs5Controls.SOOPERLOOPER:
             self.send('/note_on', 0, 0x26, 100)
             self.send('/note_on', 0, 0x27, 100)
-            # pass
+
+        self.engine.modules['optional_gui'].set_vfs5_control(
+            self._vfs5_controls.name)
 
     def _kick_pressed(self, note_on: bool, note: int, velo: int):
         seq192: 'Seq192' = self.engine.modules['seq192']

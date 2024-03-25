@@ -1,6 +1,6 @@
 
 from typing import Union
-from mentat import Module
+from rmodule import RModule
 from enum import IntEnum
 
 from songs import SongParameters
@@ -20,7 +20,7 @@ OSC_SYMBOL_DICT = {
 
 
 
-class NonXtMultip(Module):
+class NonXtMultip(RModule):
     def __init__(self, name, protocol=None, port=None, parent=None):
         super().__init__(name, protocol, port, parent)
 
@@ -31,7 +31,6 @@ class NonXtMultip(Module):
 
     def set_song(self, song: SongParameters):
         beat_duration = 1000 * 60 / song.average_tempo
-        print('SOijef set song', beat_duration, beat_duration * song.kick_spacing_beats, beat_duration * song.open_time_beats)
         self._send_pg(Param.KICK_SPACING, beat_duration * song.kick_spacing_beats)
         self._send_pg(Param.OPEN_TIME, beat_duration * song.open_time_beats)
         self._send_pg(Param.KICK_SNARE_DEMUTE, int(song.kick_snare_demute))

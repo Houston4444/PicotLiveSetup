@@ -4,7 +4,7 @@ import json
 from typing import TYPE_CHECKING, Union
 
 
-from mentat import Module
+from rmodule import RModule
 if TYPE_CHECKING:
     from main_engine import MainEngine
 
@@ -17,9 +17,7 @@ class VeloSeq:
     vel_max: int
 
 
-class Seq192Base(Module):
-    engine: 'MainEngine'
-
+class Seq192Base(RModule):
     def __init__(self, name: str, port: int):
         super().__init__(name, protocol='osc', port=port)
         self._regular_seqs = [list[int]() for i in range(14)]

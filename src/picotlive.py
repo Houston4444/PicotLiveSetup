@@ -53,4 +53,4 @@ engine.autorestart()
 
 engine.start()
 
-engine.modules['carla'].stop_osc_tcp()
+# engine.modules['carla'].stop_osc_tcp()

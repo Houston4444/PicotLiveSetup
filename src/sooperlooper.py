@@ -1,6 +1,6 @@
-from mentat import Module
+from rmodule import RModule
 
-class SooperLooper(Module):
+class SooperLooper(RModule):
     def __init__(self, name, protocol=None, port=None, parent=None):
         super().__init__(name, protocol, port, parent)
         

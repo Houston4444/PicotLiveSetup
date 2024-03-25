@@ -2,8 +2,8 @@ import sys
 import signal
 import logging
 import liblo
-from PyQt5.QtWidgets import QApplication, QDialog
-from PyQt5.QtCore import QTimer, pyqtSignal, pyqtSlot
+from PyQt5.QtWidgets import QApplication, QDialog, QCompleter
+from PyQt5.QtCore import QTimer, pyqtSignal, pyqtSlot, QSettings
 
 from ui.raymentat import Ui_Dialog
 
@@ -15,20 +15,42 @@ def signal_handler(sig, frame):
     
 main_dict = {
     'songs': list[str](),
-    'song_index': 0
+    'song_index': 0,
+    'big_sequence_index': 0,
+    'all_vfs5_controls': list[str](),
+    'vfs5_controls': 'SEQUENCE',
+    'carla_tcp_ready': False,
+    'carla_presets': list[str]()
 }
 
 
 class MainWin(QDialog):
     fill_songs = pyqtSignal()
     song_changed = pyqtSignal()
-    
+    big_sequence_changed = pyqtSignal()
+    fill_vfs5_controls = pyqtSignal()
+    vfs5_controls_changed = pyqtSignal()
+    carla_tcp_ready = pyqtSignal()
+    carla_presets_changed = pyqtSignal()
+
     def __init__(self):
         super().__init__()
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         self.fill_songs.connect(self._fill_songs)
         self.song_changed.connect(self._song_changed)
+        self.big_sequence_changed.connect(self._big_sequence_changed)
+        self.fill_vfs5_controls.connect(self._fill_vfs5_controls)
+        self.vfs5_controls_changed.connect(self._vfs5_controls_changed)
+        
+        self.ui.comboBoxCurrentSong.currentIndexChanged.connect(
+            self._songbox_index_changed)
+        self.ui.spinBox.valueChanged.connect(
+            self._spin_big_sequence_changed)
+        self.ui.comboBoxArduinoMode.currentTextChanged.connect(
+            self._arduinobox_text_changed)
+        self.ui.lineEdit.textChanged.connect(self._carla_preset_line_edited)
+        self.ui.toolButton.clicked.connect(self._save_preset_clicked)
         
     @pyqtSlot()
     def _fill_songs(self):
@@ -39,7 +61,51 @@ class MainWin(QDialog):
     @pyqtSlot()
     def _song_changed(self):
         self.ui.comboBoxCurrentSong.setCurrentIndex(main_dict['song_index'])
+        
+    @pyqtSlot()
+    def _big_sequence_changed(self):
+        self.ui.spinBox.setValue(main_dict['big_sequence_index'])
     
+    @pyqtSlot()
+    def _vfs5_controls_changed(self):
+        self.ui.comboBoxArduinoMode.setCurrentText(main_dict['vfs5_controls'])
+    
+    @pyqtSlot(int)
+    def _songbox_index_changed(self, new_index: int):
+        server.sendE('/raymentat/change_song', new_index)
+    
+    @pyqtSlot(int)
+    def _spin_big_sequence_changed(self, new_big_sequence: int):
+        server.sendE('/raymentat/change_big_sequence', new_big_sequence)
+
+    @pyqtSlot()
+    def _fill_vfs5_controls(self):
+        self.ui.comboBoxArduinoMode.clear()
+        for vfs5_controls in main_dict['all_vfs5_controls']:
+            self.ui.comboBoxArduinoMode.addItem(vfs5_controls)
+
+    @pyqtSlot(str)
+    def _arduinobox_text_changed(self, new_text: str):
+        server.sendE('/raymentat/change_vfs5_controls', new_text)
+        
+    @pyqtSlot()
+    def _carla_presets_changed(self):
+        self.ui.lineEdit.setCompleter(QCompleter(main_dict['carla_presets']))
+    
+    @pyqtSlot(str)
+    def _carla_preset_line_edited(self, text: str):
+        self.ui.toolButton.setEnabled(bool(
+            main_dict['carla_tcp_ready'] and self.ui.lineEdit.text()))
+    
+    @pyqtSlot()
+    def _carla_tcp_ready(self):
+        self.ui.toolButton.setEnabled(bool(
+            main_dict['carla_tcp_ready'] and self.ui.lineEdit.text()))
+    
+    @pyqtSlot()
+    def _save_preset_clicked(self):
+        print('yopplass')
+        server.sendE('/raymentat/save_carla_preset', self.ui.lineEdit.text())
 
 
 class OscServer(liblo.ServerThread):
@@ -55,26 +121,54 @@ class OscServer(liblo.ServerThread):
         self.sendE('/raymentat/jarrive')
         
     def stop(self):
-        super().stop()
         self.sendE('/raymentat/jepars')
+        super().stop()
     
     @liblo.make_method('/raymentat_gui/songs', None)
     def _get_songs(self, path, args: list[str]):
         main_dict['songs'] = args.copy()
         main_win.fill_songs.emit()
-        
+    
     @liblo.make_method('/raymentat_gui/current_song', 'i')
-    def _get_current_song(self, path, args: list[str]):
+    def _get_current_song(self, path, args: list[int]):
         main_dict['song_index'] = args[0]
         main_win.song_changed.emit()
-
-
-
+        
+    @liblo.make_method('/raymentat_gui/current_big_sequence', 'i')
+    def _get_current_big_sequence(self, path, args: list[int]):
+        main_dict['big_sequence_index'] = args[0]
+        main_win.big_sequence_changed.emit()
+    
+    @liblo.make_method('/raymentat_gui/all_vfs5_controls', None)
+    def _get_vfs5_controls(self, path, args: list[str]):
+        main_dict['all_vfs5_controls'] = args.copy()
+        main_win.fill_vfs5_controls.emit()
+    
+    @liblo.make_method('/raymentat_gui/current_vfs5_control', 's')
+    def _get_current_vfs5_control(self, path, args: list[str]):
+        main_dict['vfs5_controls'] = args[0]
+        main_win.vfs5_controls_changed.emit()
+    
+    @liblo.make_method('/raymentat_gui/carla_presets', None)
+    def _get_carla_presets(self, path, args: list[str]):
+        main_dict['carla_presets'] = args.copy()
+        main_win.carla_presets_changed.emit()
+    
+    @liblo.make_method('/raymentat_gui/carla_tcp_ready', 'i')
+    def _get_carla_tcp_ready(self, path, args: list[int]):
+        main_dict['carla_tcp_ready'] = bool(args[0])
+        main_win.carla_tcp_ready.emit()
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    app.setOrganizationName('RayMentatPicot')
+    settings = QSettings()
+
     main_win = MainWin()
+    geom = settings.value('MainWindow/geometry')
+    if geom:
+        main_win.restoreGeometry(geom)
     
     server = OscServer()
     server.start()
@@ -89,6 +183,7 @@ if __name__ == '__main__':
     
     server.stop()
     
+    settings.setValue('MainWindow/geometry', main_win.saveGeometry())
     _logger.info('Main win exit')
     
     

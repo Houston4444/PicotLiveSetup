@@ -6,9 +6,10 @@ import threading
 import logging
 import json
 import liblo
+import os
 from pathlib import Path
 
-from mentat import Module
+from rmodule import RModule
 from songs import SongParameters, Orage
 
 if TYPE_CHECKING:
@@ -81,6 +82,7 @@ class OscTcpServer(liblo.ServerThread):
         super().stop()
         time.sleep(0.005)
         self.free()
+        time.sleep(0.005)
 
     def carla_send(self, *args):
         self.send(self.carla_addr, *args)
@@ -221,7 +223,7 @@ class OscTcpServer(liblo.ServerThread):
         plugin_id, plg_type, category, hints, unique_id, \
             opt_available, opt_enable, name, filename, icon_name, real_name, \
                 label, maker, copyright = args
-        # print('chouupi plugin', plugin_id, label, name, filename)
+
         plugin = self.get_plugin(plugin_id)
         plugin.name = name
         plugin.label = label
@@ -306,7 +308,7 @@ class OscTcpServer(liblo.ServerThread):
             return
         
 
-class Carla(Module):
+class Carla(RModule):
     engine: 'MainEngine'
     PREPATH = '/Carla_Multi_Client_Carla_7'
     
@@ -322,16 +324,40 @@ class Carla(Module):
         self._writing_preset_name = 'indéfini'
         
         self.osc_tcp_server = OscTcpServer()
+        self.is_tcp_running = False
         # self.osc_tcp_server.start()
 
     def start_osc_tcp(self):
+        print('START CARLA TCP')
         self.osc_tcp_server.start()
+        self.is_tcp_running = True
+        self.engine.modules['optional_gui'].set_carla_tcp_ready(True)
 
     def stop_osc_tcp(self):
+        print('STOP CARLA TCP')
+        self.is_tcp_running = False
+        self.engine.modules['optional_gui'].set_carla_tcp_ready(False)
         self.osc_tcp_server.stop()
 
+    def _get_presets_dir(self) -> Path:
+        presets_dir = (self.engine.modules['nsm_client'].client_path
+                       / 'CarlaPresets')
+        presets_dir.mkdir(parents=True, exist_ok=True)
+        return presets_dir
+    
+    def list_presets(self) -> list[str]:
+        presets_dir = self._get_presets_dir()
+        return [f for f in os.listdir(presets_dir)
+                if f.endswith('.json')]
+
+    def save_preset(self, preset_name: str):
+        presets_dir = self._get_presets_dir()
+        self.osc_tcp_server.save_preset(
+            presets_dir / f'{preset_name}.json', full=True)
+
     def set_song(self, song: SongParameters):
-        client_path = self.engine.modules['nsm_client'].client_path
+        pass
+        # client_path = self.engine.modules['nsm_client'].client_path
         
         # if isinstance(song, Orage):
         #     self.osc_tcp_server.load_preset(client_path / 'rololo.json', full=True)

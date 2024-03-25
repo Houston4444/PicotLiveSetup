@@ -48,8 +48,6 @@ class BaseBeatSeq:
 
 
 class Seq192(Seq192Base):
-    engine: 'MainEngine'
-
     def __init__(self):
         super().__init__('seq192', 2354)
         # super().__init__('seq192', protocol='osc', port=2354)

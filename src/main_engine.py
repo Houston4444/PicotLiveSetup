@@ -4,6 +4,7 @@ from mentat import Engine, Route
 from non_arch_delay import NonXtArchDelay
 from non_multip import NonXtMultip
 from nsm_mentator import NsmMentator, OptionalGui
+from rmodule import RModule
 from seq192 import Seq192
 from impact import Impact
 from leonardo import Leonardo
@@ -79,10 +80,12 @@ class MainEngine(Engine):
         self._route = MainRoute('routinette')
         self._route.activate()
         
-        self._song_index = 0
+        self.song_index = 0
+        self.big_sequence = 0
     
     def stop(self):
         self.modules['carla'].stop_osc_tcp()
+        self.modules['nsm_client'].save_tmp_file()
         super().stop()
     
     def add_main_route(self):
@@ -125,18 +128,21 @@ class MainEngine(Engine):
     def set_song(self, song: Union[SongParameters, int]):
         if isinstance(song, int):
             if song < len(SONGS):
-                self._song_index = song
+                self.song_index = song
                 song = SONGS[song]
             else:
                 self.logger.critical(f"Song {song} n'existe pas !")
                 return
         else:
-            self._song_index = SONGS.index(song)
+            self.song_index = SONGS.index(song)
         
-        self.modules['seq192'].set_song(song)
-        self.modules['impact'].set_song(song)
-        self.modules['non_xt_multip'].set_song(song)
-        self.modules['non_xt_archdelay'].set_song(song)
-        self.modules['ardour'].set_song(song)
-        self.modules['carla'].set_song(song)
-        self.modules['optional_gui'].set_song(song)
+        for module in self.modules.values():
+            if isinstance(module, RModule):
+                module.set_song(song)
+
+    def set_big_sequence(self, big_sequence: int):
+        self.big_sequence = big_sequence
+
+        for module in self.modules.values():
+            if isinstance(module, RModule):
+                module.set_big_sequence(big_sequence)

@@ -1,10 +1,10 @@
 from typing import TYPE_CHECKING
-from mentat import Module
+from rmodule import RModule
 
 if TYPE_CHECKING:
     from seq192 import Seq192
 
-class RandomListener(Module):
+class RandomListener(RModule):
     def __init__(self, name: str):
         super().__init__(name, protocol='midi')
         

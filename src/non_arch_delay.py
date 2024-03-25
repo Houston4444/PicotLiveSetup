@@ -1,6 +1,6 @@
 
 from typing import TYPE_CHECKING, Union
-from mentat import Module
+from rmodule import RModule
 from enum import IntEnum
 
 from songs import SongParameters
@@ -22,9 +22,7 @@ OSC_SYMBOL_DICT = {
 
 
 
-class NonXtArchDelay(Module):
-    engine: 'MainEngine'
-    
+class NonXtArchDelay(RModule):    
     def __init__(self, name, protocol=None, port=None, parent=None):
         super().__init__(name, protocol, port, parent)
         self.params = dict[SongParameters, dict[str, float]]()

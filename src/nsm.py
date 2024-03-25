@@ -27,6 +27,18 @@ class BrotherClient:
             return True
         return False
     
+    def as_dict(self) -> dict:
+        return {'jack_client_name': self.jack_client_name,
+                'started_at_start': self.started_at_start,
+                'last_event': self.last_event}
+        
+    def from_dict(self, client_id: str, brodict: dict) -> 'BrotherClient':
+        brother = BrotherClient(client_id)
+        brother.jack_client_name = brodict['jack_client_name']
+        brother.started_at_start = brodict['started_at_start']
+        brother.last_event = brodict['last_event']
+        return brother
+
 
 class NsmClient(Module):
     def __init__(self, nsm_name: str, executable: str, capabilities: str):
@@ -55,26 +67,39 @@ class NsmClient(Module):
         if not tmp_path.exists():
             tmp_path.mkdir(parents=True)
 
-        tmp_file = str(tmp_path / 'nsm_port')
+        self._tmp_file = str(tmp_path / 'nsm_port')
                 
         already_started = True
         
         try:
-            with open(tmp_file, 'r') as f:
+            with open(self._tmp_file, 'r') as f:
                 json_dict = json.load(f)
                 assert json_dict['nsm_port'] == self.port
                 self.client_path = Path(json_dict['client_path'])
         except:
             already_started = False
         
-        if not already_started:        
+        if already_started:
+            self.send('/nsm/server/monitor_reset')
+        else:        
             self.send('/nsm/server/announce', self.nsm_name,
                       self.capabilities, self.executable, 1, 0, os.getpid())
                 
-            with open(tmp_file, 'w') as f:
+            with open(self._tmp_file, 'w') as f:
                 f.write(json.dumps(
                     {'nsm_port': self.port,
                      'client_path': str(self.client_path)}))
+    
+    def save_tmp_file(self):
+        with open(self._tmp_file, 'w') as f:
+            brothers_dict = {}
+            for brother_id, brother in self.brothers.items():
+                brothers_dict[brother_id] = brother.as_dict()
+
+            f.write(json.dumps(
+                {'nsm_port': self.port,
+                 'client_path': str(self.client_path),
+                 'brothers': brothers_dict}))
     
     def _reply(self, address: str, err: int, msg: str):
         if err:
@@ -111,6 +136,7 @@ class NsmClient(Module):
         elif address == '/nsm/client/monitor/client_state':
             client_id, jack_client_name, is_started = args
             if not client_id:
+                self.monitor_client_states_finished()
                 return
             
             brother = BrotherClient(client_id)
@@ -145,3 +171,5 @@ class NsmClient(Module):
     def brother_event(self, client_id: str, event: str):
         ...
     
+    def monitor_client_states_finished(self):
+        ...
