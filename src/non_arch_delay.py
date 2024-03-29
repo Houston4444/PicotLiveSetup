@@ -40,7 +40,6 @@ class NonXtArchDelay(RModule):
         # self._send_pg(Param.OPEN_TIME, beat_duration * song.open_time_beats)
         # self._send_pg(Param.KICK_SNARE_DEMUTE, int(song.kick_snare_demute))
         url = f"osc.udp://houstonbureau:{self.engine.port}/"
-        print('mmqq', self.name, url)
         self.send('/signal/hello', self.name, url)
         
         self.send('/signal/list')
@@ -48,20 +47,16 @@ class NonXtArchDelay(RModule):
     def route(self, address: str, args: list):
         # print('lls', address, args)
         if address != '/reply':
-            print('ziji', address, args)
             return
         
         if len(args) != 6:
-            print('pamls', address, args)
             if len(args) == 1 and args[0] == '/signal/list':
-                print('connect all')
                 self.connect_all()
             return
         
         signal_path, path, direction, min, max, default = args
         
         if signal_path != '/signal/list':
-            print('chcaoo', args)
             return
         
         path: str
@@ -78,7 +73,6 @@ class NonXtArchDelay(RModule):
         
         # print('zaza', address, args)
         short_path = path.rpartition('/')[2]
-        print('slip', short_path, default)
         # dicti = self.params.get(self.engine)
         # self.send('/signal/connect', '/marrata', path)
         self._all_paths.add(path)

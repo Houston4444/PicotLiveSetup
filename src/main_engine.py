@@ -1,16 +1,19 @@
+import json
 from typing import TYPE_CHECKING, TypedDict, Union
 
 from mentat import Engine, Route
 from non_arch_delay import NonXtArchDelay
+from hydrogen import Hydrogen
 from non_multip import NonXtMultip
 from nsm_mentator import NsmMentator, OptionalGui
 from rmodule import RModule
 from seq192 import Seq192
 from impact import Impact
-from leonardo import Leonardo
+from leonardo import Leonardo, Vfs5Controls
 from ardour import Ardour
 from songs import SongParameters, SONGS
 from carla import Carla
+from jack_tempo import JackTempoSetter
 
 
 class ModulesDict(TypedDict):
@@ -23,6 +26,8 @@ class ModulesDict(TypedDict):
     carla: Carla
     nsm_client: NsmMentator
     optional_gui: OptionalGui
+    jack_tempo: JackTempoSetter
+    hydrogen: Hydrogen
 
 
 class MainRoute(Route):
@@ -56,7 +61,6 @@ class MainRoute(Route):
             
     def change_next_signature(self, signature: str):
         self.wait_next_cycle()
-        print('set the signiatture', signature)
         self.engine.set_time_signature(signature)
     
     def count_beats(self):
@@ -80,13 +84,58 @@ class MainEngine(Engine):
         self._route = MainRoute('routinette')
         self._route.activate()
         
+        self._tmp_filename = '.picot_restart.json'
+        
         self.song_index = 0
         self.big_sequence = 0
     
+    def restart(self):
+        tmp_path = self.modules['nsm_client'].client_path / self._tmp_filename
+        restart_dict = {
+            'song_index': self.song_index,
+            'big_sequence': self.big_sequence,
+            'arduino_mode': self.modules['pedalboard'].get_vfs5_control_name()
+        }
+
+        with open(tmp_path, 'w') as f:
+            json.dump(restart_dict, f)
+        super().restart()
+    
+    def start(self):
+        tmp_path = self.modules['nsm_client'].client_path / self._tmp_filename
+        if tmp_path.exists():
+            with open(tmp_path, 'r') as f:
+                restart_dict = json.load(f)
+
+            self.set_song(restart_dict['song_index'])
+            self.set_big_sequence(restart_dict['big_sequence'])
+            self.modules['pedalboard'].change_vfs5_controls(
+                Vfs5Controls.from_name(restart_dict['arduino_mode']))
+            
+            # remove the tmp file
+            tmp_path.unlink()
+        else:
+            self.set_song(0)
+            self.set_big_sequence(0)
+            self.modules['pedalboard'].change_vfs5_controls(Vfs5Controls.SONG)
+        
+        super().start()
+    
     def stop(self):
-        self.modules['carla'].stop_osc_tcp()
-        self.modules['nsm_client'].save_tmp_file()
+        for module in self.modules.values():
+            if isinstance(module, RModule):
+                module.quit()
+
+        self.modules['nsm_client'].quit()
         super().stop()
+    
+    def set_tempo(self, bpm: float):
+        super().set_tempo(bpm)
+        # self.modules['jack_tempo'].set_tempo(bpm)
+        self.modules['carla'].set_tempo(bpm)
+        self.modules['optional_gui'].set_tempo(bpm)
+        self.modules['hydrogen'].set_tempo(bpm)
+        # self.modules['seq192'].set_tempo(bpm)
     
     def add_main_route(self):
         self.add_route(self._route)
@@ -135,6 +184,8 @@ class MainEngine(Engine):
                 return
         else:
             self.song_index = SONGS.index(song)
+        
+        self.set_tempo(song.average_tempo)
         
         for module in self.modules.values():
             if isinstance(module, RModule):

@@ -14,7 +14,8 @@
    <string>RayMentat Picot</string>
   </property>
   <property name="windowIcon">
-   <iconset theme="clock"/>
+   <iconset theme="clock">
+    <normaloff>.</normaloff>.</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -32,6 +33,16 @@
    </item>
    <item>
     <layout class="QGridLayout" name="gridLayout">
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Tempo</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label">
        <property name="sizePolicy">
@@ -45,16 +56,6 @@
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QComboBox" name="comboBoxCurrentSong">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
        </property>
       </widget>
      </item>
@@ -74,6 +75,13 @@
        </property>
       </widget>
      </item>
+     <item row="4" column="1">
+      <widget class="QLabel" name="labelCurrentTempo">
+       <property name="text">
+        <string>120.00</string>
+       </property>
+      </widget>
+     </item>
      <item row="3" column="0">
       <widget class="QLabel" name="label_3">
        <property name="sizePolicy">
@@ -90,7 +98,24 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
+     <item row="4" column="2">
+      <widget class="QPushButton" name="pushButtonSetOnJack">
+       <property name="text">
+        <string>Set on Jack</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1" colspan="2">
+      <widget class="QComboBox" name="comboBoxArduinoMode">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1" colspan="2">
       <widget class="QSpinBox" name="spinBox">
        <property name="sizePolicy">
         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -100,8 +125,8 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
-      <widget class="QComboBox" name="comboBoxArduinoMode">
+     <item row="0" column="1" colspan="2">
+      <widget class="QComboBox" name="comboBoxCurrentSong">
        <property name="sizePolicy">
         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
          <horstretch>0</horstretch>

@@ -22,7 +22,10 @@ class OptionalGui(RModule):
     def __init__(self):
         super().__init__('optional_gui', protocol='osc', port=4324)
         
-    def route(self, address: str, args: list):        
+    def route(self, address: str, args: list):
+        if not self.engine.modules['nsm_client'].gui_pid:
+            return
+
         if address == '/raymentat/jarrive':
             self.send('/raymentat_gui/songs', *[str(song) for song in SONGS])
             self.send('/raymentat_gui/current_song', self.engine.song_index)
@@ -36,10 +39,12 @@ class OptionalGui(RModule):
                       *self.engine.modules['carla'].list_presets())
             self.send('/raymentat_gui/carla_tcp_ready',
                       int(self.engine.modules['carla'].is_tcp_running))
+            self.send('/raymentat_gui/tempo', self.engine.tempo)
+            self.send('/raymentat_gui/toutestpret')
 
         elif address == '/raymentat/jepars':
             self.engine.modules['nsm_client']._send_gui_state(False)
-            
+
         elif address == '/raymentat/change_song':
             song_index = args[0]
             if self.engine.song_index != song_index:
@@ -74,21 +79,22 @@ class OptionalGui(RModule):
         
     def set_carla_tcp_ready(self, ready:bool):
         self.send('/raymentat_gui/carla_tcp_ready', int(ready))
+        
+    def set_tempo(self, bpm: float):
+        self.send('/raymentat_gui/tempo', bpm)
 
 
 class NsmMentator(NsmClient):
     engine: 'MainEngine'
         
     def __init__(self):
+        self.gui_pid = 0
         super().__init__(
             'ElMentator', 'el_mentator', ':optional-gui:monitor:')        
-        self.gui_pid = 0
     
-    def set_song(self, song: SongParameters):
-        ...
-    
-    def set_big_sequence(self, big_sequence: int):
-        ...
+    def quit(self):
+        self.save_tmp_file()
+        self.hide_optional_gui()
     
     def save(self) -> tuple[int, str]:
         seq192: Seq192 = self.engine.modules['seq192']
@@ -109,6 +115,7 @@ class NsmMentator(NsmClient):
     def hide_optional_gui(self):
         if self.gui_pid:
             os.kill(self.gui_pid, signal.SIGTERM)
+            self.gui_pid = 0
         self._send_gui_state(False)
         
     def _start_brothers(self):

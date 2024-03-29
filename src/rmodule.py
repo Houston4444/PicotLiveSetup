@@ -17,3 +17,6 @@ class RModule(Module):
         
     def set_big_sequence(self, big_sequence: int):
         ...
+        
+    def quit(self):
+        ...

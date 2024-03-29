@@ -1,7 +1,9 @@
+
 import sys
 import signal
 import logging
 import liblo
+import subprocess
 from PyQt5.QtWidgets import QApplication, QDialog, QCompleter
 from PyQt5.QtCore import QTimer, pyqtSignal, pyqtSlot, QSettings
 
@@ -20,11 +22,13 @@ main_dict = {
     'all_vfs5_controls': list[str](),
     'vfs5_controls': 'SEQUENCE',
     'carla_tcp_ready': False,
-    'carla_presets': list[str]()
+    'carla_presets': list[str](),
+    'tempo': 120.00
 }
 
 
 class MainWin(QDialog):
+    toutestpret = pyqtSignal()
     fill_songs = pyqtSignal()
     song_changed = pyqtSignal()
     big_sequence_changed = pyqtSignal()
@@ -32,6 +36,7 @@ class MainWin(QDialog):
     vfs5_controls_changed = pyqtSignal()
     carla_tcp_ready = pyqtSignal()
     carla_presets_changed = pyqtSignal()
+    tempo_changed = pyqtSignal()
 
     def __init__(self):
         super().__init__()
@@ -42,7 +47,15 @@ class MainWin(QDialog):
         self.big_sequence_changed.connect(self._big_sequence_changed)
         self.fill_vfs5_controls.connect(self._fill_vfs5_controls)
         self.vfs5_controls_changed.connect(self._vfs5_controls_changed)
-        
+        self.carla_tcp_ready.connect(self._carla_tcp_ready)
+        self.carla_presets_changed.connect(self._carla_presets_changed)
+        self.tempo_changed.connect(self._tempo_changed)
+        self.toutestpret.connect(self._connect_widgets)
+    
+    # connected to OSC messages
+    
+    @pyqtSlot()
+    def _connect_widgets(self):
         self.ui.comboBoxCurrentSong.currentIndexChanged.connect(
             self._songbox_index_changed)
         self.ui.spinBox.valueChanged.connect(
@@ -51,7 +64,7 @@ class MainWin(QDialog):
             self._arduinobox_text_changed)
         self.ui.lineEdit.textChanged.connect(self._carla_preset_line_edited)
         self.ui.toolButton.clicked.connect(self._save_preset_clicked)
-        
+    
     @pyqtSlot()
     def _fill_songs(self):
         self.ui.comboBoxCurrentSong.clear()
@@ -67,30 +80,47 @@ class MainWin(QDialog):
         self.ui.spinBox.setValue(main_dict['big_sequence_index'])
     
     @pyqtSlot()
-    def _vfs5_controls_changed(self):
-        self.ui.comboBoxArduinoMode.setCurrentText(main_dict['vfs5_controls'])
-    
-    @pyqtSlot(int)
-    def _songbox_index_changed(self, new_index: int):
-        server.sendE('/raymentat/change_song', new_index)
-    
-    @pyqtSlot(int)
-    def _spin_big_sequence_changed(self, new_big_sequence: int):
-        server.sendE('/raymentat/change_big_sequence', new_big_sequence)
-
-    @pyqtSlot()
     def _fill_vfs5_controls(self):
         self.ui.comboBoxArduinoMode.clear()
         for vfs5_controls in main_dict['all_vfs5_controls']:
             self.ui.comboBoxArduinoMode.addItem(vfs5_controls)
-
-    @pyqtSlot(str)
-    def _arduinobox_text_changed(self, new_text: str):
-        server.sendE('/raymentat/change_vfs5_controls', new_text)
-        
+    
+    @pyqtSlot()
+    def _vfs5_controls_changed(self):
+        self.ui.comboBoxArduinoMode.setCurrentText(main_dict['vfs5_controls'])
+    
+    @pyqtSlot()
+    def _tempo_changed(self):
+        self.ui.labelCurrentTempo.setText('%.2f' % main_dict['tempo'])
+    
     @pyqtSlot()
     def _carla_presets_changed(self):
         self.ui.lineEdit.setCompleter(QCompleter(main_dict['carla_presets']))
+    
+    @pyqtSlot()
+    def _carla_tcp_ready(self):
+        self.ui.toolButton.setEnabled(bool(
+            main_dict['carla_tcp_ready'] and self.ui.lineEdit.text()))
+    
+    # connected to widgets
+    
+    @pyqtSlot(int)
+    def _songbox_index_changed(self, new_index: int):
+        if new_index == main_dict['song_index']:
+            return
+        server.sendE('/raymentat/change_song', new_index)
+    
+    @pyqtSlot(int)
+    def _spin_big_sequence_changed(self, new_big_sequence: int):
+        if new_big_sequence == main_dict['big_sequence_index']:
+            return
+        server.sendE('/raymentat/change_big_sequence', new_big_sequence)
+
+    @pyqtSlot(str)
+    def _arduinobox_text_changed(self, new_text: str):        
+        if new_text == main_dict['vfs5_controls']:
+            return
+        server.sendE('/raymentat/change_vfs5_controls', new_text)
     
     @pyqtSlot(str)
     def _carla_preset_line_edited(self, text: str):
@@ -98,13 +128,7 @@ class MainWin(QDialog):
             main_dict['carla_tcp_ready'] and self.ui.lineEdit.text()))
     
     @pyqtSlot()
-    def _carla_tcp_ready(self):
-        self.ui.toolButton.setEnabled(bool(
-            main_dict['carla_tcp_ready'] and self.ui.lineEdit.text()))
-    
-    @pyqtSlot()
     def _save_preset_clicked(self):
-        print('yopplass')
         server.sendE('/raymentat/save_carla_preset', self.ui.lineEdit.text())
 
 
@@ -153,11 +177,21 @@ class OscServer(liblo.ServerThread):
     def _get_carla_presets(self, path, args: list[str]):
         main_dict['carla_presets'] = args.copy()
         main_win.carla_presets_changed.emit()
-    
+
     @liblo.make_method('/raymentat_gui/carla_tcp_ready', 'i')
     def _get_carla_tcp_ready(self, path, args: list[int]):
         main_dict['carla_tcp_ready'] = bool(args[0])
         main_win.carla_tcp_ready.emit()
+
+    @liblo.make_method('/raymentat_gui/tempo', 'f')
+    def _get_tempo(self, path, args: list[float]):
+        main_dict['tempo'] = args[0]
+        main_win.tempo_changed.emit()
+        
+    @liblo.make_method('/raymentat_gui/toutestpret', '')
+    def _toutestpret(self, path, args):
+        main_win.toutestpret.emit()
+
 
 
 if __name__ == '__main__':

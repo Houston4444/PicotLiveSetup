@@ -34,6 +34,17 @@ Pédale d'expression à rebrancher dans l'Arduino
 
 XX_ et changement en début de cycle
 
-Hydrogen à gérer
+# Hydrogen à gérer
 
-revoir le carla.py (effacer beaucoup)
+# revoir le carla.py (effacer beaucoup)
+
+# GUI qui ne s'éteint pas avec le démon
+big sequence à mettre à 0 en changement de song
+seq192 set tempo qui doit être enfant de main_engine set tempo
+carla load JSONs at startup
+preset carla en cours dans GUI 
+Arduino LED sur song au démarrage alors qu'il est sur sequence
+
+update mentat et proposer changements midi /play /stop
+PR Carla /unregister
+PR Carla No Jack Transport single client

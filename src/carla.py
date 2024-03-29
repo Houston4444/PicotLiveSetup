@@ -1,5 +1,6 @@
 
 from enum import IntEnum
+from re import S
 from typing import TYPE_CHECKING, Any
 import time
 import threading
@@ -9,14 +10,22 @@ import liblo
 import os
 from pathlib import Path
 
+
 from rmodule import RModule
-from songs import SongParameters, Orage
+from songs import MourirIdees, SongParameters, Orage
 
 if TYPE_CHECKING:
     from main_engine import MainEngine
 
 _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.DEBUG)
+
+
+class TcpConnected(IntEnum):
+    NO = 0
+    NOT_SURE = 1
+    YES = 2
+    
 
 
 class Param:
@@ -62,22 +71,26 @@ class EngineCallback(IntEnum):
     PATCHBAY_CLIENT_ADDED = 20
     
     
-class OscTcpServer(liblo.ServerThread):
+class _OscTcpServer(liblo.ServerThread):
     def __init__(self) -> None:
         super().__init__(8755, liblo.TCP)
         self.carla_addr = liblo.Address('127.0.0.1', 19998, liblo.TCP)
         self.PREPATH = '/Carla_Multi_Client_Carla_7'
         self.plugins = list[Plugin]()
+        self.tcp_connected = TcpConnected.NO
+
+    def _get_register_url(self) -> str:
+        return f'osc.tcp://127.0.0.1:{self.port}/ctrl'
 
     def start(self):
         super().start()
-        self.carla_send('/unregister',
-                        f'osc.tcp://127.0.0.1:{self.port}/ctrl')
-        self.carla_send('/register', f'osc.tcp://127.0.0.1:{self.port}/ctrl')
+        self.carla_send('/unregister', self._get_register_url())
+        self.carla_send('/register', self._get_register_url())
+        self.tcp_connected = TcpConnected.NOT_SURE
 
     def stop(self):
-        self.carla_send('/unregister',
-                        f'osc.tcp://127.0.0.1:{self.port}/ctrl')
+        self.carla_send('/unregister', self._get_register_url())
+        self.tcp_connected = TcpConnected.NO
         time.sleep(0.005)
         super().stop()
         time.sleep(0.005)
@@ -86,6 +99,10 @@ class OscTcpServer(liblo.ServerThread):
 
     def carla_send(self, *args):
         self.send(self.carla_addr, *args)
+
+    def set_tempo(self, bpm: float):
+        self.carla_send('/ctrl/transport_bpm', 0, float(bpm))
+        time.sleep(0.0054)
 
     def save_preset(self, preset_path: Path, full=False):
         out_list = list[dict[str, Any]]()
@@ -126,8 +143,12 @@ class OscTcpServer(liblo.ServerThread):
             _logger.error(str(e))
 
     def load_preset(self, preset_path: Path, full=False):
-        times_dict = dict[str, float]()
+        if self.tcp_connected is not TcpConnected.YES:
+            _logger.warning(
+                f'impossible to load preset, tcp_connected is {self.tcp_connected.name}')
+            return
         
+        times_dict = dict[str, float]()
         times_dict['start'] = time.time()
         with open(preset_path, 'r') as f:
             in_list = json.load(f)
@@ -194,9 +215,13 @@ class OscTcpServer(liblo.ServerThread):
                             f'{param_id_str} or value are not int and float')
                         continue
 
+                    # if plugin.label == 'Delay Architect' and param_id == 0:
+                    #     self.carla_send(f'{prepath}/set_parameter_value', 0, 0.0)
+
                     if value != plugin.params[param_id].value:
                         self.carla_send(f'{prepath}/set_parameter_value',
                                         param_id, value)
+                        plugin.params[param_id].value = value
             else:
                 self.carla_send(f'{prepath}/reset_parameters')
             
@@ -205,7 +230,7 @@ class OscTcpServer(liblo.ServerThread):
                     if isinstance(value, float):
                         self.carla_send(f'{prepath}/set_parameter_value',
                                         int(param_id), value)
-                        
+
         times_dict['final'] = time.time()
         for key, value in times_dict.items():
             print('timmme', value, key)
@@ -220,6 +245,8 @@ class OscTcpServer(liblo.ServerThread):
 
     @liblo.make_method('/ctrl/info', 'iiiihiisssssss')
     def _plugin_info(self, path, args):
+        self.tcp_connected = TcpConnected.YES
+        
         plugin_id, plg_type, category, hints, unique_id, \
             opt_available, opt_enable, name, filename, icon_name, real_name, \
                 label, maker, copyright = args
@@ -307,6 +334,10 @@ class OscTcpServer(liblo.ServerThread):
             self.plugins.remove(plugin)
             return
         
+    @liblo.make_method('/ctrl/resp', 'is')
+    def _resp(self, path, args):
+        print('carllla réponnse', path, args)
+        
 
 class Carla(RModule):
     engine: 'MainEngine'
@@ -314,30 +345,27 @@ class Carla(RModule):
     
     def __init__(self, name, protocol=None, port=None, parent=None):
         super().__init__(name, protocol, port, parent)
-        self.params = dict[SongParameters, dict[str, float]]()
-        self._all_paths = set[str]()
-        self._writing_snapshot = dict[int, dict[int, float]]()
-        self._plugins_count = -1
-        self._params_count = dict[int, int]()
-        self._plugins = dict[int, Plugin]()
-        # self._scanning_thread = threading.Thread(target=self.save_snapshot)
-        self._writing_preset_name = 'indéfini'
-        
-        self.osc_tcp_server = OscTcpServer()
+        self.osc_tcp_server = _OscTcpServer()
         self.is_tcp_running = False
-        # self.osc_tcp_server.start()
+
+    def quit(self):
+        self.stop_osc_tcp()
 
     def start_osc_tcp(self):
-        print('START CARLA TCP')
         self.osc_tcp_server.start()
         self.is_tcp_running = True
         self.engine.modules['optional_gui'].set_carla_tcp_ready(True)
 
     def stop_osc_tcp(self):
-        print('STOP CARLA TCP')
         self.is_tcp_running = False
         self.engine.modules['optional_gui'].set_carla_tcp_ready(False)
         self.osc_tcp_server.stop()
+
+    def set_tempo(self, bpm: float):
+        if not self.is_tcp_running:
+            return
+
+        self.osc_tcp_server.set_tempo(bpm)
 
     def _get_presets_dir(self) -> Path:
         presets_dir = (self.engine.modules['nsm_client'].client_path
@@ -347,7 +375,7 @@ class Carla(RModule):
     
     def list_presets(self) -> list[str]:
         presets_dir = self._get_presets_dir()
-        return [f for f in os.listdir(presets_dir)
+        return [f.rpartition('.')[0] for f in os.listdir(presets_dir)
                 if f.endswith('.json')]
 
     def save_preset(self, preset_name: str):
@@ -355,219 +383,22 @@ class Carla(RModule):
         self.osc_tcp_server.save_preset(
             presets_dir / f'{preset_name}.json', full=True)
 
+    def load_preset(self, preset_name: str):
+        presets_dir = self._get_presets_dir()
+        preset_path = presets_dir / f'{preset_name}.json'
+        if not preset_path.exists():
+            _logger.error(f"Impossible to find carla preset {preset_path}")
+            return
+        self.osc_tcp_server.load_preset(preset_path, full=True)
+
     def set_song(self, song: SongParameters):
-        pass
-        # client_path = self.engine.modules['nsm_client'].client_path
-        
-        # if isinstance(song, Orage):
-        #     self.osc_tcp_server.load_preset(client_path / 'rololo.json', full=True)
-
-    def start_snapshot(self, preset_name: str):
-        self._writing_preset_name = preset_name
-        snap_thread = threading.Thread(target=self.save_snapshot)
-        snap_thread.start()
-
-    # def route(self, address: str, args: list):
-    #     print('repmmmms', address, args)
+        if isinstance(song, Orage):
+            self.load_preset('orage')
+        elif isinstance(song, MourirIdees):
+            self.load_preset('mouriridées')
 
     def route(self, address: str, args: list):        
-        if address != '/reply' or not args:
-            return
-
-        path: str = args[0]
-        if not isinstance(path, str):
-            return
-        
-        if not path.startswith(self.PREPATH + '/'):
-            return
-        
-        shpath = path.replace(self.PREPATH + '/', '', 1)
-        
-        if shpath == 'get_plugins_count':
-            self._plugins_count = args[1]
-            # for pg_index in range(self._plugins_count):
-            #     self.send(f'{self.PREPATH}/{pg_index}/get_parameters_count')
-            return
-        
-        numstr, slash, command = shpath.partition('/')
-        if not numstr.isdigit():
-            return
-        
-        if len(args) < 2:
-            return
-        othargs = args[1:]
-        
-        pg_num = int(numstr)
-        
-        if command == 'get_attributes':
-            if len(othargs) != 3:
-                return
-            factory_id, name, is_active = othargs
-            
-            
-            plugin = self._plugins.get(pg_num, Plugin())
-            plugin.label = factory_id
-            plugin.name = name
-            plugin.is_active = bool(is_active)
-            self._plugins[pg_num] = plugin
-            return
-        
-        # print('commannd', command, pg_num,  othargs)
-        if command == 'get_parameters_count':
-            self._params_count[pg_num] = args[1]
-            
-            # for pm_index in range(self._params_count[pg_num]):
-            #     self.send(
-            #         f'{self.PREPATH}/{pg_num}/get_parameter_value', pm_index)
-            #     # time.sleep(0.001)
-            return
-        
-        if command == 'get_parameter_infos':
-            # _logger.info(f'get param infos {pg_num}, {len(othargs)}')
-            if len(othargs) != 9:
-                return
-            
-            pm_index, is_output, symbol, name, unit, default, mini, maxi, value = othargs
-            plugin = self._plugins.get(pg_num, Plugin())
-            self._plugins[pg_num] = plugin
-            param = plugin.params.get(pm_index, Param())
-            param.symbol = symbol
-            param.name = name
-            param.default = default
-            param.value = value
-            param.is_output = bool(is_output)
-            plugin.params[pm_index] = param
-            return
-        
-    def save_snapshot(self):
-        _logger.info('start snapshot')
-        self._writing_snapshot.clear()
-        self._plugins_count = -1
-        self._params_count.clear()
-
-        start_time = time.time()
-
-        self.send(f'{self.PREPATH}/get_plugins_count')
-        
-        for i in range(100):
-            if self._plugins_count >= 0:
-                break
-            time.sleep(0.001)
-        else:
-            _logger.error('Pas de réponse de get_plugins_count')
-            return
-        
-        for pg_index in range(self._plugins_count):
-            self.send(f'{self.PREPATH}/{pg_index}/get_attributes')
-            self.send(f'{self.PREPATH}/{pg_index}/get_parameters_count')
-            
-        for pg_index in range(self._plugins_count):
-            for i in range(100):
-                if self._params_count.get(pg_index) is not None:
-                    break
-                else:
-                    time.sleep(0.001)
-            else:
-                _logger.error('Pas de réponse de get_parameters_count')
-                return
-        
-        has_missing_pm = False
-        
-        for i in range(30):
-            _logger.debug(f'on rentre dans la boucle {i}')
-            has_missing_pm = False
-            
-            for pg_index in range(self._plugins_count):
-                plugin = self._plugins.get(pg_index, Plugin())
-                self._plugins[pg_index] = plugin
-                for pm_index in range(self._params_count[pg_index]):
-                    param =  plugin.params.get(pm_index)
-                    if param is None:
-                        # time.sleep(0.00001)
-                        self.send(
-                            f'{self.PREPATH}/{pg_index}/get_parameter_infos', pm_index)
-                        has_missing_pm = True
-            
-            if has_missing_pm:
-                time.sleep(0.1)
-            else:
-                break
-
-        end_time = time.time()
-
-        if has_missing_pm:
-            _logger.error('encore des paramètres manquants')
-        else:
-            _logger.info('tout est Ok')
-
-        _logger.info('snapshot Carla fait en %.3f' % (end_time - start_time))
-
-        if not has_missing_pm:
-            out_dict = {}
-            
-            for pg_index, plugin in self._plugins.items():
-                params_dict = {}
-                pg_dict = {'label': plugin.label,
-                           'is_active': plugin.is_active,
-                           'params': params_dict}
-                
-                for pm_index, param in plugin.params.items():
-                    if param.default != param.value and not param.is_output:
-                        params_dict[pm_index] = {'def': param.default, 'value': param.value}
-                out_dict[pg_index] = pg_dict
-                
-            # print(out_dict)
-            client_path = self.engine.modules['nsm_client'].client_path
-            client_path.mkdir(exist_ok=True, parents=True)
-            preset_path = client_path / f'{self._writing_preset_name}.json'
-            
-            with open(preset_path, 'w') as f:
-                f.write(json.dumps(out_dict))
-                
-    def load_snapshot(self, preset_name: str):
-        preset_file = (self.engine.modules['nsm_client'].client_path
-                       / f'{preset_name}.json')   
-        
-        try:
-            with open(preset_file, 'r') as f:
-                preset_dict: dict = json.load(f)
-        except BaseException as e:
-            _logger.error(str(e))
-            return
-        
-        if not isinstance(preset_dict, dict):
-            _logger.error(f"{str(preset_file)} is not a json dict")
-            return
-        
-        all_plugins = dict[int, Plugin]()
-        
-        for pg_index, pg_dict in preset_dict.items():
-            if not isinstance(pg_index, int) or not isinstance(pg_dict, dict):
-                _logger.error(f"{str(preset_file)} has no valid data")
-                return
-        
-            plugin = Plugin()
-            plugin.label = pg_dict.get('label')
-            plugin.name = pg_dict.get('name')
-            plugin.is_active = pg_dict.get('is_active')
-            
-            params_dict = pg_dict.get('params')
-            if not isinstance(params_dict, dict):
-                _logger.error(f"{str(preset_file)} has invalid paramss on plugin {pg_index}")
-                return
-
-            plugin.params = dict[int, Param]()
-
-            for pm_num, value in params_dict.items():
-                if not isinstance(pm_num, int) or not isinstance(value, float):
-                    _logger.error(f"invalid param {pm_num} on plugin {pg_index}")
-                    return
-                
-                param = Param()
-                param.value = value
-                plugin.params[pm_num] = param
-                 
-            all_plugins[pg_index] = plugin
+        ...
             
     
             

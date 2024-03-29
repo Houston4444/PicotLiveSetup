@@ -1,14 +1,19 @@
 from enum import IntFlag, Enum
+import inspect
 import time
 from typing import TYPE_CHECKING
-from impact import Impact
+import logging
 
 from rmodule import RModule
+from impact import Impact
+
 
 if TYPE_CHECKING:
     from main_engine import MainEngine
     from sooperlooper import SooperLooper
     from seq192 import Seq192
+
+_logger = logging.getLogger(__name__)
 
 
 class FsButton(IntFlag):
@@ -35,6 +40,13 @@ class Vfs5Controls(Enum):
     
     def next(self) -> 'Vfs5Controls':
         return Vfs5Controls(1 + self.value % 3)
+    
+    @staticmethod
+    def from_name(name: str) -> 'Vfs5Controls':
+        for control in Vfs5Controls:
+            if control.name == name:
+                return control
+        return Vfs5Controls.SONG
 
 
 class Leonardo(RModule):
@@ -128,6 +140,7 @@ class Leonardo(RModule):
             self.engine.set_song(3)        
 
     def get_vfs5_control_name(self) -> str:
+        print('yappclclcl', self._vfs5_controls)
         return self._vfs5_controls.name
     
     def _vfs5_control(self, cc_num: int, cc_value: int):
@@ -155,8 +168,9 @@ class Leonardo(RModule):
             self._multi_action = MultiAction.NONE
 
     def change_vfs5_controls(self, vfs5_controls: Vfs5Controls):
+        _logger.info(f'change vfs5_controls to {vfs5_controls.name}')
+        
         self._vfs5_controls = vfs5_controls
-        print('Vf5_controls', self._vfs5_controls)
         self.send('/note_off', 0, 0x26)
         self.send('/note_off', 0, 0x27)
         

@@ -1,3 +1,6 @@
 [submodule "mentat"]
 	path = mentat
 	url = https://github.com/Houston4444/mentat.git
+[submodule "pyjacklib"]
+	path = pyjacklib
+	url = https://github.com/Houston4444/pyjacklib.git

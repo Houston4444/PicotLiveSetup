@@ -49,6 +49,8 @@ class NsmClient(Module):
         self.client_path = Path()
         self.brothers = dict[str, BrotherClient]()
         
+        self._gui_visible = False
+        
         NSM_URL = os.getenv('NSM_URL')
         if not NSM_URL:
             _logger.error('NsmClient started without NSM_URL environment variable')
@@ -73,33 +75,31 @@ class NsmClient(Module):
         
         try:
             with open(self._tmp_file, 'r') as f:
-                json_dict = json.load(f)
+                json_dict: dict = json.load(f)
                 assert json_dict['nsm_port'] == self.port
                 self.client_path = Path(json_dict['client_path'])
+                gui_visible = json_dict.get('gui_visible', False)
         except:
             already_started = False
         
         if already_started:
             self.send('/nsm/server/monitor_reset')
+            if gui_visible:
+                self.show_optional_gui()
+            else:
+                self.hide_optional_gui()
+            
         else:        
             self.send('/nsm/server/announce', self.nsm_name,
                       self.capabilities, self.executable, 1, 0, os.getpid())
-                
-            with open(self._tmp_file, 'w') as f:
-                f.write(json.dumps(
-                    {'nsm_port': self.port,
-                     'client_path': str(self.client_path)}))
+            self.save_tmp_file()  
     
     def save_tmp_file(self):
         with open(self._tmp_file, 'w') as f:
-            brothers_dict = {}
-            for brother_id, brother in self.brothers.items():
-                brothers_dict[brother_id] = brother.as_dict()
-
             f.write(json.dumps(
                 {'nsm_port': self.port,
                  'client_path': str(self.client_path),
-                 'brothers': brothers_dict}))
+                 'gui_visible': self._gui_visible}))
     
     def _reply(self, address: str, err: int, msg: str):
         if err:
@@ -112,6 +112,8 @@ class NsmClient(Module):
             self.send('/nsm/client/gui_is_shown')
         else:
             self.send('/nsm/client/gui_is_hidden')
+        
+        self._gui_visible = visible
     
     def route(self, address: str, args: list):        
         if address == '/reply':
