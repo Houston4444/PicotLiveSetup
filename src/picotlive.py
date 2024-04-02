@@ -33,7 +33,8 @@ for module in (
         Impact(),
         Carla('carla', protocol="osc.tcp", port=19998),
         RandomListener('randomSeq'),
-        Hydrogen('hydrogen', protocol='osc', port=9000)
+        Hydrogen('hydrogen', protocol='osc', port=9000),
+        JackTempoSetter('jack_tempo')
         ): 
     engine.add_module(module)
 

@@ -5,4 +5,5 @@ class Hydrogen(RModule):
         super().__init__(name, protocol, port, parent)
         
     def set_tempo(self, bpm: float):        
-        self.send('/Hydrogen/BPM', bpm)
+        # self.send('/Hydrogen/BPM', bpm)
+        pass

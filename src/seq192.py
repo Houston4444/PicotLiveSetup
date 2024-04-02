@@ -232,7 +232,7 @@ class Seq192(Seq192Base):
             word = 'on' if velo_seq.vel_min <= velo <= velo_seq.vel_max else 'off'
             self.send('/sequence', word, velo_seq.col, velo_seq.row)
     
-    def set_big_sequence(self, big_sequence: int):        
+    def set_big_sequence(self, big_sequence: int):
         if big_sequence == self._big_sequence:
             return
         
@@ -242,7 +242,7 @@ class Seq192(Seq192Base):
         if not (ex_cols and new_cols):
             return
 
-        immediate = self._song.immediate_sequence_switch
+        immediate = self._song.immediate_sequence_switch or not self._playing
 
         if not immediate:
             beats_elapsed = self.engine.get_beats_elapsed()

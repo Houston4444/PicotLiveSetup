@@ -140,7 +140,6 @@ class Leonardo(RModule):
             self.engine.set_song(3)        
 
     def get_vfs5_control_name(self) -> str:
-        print('yappclclcl', self._vfs5_controls)
         return self._vfs5_controls.name
     
     def _vfs5_control(self, cc_num: int, cc_value: int):

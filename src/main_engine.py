@@ -131,7 +131,7 @@ class MainEngine(Engine):
     
     def set_tempo(self, bpm: float):
         super().set_tempo(bpm)
-        # self.modules['jack_tempo'].set_tempo(bpm)
+        self.modules['jack_tempo'].set_tempo(bpm)
         self.modules['carla'].set_tempo(bpm)
         self.modules['optional_gui'].set_tempo(bpm)
         self.modules['hydrogen'].set_tempo(bpm)
@@ -186,6 +186,7 @@ class MainEngine(Engine):
             self.song_index = SONGS.index(song)
         
         self.set_tempo(song.average_tempo)
+        self.set_big_sequence(0)
         
         for module in self.modules.values():
             if isinstance(module, RModule):

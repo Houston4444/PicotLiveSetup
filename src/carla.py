@@ -18,7 +18,6 @@ if TYPE_CHECKING:
     from main_engine import MainEngine
 
 _logger = logging.getLogger(__name__)
-_logger.setLevel(logging.DEBUG)
 
 
 class TcpConnected(IntEnum):
@@ -27,13 +26,19 @@ class TcpConnected(IntEnum):
     YES = 2
     
 
-
 class Param:
     symbol: str
     name: str
     is_output: bool
     default: float
     value: float
+    
+    def __init__(self):
+        self.symbol = ''
+        self.name = ''
+        self.is_output = False
+        self.default = 0.0
+        self.value = 0.0
 
 
 class Plugin:
