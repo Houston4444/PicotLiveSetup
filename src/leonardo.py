@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     from main_engine import MainEngine
     from sooperlooper import SooperLooper
     from seq192 import Seq192
+    from nsm_mentator import OptionalGui
 
 _logger = logging.getLogger(__name__)
 
@@ -187,8 +188,12 @@ class Leonardo(RModule):
     def _kick_pressed(self, note_on: bool, note: int, velo: int):
         seq192: 'Seq192' = self.engine.modules['seq192']
         impact: 'Impact' = self.engine.modules['impact']
+        opt_gui: 'OptionalGui' = self.engine.modules['optional_gui']
+
         seq192.kick_pressed(note_on, note, velo)
         impact.kick_pressed(note_on, note, velo)
+        if note_on:
+            opt_gui.set_kick_velo(velo)
 
         if note_on and self._vfs5_controls is Vfs5Controls.SONG:
             self.change_vfs5_controls(Vfs5Controls.SEQ192_SEQUENCES)

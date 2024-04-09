@@ -48,3 +48,7 @@ Arduino LED sur song au démarrage alors qu'il est sur sequence
 update mentat et proposer changements midi /play /stop
 PR Carla /unregister
 PR Carla No Jack Transport single client
+
+Attention: change song -> stop play
+
+cc -fPIC  -shared  -o src/timebase_master.so src/timebase_master.c

@@ -3,6 +3,7 @@ import signal
 import os
 import logging
 from hydrogen import Hydrogen
+from looper_volumes import LoooperVolumes
 
 from non_multip import NonXtMultip
 from non_arch_delay import NonXtArchDelay
@@ -32,9 +33,10 @@ for module in (
         Seq192(),
         Impact(),
         Carla('carla', protocol="osc.tcp", port=19998),
-        RandomListener('randomSeq'),
+        RandomListener('randomidi'),
         Hydrogen('hydrogen', protocol='osc', port=9000),
-        JackTempoSetter('jack_tempo')
+        JackTempoSetter('jack_tempo'),
+        LoooperVolumes('looper_volumes', protocol='osc', port=7781)
         ): 
     engine.add_module(module)
 

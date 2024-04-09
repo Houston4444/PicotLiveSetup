@@ -25,7 +25,6 @@ class SongParameters:
     impact_col = 0
     
     kick_spacing = 100 # en ms
-    open_time = 150 # en ms
     kick_spacing_beats = 1/4
     open_time_beats = 1/4
     kick_snare_demute = True

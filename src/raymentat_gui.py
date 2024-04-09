@@ -21,9 +21,10 @@ main_dict = {
     'big_sequence_index': 0,
     'all_vfs5_controls': list[str](),
     'vfs5_controls': 'SEQUENCE',
-    'carla_tcp_ready': False,
+    'carla_tcp_state': 'NO',
     'carla_presets': list[str](),
-    'tempo': 120.00
+    'tempo': 120.00,
+    'last_kick_velo': 100
 }
 
 
@@ -34,9 +35,10 @@ class MainWin(QDialog):
     big_sequence_changed = pyqtSignal()
     fill_vfs5_controls = pyqtSignal()
     vfs5_controls_changed = pyqtSignal()
-    carla_tcp_ready = pyqtSignal()
+    carla_tcp_state = pyqtSignal()
     carla_presets_changed = pyqtSignal()
     tempo_changed = pyqtSignal()
+    last_kick_velo_changed = pyqtSignal()
 
     def __init__(self):
         super().__init__()
@@ -47,9 +49,10 @@ class MainWin(QDialog):
         self.big_sequence_changed.connect(self._big_sequence_changed)
         self.fill_vfs5_controls.connect(self._fill_vfs5_controls)
         self.vfs5_controls_changed.connect(self._vfs5_controls_changed)
-        self.carla_tcp_ready.connect(self._carla_tcp_ready)
+        self.carla_tcp_state.connect(self._carla_tcp_state)
         self.carla_presets_changed.connect(self._carla_presets_changed)
         self.tempo_changed.connect(self._tempo_changed)
+        self.last_kick_velo_changed.connect(self._last_kick_velo_changed)
         self.toutestpret.connect(self._connect_widgets)
     
     # connected to OSC messages
@@ -98,9 +101,14 @@ class MainWin(QDialog):
         self.ui.lineEdit.setCompleter(QCompleter(main_dict['carla_presets']))
     
     @pyqtSlot()
-    def _carla_tcp_ready(self):
+    def _carla_tcp_state(self):
+        self.ui.labelCarlaTcpState.setText(main_dict['carla_tcp_state'])
         self.ui.toolButton.setEnabled(bool(
-            main_dict['carla_tcp_ready'] and self.ui.lineEdit.text()))
+            main_dict['carla_tcp_state'] == 'YES' and self.ui.lineEdit.text()))
+    
+    @pyqtSlot()
+    def _last_kick_velo_changed(self):
+        self.ui.verticalSlider.setValue(main_dict['last_kick_velo'])
     
     # connected to widgets
     
@@ -125,7 +133,7 @@ class MainWin(QDialog):
     @pyqtSlot(str)
     def _carla_preset_line_edited(self, text: str):
         self.ui.toolButton.setEnabled(bool(
-            main_dict['carla_tcp_ready'] and self.ui.lineEdit.text()))
+            main_dict['carla_tcp_state'] == 'YES' and self.ui.lineEdit.text()))
     
     @pyqtSlot()
     def _save_preset_clicked(self):
@@ -147,6 +155,11 @@ class OscServer(liblo.ServerThread):
     def stop(self):
         self.sendE('/raymentat/jepars')
         super().stop()
+    
+    @liblo.make_method('/raymentat_gui/last_kick_velo', 'i')
+    def _get_last_kick_velo(self, path, args: list[int]):
+        main_dict['last_kick_velo'] = args[0]
+        main_win.last_kick_velo_changed.emit()
     
     @liblo.make_method('/raymentat_gui/songs', None)
     def _get_songs(self, path, args: list[str]):
@@ -178,16 +191,16 @@ class OscServer(liblo.ServerThread):
         main_dict['carla_presets'] = args.copy()
         main_win.carla_presets_changed.emit()
 
-    @liblo.make_method('/raymentat_gui/carla_tcp_ready', 'i')
-    def _get_carla_tcp_ready(self, path, args: list[int]):
-        main_dict['carla_tcp_ready'] = bool(args[0])
-        main_win.carla_tcp_ready.emit()
+    @liblo.make_method('/raymentat_gui/carla_tcp_state', 's')
+    def _get_carla_tcp_state(self, path, args: list[int]):
+        main_dict['carla_tcp_state'] = args[0]
+        main_win.carla_tcp_state.emit()
 
     @liblo.make_method('/raymentat_gui/tempo', 'f')
     def _get_tempo(self, path, args: list[float]):
         main_dict['tempo'] = args[0]
         main_win.tempo_changed.emit()
-        
+    
     @liblo.make_method('/raymentat_gui/toutestpret', '')
     def _toutestpret(self, path, args):
         main_win.toutestpret.emit()

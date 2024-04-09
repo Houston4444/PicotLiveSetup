@@ -13,6 +13,7 @@ from songs import SONGS, SongParameters
 if TYPE_CHECKING:
     from seq192 import Seq192
     from main_engine import MainEngine
+    from carla import RegisterState
 
 
 _logger = logging.getLogger(__name__)
@@ -37,8 +38,8 @@ class OptionalGui(RModule):
                       self.engine.modules['pedalboard'].get_vfs5_control_name())
             self.send('/raymentat_gui/carla_presets',
                       *self.engine.modules['carla'].list_presets())
-            self.send('/raymentat_gui/carla_tcp_ready',
-                      int(self.engine.modules['carla'].is_tcp_running))
+            self.send('/raymentat_gui/carla_tcp_state',
+                      self.engine.modules['carla'].get_tcp_connected_state().name)
             self.send('/raymentat_gui/tempo', self.engine.tempo)
             self.send('/raymentat_gui/toutestpret')
 
@@ -70,18 +71,22 @@ class OptionalGui(RModule):
     def set_song(self, song: SongParameters):
         self.send('/raymentat_gui/current_song',
                   int(self.engine.song_index))
-    
+
     def set_big_sequence(self, big_sequence: int):
         self.send('/raymentat_gui/current_big_sequence', big_sequence)
 
     def set_vfs5_control(self, vfs5_controls: str):
         self.send('/raymentat_gui/current_vfs5_control', vfs5_controls)
         
-    def set_carla_tcp_ready(self, ready:bool):
-        self.send('/raymentat_gui/carla_tcp_ready', int(ready))
-        
+    def set_carla_tcp_state(self, tcp_state: 'RegisterState'):
+        print('on envoie jusqua GUI', tcp_state.name)
+        self.send('/raymentat_gui/carla_tcp_state', tcp_state.name)
+
     def set_tempo(self, bpm: float):
         self.send('/raymentat_gui/tempo', bpm)
+
+    def set_kick_velo(self, kick_velo: int):
+        self.send('/raymentat_gui/last_kick_velo', kick_velo)
 
 
 class NsmMentator(NsmClient):
@@ -126,7 +131,7 @@ class NsmMentator(NsmClient):
                 break    
 
             elif brother_id == 'Carla_7' and brother.is_running():
-                self.engine.modules['carla'].start_osc_tcp()
+                self.engine.modules['carla'].register_tcp()
                 break
         
     def brother_event(self, client_id: str, event: str):
@@ -153,13 +158,14 @@ class NsmMentator(NsmClient):
 
         elif client_id == 'Carla_7':
             if event == 'ready':
-                self.engine.modules['carla'].start_osc_tcp()
+                self.engine.modules['carla'].register_tcp()
+                print('Hop go start TCP')
 
             elif event in ('stopped_by_server', 'stopped_by_itself',
                            'removed', 'stop_request'):
-                self.engine.modules['carla'].stop_osc_tcp()
+                self.engine.modules['carla'].unregister_tcp()
                 
     def monitor_client_states_finished(self):
         carla_broth = self.brothers['Carla_7']
         if carla_broth.is_running():
-            self.engine.modules['carla'].start_osc_tcp()
+            self.engine.modules['carla'].register_tcp()

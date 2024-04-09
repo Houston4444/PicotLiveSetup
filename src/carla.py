@@ -1,4 +1,5 @@
 
+from email.policy import default
 from enum import IntEnum
 from re import S
 from typing import TYPE_CHECKING, Any
@@ -20,7 +21,7 @@ if TYPE_CHECKING:
 _logger = logging.getLogger(__name__)
 
 
-class TcpConnected(IntEnum):
+class RegisterState(IntEnum):
     NO = 0
     NOT_SURE = 1
     YES = 2
@@ -38,7 +39,7 @@ class Param:
         self.name = ''
         self.is_output = False
         self.default = 0.0
-        self.value = 0.0
+        self.value = float('nan')
 
 
 class Plugin:
@@ -77,26 +78,40 @@ class EngineCallback(IntEnum):
     
     
 class _OscTcpServer(liblo.ServerThread):
-    def __init__(self) -> None:
+    def __init__(self, parent: 'Carla') -> None:
         super().__init__(8755, liblo.TCP)
+        self.parent = parent
         self.carla_addr = liblo.Address('127.0.0.1', 19998, liblo.TCP)
         self.PREPATH = '/Carla_Multi_Client_Carla_7'
         self.plugins = list[Plugin]()
-        self.tcp_connected = TcpConnected.NO
+        self.register_state = RegisterState.NO
 
     def _get_register_url(self) -> str:
         return f'osc.tcp://127.0.0.1:{self.port}/ctrl'
 
-    def start(self):
-        super().start()
+    def _set_tcp_connected_state(self, tcp_state: RegisterState):
+        if tcp_state is self.register_state:
+            return
+
+        self.register_state = tcp_state
+        print('yaromzek', self.register_state)
+        self.parent.set_tcp_connected_state(tcp_state)
+
+    def register(self):
         self.carla_send('/unregister', self._get_register_url())
         self.carla_send('/register', self._get_register_url())
-        self.tcp_connected = TcpConnected.NOT_SURE
+        self._set_tcp_connected_state(RegisterState.NOT_SURE)
+
+    def unregister(self):
+        self.carla_send('/unregister', self._get_register_url())
+        self._set_tcp_connected_state(RegisterState.NO)
+        # time.sleep(0.005)
+        # super().stop()
+        # time.sleep(0.005)
+        # self.free()
+        # time.sleep(0.005)
 
     def stop(self):
-        self.carla_send('/unregister', self._get_register_url())
-        self.tcp_connected = TcpConnected.NO
-        time.sleep(0.005)
         super().stop()
         time.sleep(0.005)
         self.free()
@@ -148,9 +163,9 @@ class _OscTcpServer(liblo.ServerThread):
             _logger.error(str(e))
 
     def load_preset(self, preset_path: Path, full=False):
-        if self.tcp_connected is not TcpConnected.YES:
+        if self.register_state is not RegisterState.YES:
             _logger.warning(
-                f'impossible to load preset, tcp_connected is {self.tcp_connected.name}')
+                f'impossible to load preset, tcp_connected is {self.register_state.name}')
             return
         
         times_dict = dict[str, float]()
@@ -248,9 +263,15 @@ class _OscTcpServer(liblo.ServerThread):
         
         return self.plugins[plugin_id]
 
+    def off_ramps(self, on: bool):
+        for i in (3, 4):
+            self.carla_send(
+                f'{self.PREPATH}/{i}/set_parameter_value',
+                0, 1.0 if on else 0.0)
+
     @liblo.make_method('/ctrl/info', 'iiiihiisssssss')
     def _plugin_info(self, path, args):
-        self.tcp_connected = TcpConnected.YES
+        self._set_tcp_connected_state(RegisterState.YES)
         
         plugin_id, plg_type, category, hints, unique_id, \
             opt_available, opt_enable, name, filename, icon_name, real_name, \
@@ -322,7 +343,17 @@ class _OscTcpServer(liblo.ServerThread):
             plugin = self.get_plugin(plugin_id)
 
             if param_id >= 0:
-                plugin.params[param_id].value = valuef
+                # plugin.params[param_id].value = valuef
+                # plugin.params.get(param_id, default=Param()).value = valuef
+                param = plugin.params.get(param_id)
+                if param is None:
+                    param = Param()
+                    plugin.params[param_id] = param
+                    _logger.warning(
+                        f"creation of param n°{param_id} on plugin {plugin_id}"
+                        " via callback /cb PARAMETER_VALUE_CHANGED")
+                param.value = valuef
+                    
             elif param_id == -2:
                 plugin.is_active = bool(valuef > 0.5)
             elif param_id == -3:
@@ -341,7 +372,7 @@ class _OscTcpServer(liblo.ServerThread):
         
     @liblo.make_method('/ctrl/resp', 'is')
     def _resp(self, path, args):
-        print('carllla réponnse', path, args)
+        ...
         
 
 class Carla(RModule):
@@ -350,21 +381,27 @@ class Carla(RModule):
     
     def __init__(self, name, protocol=None, port=None, parent=None):
         super().__init__(name, protocol, port, parent)
-        self.osc_tcp_server = _OscTcpServer()
+        self.osc_tcp_server = _OscTcpServer(self)
+        self.osc_tcp_server.start()
         self.is_tcp_running = False
 
     def quit(self):
-        self.stop_osc_tcp()
-
-    def start_osc_tcp(self):
-        self.osc_tcp_server.start()
-        self.is_tcp_running = True
-        self.engine.modules['optional_gui'].set_carla_tcp_ready(True)
-
-    def stop_osc_tcp(self):
-        self.is_tcp_running = False
-        self.engine.modules['optional_gui'].set_carla_tcp_ready(False)
+        self.unregister_tcp()
         self.osc_tcp_server.stop()
+
+    def register_tcp(self):
+        self.osc_tcp_server.register()
+        self.is_tcp_running = True
+
+    def unregister_tcp(self):
+        self.is_tcp_running = False
+        self.osc_tcp_server.unregister()
+
+    def set_tcp_connected_state(self, tcp_state: RegisterState):
+        self.engine.modules['optional_gui'].set_carla_tcp_state(tcp_state)
+
+    def get_tcp_connected_state(self) -> RegisterState:
+        return self.osc_tcp_server.register_state
 
     def set_tempo(self, bpm: float):
         if not self.is_tcp_running:
@@ -404,7 +441,9 @@ class Carla(RModule):
 
     def route(self, address: str, args: list):        
         ...
-            
+    
+    def off_ramps(self, on:bool):
+        self.osc_tcp_server.off_ramps(on)
     
             
         

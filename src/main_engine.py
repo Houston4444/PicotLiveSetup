@@ -6,6 +6,7 @@ from non_arch_delay import NonXtArchDelay
 from hydrogen import Hydrogen
 from non_multip import NonXtMultip
 from nsm_mentator import NsmMentator, OptionalGui
+from random_listener import RandomListener
 from rmodule import RModule
 from seq192 import Seq192
 from impact import Impact
@@ -14,6 +15,8 @@ from ardour import Ardour
 from songs import SongParameters, SONGS
 from carla import Carla
 from jack_tempo import JackTempoSetter
+from sooperlooper import SooperLooper
+from looper_volumes import LoooperVolumes
 
 
 class ModulesDict(TypedDict):
@@ -28,6 +31,9 @@ class ModulesDict(TypedDict):
     optional_gui: OptionalGui
     jack_tempo: JackTempoSetter
     hydrogen: Hydrogen
+    sooperlooper: SooperLooper
+    randomidi: RandomListener
+    looper_volumes: LoooperVolumes
 
 
 class MainRoute(Route):
@@ -127,6 +133,7 @@ class MainEngine(Engine):
                 module.quit()
 
         self.modules['nsm_client'].quit()
+        self.modules['jack_tempo'].close()
         super().stop()
     
     def set_tempo(self, bpm: float):
@@ -184,6 +191,9 @@ class MainEngine(Engine):
                 return
         else:
             self.song_index = SONGS.index(song)
+        
+        if self.playing:
+            self.stop_playing()
         
         self.set_tempo(song.average_tempo)
         self.set_big_sequence(0)
