@@ -9,6 +9,7 @@ from non_multip import NonXtMultip
 from non_arch_delay import NonXtArchDelay
 from impact import Impact
 from leonardo import Leonardo
+from oscitronix import OsciTronix
 from random_listener import RandomListener
 from sooperlooper import SooperLooper
 from seq192 import Seq192
@@ -36,7 +37,8 @@ for module in (
         RandomListener('randomidi'),
         Hydrogen('hydrogen', protocol='osc', port=9000),
         JackTempoSetter('jack_tempo'),
-        LoooperVolumes('looper_volumes', protocol='osc', port=7781)
+        LoooperVolumes('looper_volumes', protocol='osc', port=7781),
+        OsciTronix('oscitronix', protocol='osc', port=1761)
         ): 
     engine.add_module(module)
 

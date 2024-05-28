@@ -94,7 +94,6 @@ class _OscTcpServer(liblo.ServerThread):
             return
 
         self.register_state = tcp_state
-        print('yaromzek', self.register_state)
         self.parent.set_tcp_connected_state(tcp_state)
 
     def register(self):
@@ -264,10 +263,16 @@ class _OscTcpServer(liblo.ServerThread):
         return self.plugins[plugin_id]
 
     def off_ramps(self, on: bool):
-        for i in (3, 4):
-            self.carla_send(
-                f'{self.PREPATH}/{i}/set_parameter_value',
-                0, 1.0 if on else 0.0)
+        self.send_param(3, 0, 1.0 if on else 0.0)
+        self.send_param(4, 0, 1.0 if on else 0.0)
+
+    def send_param(self, plugin_id: int, param_id: int, value: float):
+        self.carla_send(f'{self.PREPATH}/{plugin_id}/set_parameter_value',
+                        param_id, value)
+        try:
+            self.plugins[plugin_id].params[param_id].value = value
+        except:
+            _logger.warning(f'pas possib de send param {plugin_id} {param_id}')    
 
     @liblo.make_method('/ctrl/info', 'iiiihiisssssss')
     def _plugin_info(self, path, args):
@@ -445,5 +450,6 @@ class Carla(RModule):
     def off_ramps(self, on:bool):
         self.osc_tcp_server.off_ramps(on)
     
-            
+    def send_param(self, plugin_id: int, param_id: int, value: float):
+        self.osc_tcp_server.send_param(plugin_id, param_id, value)
         

@@ -5,7 +5,7 @@ class LoooperVolumes(RModule):
     def __init__(self, name, protocol=None, port=None, parent=None):
         super().__init__(name, protocol, port, parent)
     
-        self.strips = ('Loop0', 'Loop1', 'Loop2')
+        self.strips = ('Loop0', 'Loop1', 'Loop2', 'Loop3')
         for strip in self.strips:
             self.add_parameter(
                 f'{strip}_fader', 
@@ -28,4 +28,4 @@ class LoooperVolumes(RModule):
     def demute(self, strip: str):
         if strip not in self.strips:
             return
-        self.animate(f'{strip}_fader', None, 0.0, 0.5)
+        self.animate(f'{strip}_fader', None, 0.0, 0.125)

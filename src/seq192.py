@@ -205,7 +205,8 @@ class Seq192(Seq192Base):
 
         self.wait(open_secs, 's')
         if self._kick36_note_on:
-            self.engine.modules['sooperlooper'].mute_all()
+            print('c la ksas pass')
+            self.engine.modules['sooperlooper'].mute_all(kick=True)
 
         self.wait(self._song.stop_time - open_secs, 's')
         
@@ -378,7 +379,7 @@ class Seq192(Seq192Base):
         
         self.stop_scene('check_for_stop')
         if not note_on:
-            self.engine.modules['sooperlooper'].demute_all()
+            self.engine.modules['sooperlooper'].demute_all(kick=True)
             return
         
         kick_time = time.time()
@@ -466,7 +467,7 @@ class Seq192(Seq192Base):
                         self.send('/sequence', 'on',
                                   random_gp.col, random_gp.rows[0])
                 self.start()
-                self.engine.modules['randomidi'].start()
+                # self.engine.modules['randomidi'].start()
                 self.engine.modules['sooperlooper'].start_play_song()
                     # self.engine.modules['sooperlooper'].orage_rec()
         

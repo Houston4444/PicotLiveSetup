@@ -10,6 +10,7 @@ class SongParameters:
     average_tempo = 92.0
     taps_for_tempo = 1
     tempo_style = ''
+    vox_program = ''
 
     kick_restarts_cycle = False
     restart_precision: 1.0 # en beats
@@ -62,6 +63,7 @@ class TestiSpace(SongParameters):
 class Orage(SongParameters):
     average_tempo = 140
     seq_page = 10
+    vox_program = 'Orage Debut'
 
 SONGS = [Radeaux(),
          Avale(),
