@@ -205,7 +205,6 @@ class Seq192(Seq192Base):
 
         self.wait(open_secs, 's')
         if self._kick36_note_on:
-            print('c la ksas pass')
             self.engine.modules['sooperlooper'].mute_all(kick=True)
 
         self.wait(self._song.stop_time - open_secs, 's')

@@ -1,12 +1,28 @@
+from enum import Enum, auto
+
 from rmodule import RModule
 from songs import SONGS, Orage, SongParameters
 
 REPETTE = True
 
+class Marker(Enum):
+    DEBUT = auto()
+    CHANGE_INSTRU = auto()
+    COUPLET2 = auto()
+    COUPLET3 = auto()
+    FRANKLIN = auto()
+    SOLO_GUIT = auto()
+    JUPITER = auto()
+    NUAGES = auto()
+    
+
+START_MARKER = Marker.CHANGE_INSTRU
+
 THEMES = 0
 SKANKS = 1
 AIGUS = 2
 BASSE = 3
+N_LOOPS = 4
 
 
 class SooperLooper(RModule):
@@ -23,7 +39,11 @@ class SooperLooper(RModule):
         if REPETTE and not self._repette_started:
             return
         super().wait(*args)
-    
+
+    def add_marker(self, marker: Marker):
+        if REPETTE and marker is START_MARKER:
+            self._repette_started = True
+
     def set_loop(self, loop: int):
         self._loop = loop
 
@@ -65,25 +85,22 @@ class SooperLooper(RModule):
         # 45  1b: A7
         # 46  2b: Dm
         
-        ALL = -1
-        
         
         print('orage start')
+        self._repette_started = not REPETTE
         
+        self.add_marker(Marker.DEBUT)
+
         seq192 = self.engine.modules['seq192']
         seq192.set_big_sequence(0)
-        self._repette_started = False
-        # self._start_repette()
-        self._demute_allowed = False
-        
-        
+        self.engine.modules['oscitronix'].set_program('Orage Debut')
 
         self.mute_all()
         self.engine.modules['randomidi'].start()
-        self.send('/sl/-1/hit', 'pause')
         self.wait(8, 'beats')
 
         ### BOUCLE mini theme Tzouras normal
+        self.send('/sl/-1/hit', 'trigger')
         self.sl(THEMES, 'down', 'record')
         self.sl(AIGUS, 'down', 'record')
         
@@ -97,8 +114,6 @@ class SooperLooper(RModule):
         self.sl(AIGUS, 'down', 'overdub')
 
         self.wait(48, 'beats')
-
-        self._demute_allowed = True
 
         ### BOUCLE avec skanks Tzouras
         self.sl(THEMES, 'up', 'overdub')
@@ -116,6 +131,8 @@ class SooperLooper(RModule):
         self.sl(SKANKS, 'up', 'record')
         
         ### BOUCLE Changement d'instru
+        self.add_marker(Marker.CHANGE_INSTRU)
+
         self.wait(24, 'beats')
         # passer sur Channel B (guitar)
         self.engine.modules['carla'].send_param(7, 0, 1.0)
@@ -129,12 +146,15 @@ class SooperLooper(RModule):
         self.wait(48, 'beats')
 
         ### BOUCLE guitar couplet 2 (par un soir de novembre)
+        self.add_marker(Marker.COUPLET2)
         self.sl(BASSE, 'up', 'record')
+
         self.engine.modules['carla'].send_param(10, 0, 1.0)
 
         self.wait(48, 'beats')
         
         ### BOUCLE guitar couplet 3 (je suis seule et j'ai peur)
+        self.add_marker(Marker.COUPLET3)
         self.send('/sl/-1/hit', 'trigger')
         self.wait(32, 'beats')
         self.send('/sl/-1/hit', 'set_sync_pos')
@@ -150,37 +170,49 @@ class SooperLooper(RModule):
         self.wait(4, 'beats')
         self.send('/sl/-1/hit', 'trigger')
         self.wait(2, 'beats')
-        self.demute(AIGUS)
+        self.demute(AIGUS, 3.0)
         self.wait(2, 'beat')
 
         self.send('/sl/-1/hit', 'reset_sync_pos')
         self.send('/sl/-1/hit', 'trigger')
         
+        self.add_marker(Marker.FRANKLIN)
+        
         self.wait(48, 'beats')
         
         ### BOUCLE guitar solo
-        self._start_repette()
-        # self._start_repette()
+        self.add_marker(Marker.SOLO_GUIT)
+
         seq192.set_big_sequence(0)
-        # self.wait(48, 'beats')
+        self.demute(AIGUS)
+
         for i in range(24):
-            if i % 2:
+            if i % 2 and i != 23:
                 self.demute(THEMES)
             else:
                 self.mute(THEMES)
-                
+
             self.wait(2, 'beat')
             if i == 20:
-                seq192.set_big_sequence(2)
-        
-        self.demute(SKANKS)
+                seq192.set_big_sequence(1)
+                self.demute(SKANKS)
+
         self.demute(AIGUS)
         
         ### Boucle Quand Jupiter
-        self.wait(48, 'beats')
+        self.add_marker(Marker.JUPITER)
+        
+        self.wait(12, 'beats')
+        seq192.set_big_sequence(2)
+        self.wait(11, 'beats')
+        seq192.set_big_sequence(3)
+        self.engine.modules['oscitronix'].set_program('Orage Funk')
+        # self.demute(SKANKS)
+        self.wait(25, 'beats')
         self.demute(THEMES)
         
         ### BOUCLE guitar couplet 5 
+        self.add_marker(Marker.NUAGES)
         
         for i in range(10):
             self.wait(48, 'beats')
@@ -189,7 +221,6 @@ class SooperLooper(RModule):
         
         self.mute_all()
         self._running_scene = ''
-        self._demute_allowed = False
         self.engine.modules['randomidi'].stop()
         self.engine.modules['carla'].send_param(7, 0, 0.0)
         
@@ -200,52 +231,35 @@ class SooperLooper(RModule):
     
     def stop_play_song(self):
         self.mute_all()
-        self._demute_allowed = False
 
         if self._running_scene:
             self.stop_scene(self._running_scene)
             self._running_scene = ''
     
     def mute_all(self, kick=False):
-        print('SOOP MUTE ALL')
         if kick:
-            for i in range(4):
+            for i in range(N_LOOPS):
                 if self._demuted_loops & (2 ** i):
                     self.engine.modules['looper_volumes'].mute(f'Loop{i}')
             return
         
-        # self.send('/sl/-1/down', 'mute')
         self._demuted_loops = 0
         self.engine.modules['looper_volumes'].mute_all()
 
     def demute_all(self, kick=False):
-        print('SOOP DEMUTE ALL')
         if kick:
-            for i in range(4):
+            for i in range(N_LOOPS):
                 if self._demuted_loops & (2 ** i):
                     self.engine.modules['looper_volumes'].demute(f'Loop{i}')
             return
 
-        self._demuted_loops = 15
+        self._demuted_loops = (2 ** N_LOOPS) - 1
         self.engine.modules['looper_volumes'].demute_all()
     
     def mute(self, loop_n: int):
-        print('mute___av', loop_n, self._demuted_human())
         self._demuted_loops &= ~ 2**loop_n
-        print('mute___ap', loop_n, self._demuted_human())
         self.engine.modules['looper_volumes'].mute(f'Loop{loop_n}')
         
-    def demute(self, loop_n: int):
-        print('demute_av', loop_n, self._demuted_human())
+    def demute(self, loop_n: int, volume=0.0):
         self._demuted_loops |= 2**loop_n
-        print('demute_ap', loop_n, self._demuted_human())
-        self.engine.modules['looper_volumes'].demute(f'Loop{loop_n}')
-        
-    def _demuted_human(self) -> str:
-        ret = ''
-        for i in range(4):
-            if self._demuted_loops & (2**i):
-                ret += '1'
-            else:
-                ret += '0'
-        return ret
+        self.engine.modules['looper_volumes'].demute(f'Loop{loop_n}', volume)

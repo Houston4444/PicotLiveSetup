@@ -10,22 +10,30 @@ class LoooperVolumes(RModule):
             self.add_parameter(
                 f'{strip}_fader', 
                 f'/Non-Mixer-XT.LooperVolumes/strip/{strip}/Gain/Gain%20(dB)/unscaled',
-                'f', default=0.0)
-        
+                'f', default=-70.0)
+            
+            self.add_parameter(
+                f'{strip}_mute',
+                f'/Non-Mixer-XT.LooperVolumes/strip/{strip}/Gain/Mute', 'f', default=0.501)
+    
     def mute_all(self):
         for strip in self.strips:
             self.animate(f'{strip}_fader', None, -70.0, 0.5)
+            self.animate(f'{strip}_mute', None, 0.501, 0.5)
             
     def demute_all(self):
         for strip in self.strips:
+            self.set(f'{strip}_mute', 0.0)
             self.animate(f'{strip}_fader', None, 0.0, 0.5)
 
     def mute(self, strip: str):
         if strip not in self.strips:
             return
+        self.animate(f'{strip}_mute', None, 0.501, 0.5)
         self.animate(f'{strip}_fader', None, -70.0, 0.5)
         
-    def demute(self, strip: str):
+    def demute(self, strip: str, volume=0.0):
         if strip not in self.strips:
             return
-        self.animate(f'{strip}_fader', None, 0.0, 0.125)
+        self.set(f'{strip}_mute', 0.0)
+        self.animate(f'{strip}_fader', None, volume, 0.125)

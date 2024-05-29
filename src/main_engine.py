@@ -6,6 +6,7 @@ from non_arch_delay import NonXtArchDelay
 from hydrogen import Hydrogen
 from non_multip import NonXtMultip
 from nsm_mentator import NsmMentator, OptionalGui
+from oscitronix import OsciTronix
 from random_listener import RandomListener
 from rmodule import RModule
 from seq192 import Seq192
@@ -34,6 +35,7 @@ class ModulesDict(TypedDict):
     sooperlooper: SooperLooper
     randomidi: RandomListener
     looper_volumes: LoooperVolumes
+    oscitronix: OsciTronix
 
 
 class MainRoute(Route):
