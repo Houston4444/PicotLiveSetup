@@ -1,6 +1,7 @@
 
 from rmodule import RModule
 
+
 class LoooperVolumes(RModule):
     def __init__(self, name, protocol=None, port=None, parent=None):
         super().__init__(name, protocol, port, parent)
@@ -9,12 +10,14 @@ class LoooperVolumes(RModule):
         for strip in self.strips:
             self.add_parameter(
                 f'{strip}_fader', 
-                f'/Non-Mixer-XT.LooperVolumes/strip/{strip}/Gain/Gain%20(dB)/unscaled',
+                '/Non-Mixer-XT.LooperVolumes/strip/'
+                f'{strip}/Gain/Gain%20(dB)/unscaled',
                 'f', default=-70.0)
             
             self.add_parameter(
                 f'{strip}_mute',
-                f'/Non-Mixer-XT.LooperVolumes/strip/{strip}/Gain/Mute', 'f', default=0.501)
+                '/Non-Mixer-XT.LooperVolumes/strip/'
+                f'{strip}/Gain/Mute', 'f', default=0.501)
     
     def mute_all(self):
         for strip in self.strips:

@@ -3,9 +3,11 @@ import inspect
 import time
 from typing import TYPE_CHECKING
 import logging
+from chansons.song_parameters import SongParameters
 
 from rmodule import RModule
 from impact import Impact
+from songs import SONGS
 
 
 if TYPE_CHECKING:
@@ -199,6 +201,7 @@ class Leonardo(RModule):
             self.change_vfs5_controls(Vfs5Controls.SEQ192_SEQUENCES)
     
     def route(self, address: str, args: list[int]):
+        print('orapmmdd', args)
         if address == '/control_change':
             channel, cc_num, cc_value = args
             
@@ -208,6 +211,11 @@ class Leonardo(RModule):
 
                 elif cc_num == 23 and cc_value > 0:
                     self.change_vfs5_controls(self._vfs5_controls.next())
+                
+                elif cc_num == 24 and cc_value > 0:
+                    song: SongParameters = SONGS[self.engine.song_index]
+                    song.set_loop_looped()
+                    print('LOOP RATÉE !!!')
 
         elif address in ('/note_on', '/note_off'):
             channel, note, velo = args
@@ -215,6 +223,5 @@ class Leonardo(RModule):
 
             if channel == 15 and note in (35, 36):
                 self._kick_pressed(note_is_on, note, velo)
-                print('goovelo', velo)
                 
             

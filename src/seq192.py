@@ -212,7 +212,9 @@ class Seq192(Seq192Base):
         if self._kick36_note_on:
             self.stop()
             self.engine.modules['randomidi'].stop()
-            self.engine.modules['sooperlooper'].stop_play_song()
+            # self.engine.modules['sooperlooper'].stop_play_song()
+            song: SongParameters = SONGS[self.engine.song_index]
+            song.stop_main_scene()
 
     def start(self):
         self._beats_elapsed = 0.0
@@ -385,14 +387,7 @@ class Seq192(Seq192Base):
 
         # gérer le timer pour stopper seq192 si la note off n'apparaît
         # pas dans le délai imparti
-        
         self.start_scene('check_for_stop', self._check_for_stop)
-        
-        # self._stop_timer.cancel()
-        # del self._stop_timer
-        # self._stop_timer = Timer(self._song.stop_time,
-        #                          self._check_for_stop)
-        # self._stop_timer.start()
 
         if self._playing:
             mv_tempo = self._song.moving_tempo / 100
@@ -465,10 +460,10 @@ class Seq192(Seq192Base):
                         random_gp.playing_row_index = 0
                         self.send('/sequence', 'on',
                                   random_gp.col, random_gp.rows[0])
+
                 self.start()
-                # self.engine.modules['randomidi'].start()
-                self.engine.modules['sooperlooper'].start_play_song()
-                    # self.engine.modules['sooperlooper'].orage_rec()
+                song: SongParameters = SONGS[self.engine.song_index]
+                song.start_main_scene(self.engine)
         
         self.switch_velo_seqs(velo, self._big_sequence)
         self._last_kick_hit = kick_time

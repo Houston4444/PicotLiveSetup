@@ -29,7 +29,9 @@ class JackTempoSetter(Module):
         pos.tick = 0
         pos.valid = 0x10
         pos.beats_per_minute = 121.0
-        jacklib.transport_reposition(self.jack_client, pos)        
+        jacklib.transport_reposition(self.jack_client, pos)   
+        
+        print('jack temppo finited')     
 
     def close(self):
         jacklib.client_close(self.jack_client)
