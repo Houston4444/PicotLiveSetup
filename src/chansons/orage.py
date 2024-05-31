@@ -1,13 +1,8 @@
-from typing import TYPE_CHECKING, Optional
-from enum import Enum, auto
-from chansons.song_parameters import SongParameters
-
-if TYPE_CHECKING:
-    from main_engine import MainEngine
+from enum import auto
+from chansons.song_parameters import SongParameters, scene_method, Marker, REPETTE
 
 
-
-class Marker(Enum):
+class Marker(Marker):
     DEBUT = auto()
     TZOURAS_TIERCE = auto()
     TZOURAS_SKANKS = auto()
@@ -19,10 +14,11 @@ class Marker(Enum):
     SOLO_GUIT = auto()
     JUPITER = auto()
     NUAGES = auto()
+
+    BONHOMME_MARI = auto()
     
 
-REPETTE = True
-START_MARKER = Marker.DEBUT
+START_MARKER = Marker.SOLO_GUIT
 
 
 THEMES = 0
@@ -36,12 +32,12 @@ class Orage(SongParameters):
     average_tempo = 140
     seq_page = 10
     vox_program = 'Orage Debut'
-    
-    _repette_started = False
+    stop_time = 3.528
     
     def __init__(self):
         super().__init__()
-        self._current_marker = Marker.DEBUT    
+        self._finito_nuages = False
+        self.scenes = [self.main_scene, self.derniers_couplets]
     
     def wait(self, *args):
         if REPETTE and not self._repette_started:
@@ -59,6 +55,7 @@ class Orage(SongParameters):
             return
         self.engine.modules['sooperlooper'].sl(loop, updown, action)
 
+    @scene_method()
     def main_scene(self):
         '''scene method'''
         # la boucle fait
@@ -82,8 +79,13 @@ class Orage(SongParameters):
         # 45  1b: A7
         # 46  2b: Dm
         
-        print('HOP start la scene Orage')
-        
+        # la fin
+        # if self._finito_nuages:
+        # if True:
+        #     self.derniers_couplets()
+        #     self._finito_nuages = False
+        #     return
+            
         self._repette_started = not REPETTE
         
         self.add_marker(Marker.DEBUT)
@@ -95,13 +97,13 @@ class Orage(SongParameters):
         soop = self.engine.modules['sooperlooper']
         
         seq192.set_big_sequence(0)
-        oscitronix.set_program('Orage Debut')
-        
+        oscitronix.set_program('Orage Debut')        
         soop.set_n_loops(N_LOOPS)
         soop.send('/sl/-1/hit', 'pause')
-
         soop.mute_all()
         randomidi.start()
+
+        self.engine.set_cycle_length(1.0)
         self.wait(8, 'beats')
 
         ### BOUCLE mini theme Tzouras normal
@@ -160,6 +162,7 @@ class Orage(SongParameters):
         self.add_marker(Marker.CHANGE_INSTRU)
 
         self.wait(24, 'beats')
+
         # passer sur Channel B (guitar)
         carla.send_param(7, 0, 1.0)
 
@@ -174,7 +177,6 @@ class Orage(SongParameters):
         self.wait(48, 'beats')
 
         while self._loop_louped:
-            # self.loop_sl(BASSE, 'up', 'record')
             self.loop_sl(BASSE, 'down', 'record')
             self._loop_louped = False
             self.wait(48, 'beats')
@@ -237,26 +239,93 @@ class Orage(SongParameters):
         ### Boucle Quand Jupiter
         self.add_marker(Marker.JUPITER)
         
-        self.wait(12, 'beats')
+        self.wait(24, 'beats')
         seq192.set_big_sequence(2)
-        self.wait(11, 'beats')
+        
+        self.wait(14, 'beats')
+        soop.send('/sl/-1/hit', 'set_sync_pos')
+        self.wait(2, 'beats')
+        soop.send('/sl/-1/hit', 'trigger')
+        soop.send('/sl/-1/hit', 'reset_sync_pos')
+        
+        self.wait(3, 'beats')
         seq192.set_big_sequence(3)
         oscitronix.set_program('Orage Funk')
-        # soop.demute(SKANKS)
-        self.wait(25, 'beats')
+        self.wait(7, 'beats')
         soop.demute(THEMES)
         
         ### BOUCLE guitar couplet 5 
         self.add_marker(Marker.NUAGES)
         
-        for i in range(10):
-            self.wait(48, 'beats')
-            soop.send('/sl/-1/hit', 'trigger')
-            print('hop new chillle')
+        self.wait(32, 'beats')
+        soop.send('/sl/-1/hit', 'set_sync_pos')
+        self.wait(8, 'beats')
+        soop.send('/sl/-1/hit', 'trigger')
+        self.wait(6, 'beats')
+
+        soop.send('/sl/-1/hit', 'set_sync_pos')
+
+        self.wait(2, 'beats')        
+        soop.send('/sl/-1/hit', 'trigger')
+        self.wait(2, 'beats')
+        soop.send('/sl/-1/hit', 'trigger')
+        self.wait(2, 'beats')        
+        soop.send('/sl/-1/hit', 'trigger')
+        self.wait(2, 'beats')
+        soop.send('/sl/-1/hit', 'trigger')
+        
+        soop.send('/sl/-1/hit', 'reset_sync_pos')
+        
+        self._finito_nuages = True
+        # for i in range(10):
+        #     self.wait(48, 'beats')
+        #     soop.send('/sl/-1/hit', 'trigger')
+        #     print('hop new chillle')
         
         soop.mute_all()
         randomidi.stop()
-        carla.send_param(7, 0, 0.0)
+        
+        # carla.send_param(7, 0, 0.0)
+    
+    @scene_method()
+    def derniers_couplets(self):
+        self.add_marker(Marker.BONHOMME_MARI)
+        
+        seq192 = self.engine.modules['seq192']
+        oscitronix = self.engine.modules['oscitronix']
+        randomidi = self.engine.modules['randomidi']
+        carla = self.engine.modules['carla']
+        soop = self.engine.modules['sooperlooper']
+        
+        seq192.set_big_sequence(1)
+        randomidi.start()
+        soop.send('/sl/-1/hit', 'reset_sync_pos')
+        soop.send('/sl/-1/hit', 'trigger')
+        soop.mute_all()
+        soop.demute(BASSE)
+        # soop.demute(SKANKS)
+        self.wait(24, 'beats')
+        soop.demute(AIGUS)
+        self.wait(8, 'beats')
+        
+        soop.send('/sl/-1/hit', 'set_sync_pos')
+        self.wait(16, 'beats')
+        
+        soop.demute(AIGUS, 6.0)
+        soop.send('/sl/-1/hit', 'trigger')
+        self.wait(8, 'beats')
+        
+        soop.send('/sl/-1/hit', 'trigger')
+        self.wait(8, 'beats')
+        
+        soop.send('/sl/-1/hit', 'trigger')
+        soop.send('/sl/-1/hit', 'reset_sync_pos')
+        self.wait(8, 'beats')
+        soop.demute(THEMES)
+        self.wait(8, 'beats')
+        
+        # couplet final démarre sur Dm avec délai
+        soop.mute_all()
         
     def set_loop_looped(self):
         super().set_loop_looped()
@@ -280,3 +349,4 @@ class Orage(SongParameters):
         elif self._current_marker is Marker.BASSE:
             self.loop_sl(BASSE, 'up', 'record')
             self.loop_sl(BASSE, 'hit', 'pause')
+            

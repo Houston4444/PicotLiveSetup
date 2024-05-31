@@ -216,6 +216,11 @@ class Seq192(Seq192Base):
             song: SongParameters = SONGS[self.engine.song_index]
             song.stop_main_scene()
 
+    def _demute_loops_from_kick(self):
+        '''scene method'''
+        self.engine.wait_next_cycle()
+        self.engine.modules['sooperlooper'].demute_all(kick=True)
+
     def start(self):
         self._beats_elapsed = 0.0
         self.send('/cursor', 0.0)
@@ -380,7 +385,9 @@ class Seq192(Seq192Base):
         
         self.stop_scene('check_for_stop')
         if not note_on:
-            self.engine.modules['sooperlooper'].demute_all(kick=True)
+            # self.engine.modules['sooperlooper'].demute_all(kick=True)
+            self.engine.start_scene('demute_loops',
+                                    self._demute_loops_from_kick)
             return
         
         kick_time = time.time()

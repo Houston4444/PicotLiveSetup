@@ -1,7 +1,32 @@
-from typing import TYPE_CHECKING, Optional
+from enum import Enum
+from typing import TYPE_CHECKING, Callable, Optional
 
 if TYPE_CHECKING:
     from main_engine import MainEngine
+
+REPETTE = True
+
+def scene_method():
+    def decorator(func: Callable):
+        def wrapper(*args, **kwargs):
+            song: SongParameters = args[0]
+            ret = func(*args, **kwargs)
+            if song.scenes:
+                song._current_scene = (
+                    (song._current_scene + 1) % len(song.scenes))
+            
+            if REPETTE:
+                if not song._repette_started and len(song.scenes) > 1:
+                    scene = song.scenes[song._current_scene]
+                    song.engine.start_scene(
+                        f'{song.__repr__()}_{scene.__name__}', scene)
+            return ret
+        return wrapper
+    return decorator
+
+
+class Marker(Enum):
+    ...
 
 
 class SongParameters:
@@ -33,9 +58,13 @@ class SongParameters:
     kick_snare_demute = True
     
     def __init__(self):
-        self._main_scene_running = False
+        self._repette_started = False
+        self._scene_running = False
         self._loop_louped = False
-        self.engine: Optional[MainEngine] = None 
+        self.engine: Optional[MainEngine] = None
+        self.scenes = list[Callable]()
+        self._current_scene = 0
+        self._current_marker: Optional[Marker] = None
 
     def __repr__(self) -> str:
         return self.__class__.__name__
@@ -43,23 +72,38 @@ class SongParameters:
     def start_main_scene(self, engine: 'MainEngine'):
         self.engine = engine
         
-        if self._main_scene_running:
+        if self._scene_running:
             return
         
-        self._main_scene_running = True
-        engine.start_scene(f'{self.__repr__()}_main', self.main_scene)
+        if not self.scenes:
+            print('Y a pas de scenes dans ta chanson !!!')
+            return
+        
+        self._scene_running = True
+        
+        scene = self.scenes[self._current_scene]
+        print('hopeula', self.__repr__(), self._current_scene)
+
+        engine.start_scene(
+            f'{self.__repr__()}_{self._current_scene}', scene)
 
     def stop_main_scene(self):
-        if not self._main_scene_running:
+        print('STop la scene')
+        if not self._scene_running:
             return
         
-        self._main_scene_running = False
+        self._scene_running = False
         
         if self.engine is None:
             return
         
+        if not self.scenes:
+            return
+        
+        scene = self.scenes[self._current_scene]
+
         self.engine.modules['sooperlooper'].mute_all()
-        self.engine.stop_scene(f'{self.__repr__()}_main')
+        self.engine.stop_scene(f'{self.__repr__()}_{self._current_scene}')
 
     def main_scene(self):
         '''scene method'''

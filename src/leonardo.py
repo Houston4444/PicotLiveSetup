@@ -201,7 +201,6 @@ class Leonardo(RModule):
             self.change_vfs5_controls(Vfs5Controls.SEQ192_SEQUENCES)
     
     def route(self, address: str, args: list[int]):
-        print('orapmmdd', args)
         if address == '/control_change':
             channel, cc_num, cc_value = args
             
@@ -215,7 +214,6 @@ class Leonardo(RModule):
                 elif cc_num == 24 and cc_value > 0:
                     song: SongParameters = SONGS[self.engine.song_index]
                     song.set_loop_looped()
-                    print('LOOP RATÉE !!!')
 
         elif address in ('/note_on', '/note_off'):
             channel, note, velo = args

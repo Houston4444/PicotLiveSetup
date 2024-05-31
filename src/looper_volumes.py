@@ -27,7 +27,7 @@ class LoooperVolumes(RModule):
     def demute_all(self):
         for strip in self.strips:
             self.set(f'{strip}_mute', 0.0)
-            self.animate(f'{strip}_fader', None, 0.0, 0.5)
+            self.animate(f'{strip}_fader', None, 0.0, 0.125)
 
     def mute(self, strip: str):
         if strip not in self.strips:
