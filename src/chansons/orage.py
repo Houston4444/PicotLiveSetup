@@ -18,7 +18,7 @@ class Marker(Marker):
     BONHOMME_MARI = auto()
     
 
-START_MARKER = Marker.SOLO_GUIT
+START_MARKER = Marker.DEBUT
 
 
 THEMES = 0
@@ -36,13 +36,9 @@ class Orage(SongParameters):
     
     def __init__(self):
         super().__init__()
-        self._finito_nuages = False
         self.scenes = [self.main_scene, self.derniers_couplets]
     
-    def wait(self, *args):
-        if REPETTE and not self._repette_started:
-            return
-        self.engine.wait(*args)
+    
     
     def add_marker(self, marker: Marker):
         self._current_marker = marker
@@ -78,13 +74,6 @@ class Orage(SongParameters):
         # 44  1b: F
         # 45  1b: A7
         # 46  2b: Dm
-        
-        # la fin
-        # if self._finito_nuages:
-        # if True:
-        #     self.derniers_couplets()
-        #     self._finito_nuages = False
-        #     return
             
         self._repette_started = not REPETTE
         
@@ -103,11 +92,11 @@ class Orage(SongParameters):
         soop.mute_all()
         randomidi.start()
 
-        self.engine.set_cycle_length(1.0)
+        # self.engine.set_cycle_length(1.0)
         self.wait(8, 'beats')
 
         ### BOUCLE mini theme Tzouras normal
-        soop.send('/sl/-1/hit', 'trigger')
+        soop.trigger_all()
         self.loop_sl(THEMES, 'down', 'record')
         self.loop_sl(AIGUS, 'down', 'record')
         
@@ -164,13 +153,13 @@ class Orage(SongParameters):
         self.wait(24, 'beats')
 
         # passer sur Channel B (guitar)
-        carla.send_param(7, 0, 1.0)
+        carla.set_param_str('ChannelB UseGuit', 'ChannelB', 1.0)
 
         self.wait(24, 'beats')
         
         ### BOUCLE Bass couplet 1 (parlez moi de la pluie)
         self.add_marker(Marker.BASSE)
-        soop.send('/sl/-1/hit', 'trigger')
+        soop.trigger_all()
         self.loop_sl(BASSE, 'down', 'record')
         soop.demute(BASSE)
         self._loop_louped = False
@@ -186,21 +175,21 @@ class Orage(SongParameters):
         ### BOUCLE guitar couplet 2 (par un soir de novembre)
         self.add_marker(Marker.COUPLET2)
 
-        carla.send_param(10, 0, 1.0)
+        carla.set_param_str('ChannelB bassguit', 'ChannelB', 1.0)
 
         self.wait(48, 'beats')
         
         ### BOUCLE guitar couplet 3 (je suis seule et j'ai peur)
         self.add_marker(Marker.COUPLET3)
-        soop.send('/sl/-1/hit', 'trigger')
+        soop.trigger_all()
         self.wait(32, 'beats')
-        soop.send('/sl/-1/hit', 'set_sync_pos')
+        soop.set_sync_pos_all()
         self.wait(16, 'beats')
         
         ### BOUCLE voix couplet 4 (en bénissant le nom de Benjamin Franklin)
         
         # petit pont sur Dm
-        soop.send('/sl/-1/hit', 'trigger')
+        soop.trigger_all()
         soop.mute(THEMES)
         soop.mute(SKANKS)
         soop.mute(AIGUS)
@@ -210,8 +199,8 @@ class Orage(SongParameters):
         soop.demute(AIGUS, 3.0)
         self.wait(2, 'beat')
 
-        soop.send('/sl/-1/hit', 'reset_sync_pos')
-        soop.send('/sl/-1/hit', 'trigger')
+        soop.reset_sync_pos_all()
+        soop.trigger_all()
         
         self.add_marker(Marker.FRANKLIN)
         
@@ -242,50 +231,44 @@ class Orage(SongParameters):
         self.wait(24, 'beats')
         seq192.set_big_sequence(2)
         
-        self.wait(14, 'beats')
-        soop.send('/sl/-1/hit', 'set_sync_pos')
-        self.wait(2, 'beats')
-        soop.send('/sl/-1/hit', 'trigger')
-        soop.send('/sl/-1/hit', 'reset_sync_pos')
+        self.wait(14, 'beats')   #38
+        soop.set_sync_pos_all()
+        self.wait(2, 'beats')    #40
+        soop.trigger_all() #38
         
-        self.wait(3, 'beats')
+        self.wait(3, 'beats')    #41
         seq192.set_big_sequence(3)
         oscitronix.set_program('Orage Funk')
-        self.wait(7, 'beats')
+        self.wait(5, 'beats')    #46
+        soop.set_sync_pos_all()
+        self.wait(2, 'beats')    #48 0
         soop.demute(THEMES)
         
+        soop.trigger_all() # 46
+        soop.reset_sync_pos_all()
+        self.wait(2, 'beats')  #48 0
+                
         ### BOUCLE guitar couplet 5 
         self.add_marker(Marker.NUAGES)
         
-        self.wait(32, 'beats')
-        soop.send('/sl/-1/hit', 'set_sync_pos')
         self.wait(8, 'beats')
-        soop.send('/sl/-1/hit', 'trigger')
-        self.wait(6, 'beats')
-
-        soop.send('/sl/-1/hit', 'set_sync_pos')
-
-        self.wait(2, 'beats')        
-        soop.send('/sl/-1/hit', 'trigger')
-        self.wait(2, 'beats')
-        soop.send('/sl/-1/hit', 'trigger')
-        self.wait(2, 'beats')        
-        soop.send('/sl/-1/hit', 'trigger')
-        self.wait(2, 'beats')
-        soop.send('/sl/-1/hit', 'trigger')
+        soop.trigger_all()
+        self.wait(8, 'beats')
+        soop.trigger_all()
         
-        soop.send('/sl/-1/hit', 'reset_sync_pos')
+        self.wait(38, 'beats')
+        soop.set_sync_pos_all()
+
+        for nimp in range(16):
+            self.wait(1, 'beats') # 40
+            if nimp == 8:
+                soop.mute(SKANKS)
+            soop.trigger_all() # 38
         
-        self._finito_nuages = True
-        # for i in range(10):
-        #     self.wait(48, 'beats')
-        #     soop.send('/sl/-1/hit', 'trigger')
-        #     print('hop new chillle')
+        soop.reset_sync_pos_all()
         
         soop.mute_all()
         randomidi.stop()
-        
-        # carla.send_param(7, 0, 0.0)
     
     @scene_method()
     def derniers_couplets(self):
@@ -315,13 +298,15 @@ class Orage(SongParameters):
         soop.send('/sl/-1/hit', 'trigger')
         self.wait(8, 'beats')
         
+        soop.demute(SKANKS, -3.0)
         soop.send('/sl/-1/hit', 'trigger')
         self.wait(8, 'beats')
         
+        soop.demute(THEMES)
         soop.send('/sl/-1/hit', 'trigger')
         soop.send('/sl/-1/hit', 'reset_sync_pos')
         self.wait(8, 'beats')
-        soop.demute(THEMES)
+        # soop.demute(THEMES)
         self.wait(8, 'beats')
         
         # couplet final démarre sur Dm avec délai

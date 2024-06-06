@@ -1,0 +1,5147 @@
+[
+  {
+    "name": "TzouMagnetik",
+    "label": "http://lsp-plug.in/plugins/lv2/impulse_responses_mono",
+    "is_active": true,
+    "volume": 0.8233358263969421,
+    "drywet": 1.0,
+    "n_param": 31,
+    "params": {
+      "0": {
+        "name": "Enabled",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "1": {
+        "name": "FFT size",
+        "def": 6.0,
+        "value": 6.0
+      },
+      "2": {
+        "name": "Dry amount",
+        "def": 1.0,
+        "value": 0.0
+      },
+      "3": {
+        "name": "Wet amount",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "4": {
+        "name": "Output gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "5": {
+        "name": "Head cut",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "6": {
+        "name": "Tail cut",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "7": {
+        "name": "Fade in",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "8": {
+        "name": "Fade out",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "9": {
+        "name": "Impulse listen",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "12": {
+        "name": "Channel source",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "13": {
+        "name": "Makeup gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "15": {
+        "name": "Pre-delay",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "16": {
+        "name": "Wet post-process",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "17": {
+        "name": "Equalizer visibility",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "18": {
+        "name": "Low-cut mode",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "19": {
+        "name": "Low-cut frequency",
+        "def": 50.0,
+        "value": 50.0
+      },
+      "20": {
+        "name": "Band 50Hz gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "21": {
+        "name": "Band 107Hz gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "22": {
+        "name": "Band 227Hz gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "23": {
+        "name": "Band 484Hz gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "24": {
+        "name": "Band 1 kHz gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "25": {
+        "name": "Band 2.2 kHz gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "26": {
+        "name": "Band 4.7 kHz gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "27": {
+        "name": "Band 10 kHz gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "28": {
+        "name": "High-cut mode",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "29": {
+        "name": "High-cut frequency",
+        "def": 10000.0,
+        "value": 10000.0
+      }
+    }
+  },
+  {
+    "name": "TzouStatic",
+    "label": "http://lsp-plug.in/plugins/lv2/impulse_responses_mono",
+    "is_active": true,
+    "volume": 1.0,
+    "drywet": 1.0,
+    "n_param": 31,
+    "params": {
+      "0": {
+        "name": "Enabled",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "1": {
+        "name": "FFT size",
+        "def": 6.0,
+        "value": 6.0
+      },
+      "2": {
+        "name": "Dry amount",
+        "def": 1.0,
+        "value": 0.0
+      },
+      "3": {
+        "name": "Wet amount",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "4": {
+        "name": "Output gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "5": {
+        "name": "Head cut",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "6": {
+        "name": "Tail cut",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "7": {
+        "name": "Fade in",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "8": {
+        "name": "Fade out",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "9": {
+        "name": "Impulse listen",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "12": {
+        "name": "Channel source",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "13": {
+        "name": "Makeup gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "15": {
+        "name": "Pre-delay",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "16": {
+        "name": "Wet post-process",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "17": {
+        "name": "Equalizer visibility",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "18": {
+        "name": "Low-cut mode",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "19": {
+        "name": "Low-cut frequency",
+        "def": 50.0,
+        "value": 50.0
+      },
+      "20": {
+        "name": "Band 50Hz gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "21": {
+        "name": "Band 107Hz gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "22": {
+        "name": "Band 227Hz gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "23": {
+        "name": "Band 484Hz gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "24": {
+        "name": "Band 1 kHz gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "25": {
+        "name": "Band 2.2 kHz gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "26": {
+        "name": "Band 4.7 kHz gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "27": {
+        "name": "Band 10 kHz gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "28": {
+        "name": "High-cut mode",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "29": {
+        "name": "High-cut frequency",
+        "def": 10000.0,
+        "value": 10000.0
+      }
+    }
+  },
+  {
+    "name": "LSP Multiband Compressor Mono x8",
+    "label": "http://lsp-plug.in/plugins/lv2/mb_compressor_mono",
+    "is_active": true,
+    "volume": 1.0,
+    "drywet": 1.0,
+    "n_param": 256,
+    "params": {
+      "0": {
+        "name": "Enabled",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "1": {
+        "name": "Compressor mode",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "2": {
+        "name": "Input gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "3": {
+        "name": "Output gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "4": {
+        "name": "Dry gain",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "5": {
+        "name": "Wet gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "6": {
+        "name": "Dry/Wet balance",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "7": {
+        "name": "FFT reactivity",
+        "def": 0.20000000298023224,
+        "value": 0.20000000298023224
+      },
+      "8": {
+        "name": "Shift gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "9": {
+        "name": "Graph zoom",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "10": {
+        "name": "Envelope boost",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "11": {
+        "name": "Band selection",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "12": {
+        "name": "Band filter curves",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "13": {
+        "name": "Input FFT graph enable",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "14": {
+        "name": "Output FFT graph enable",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "17": {
+        "name": "Compression band enable 1",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "18": {
+        "name": "Split frequency 1",
+        "def": 40.0,
+        "value": 40.0
+      },
+      "19": {
+        "name": "Compression band enable 2",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "20": {
+        "name": "Split frequency 2",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "21": {
+        "name": "Compression band enable 3",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "22": {
+        "name": "Split frequency 3",
+        "def": 252.0,
+        "value": 252.0
+      },
+      "23": {
+        "name": "Compression band enable 4",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "24": {
+        "name": "Split frequency 4",
+        "def": 632.0,
+        "value": 632.0
+      },
+      "25": {
+        "name": "Compression band enable 5",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "26": {
+        "name": "Split frequency 5",
+        "def": 1587.0,
+        "value": 1587.0
+      },
+      "27": {
+        "name": "Compression band enable 6",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "28": {
+        "name": "Split frequency 6",
+        "def": 3984.0,
+        "value": 3984.0
+      },
+      "29": {
+        "name": "Compression band enable 7",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "30": {
+        "name": "Split frequency 7",
+        "def": 10000.0,
+        "value": 10000.0
+      },
+      "31": {
+        "name": "Sidechain mode 0",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "32": {
+        "name": "Sidechain lookahead 0",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "33": {
+        "name": "Sidechain reactivity 0",
+        "def": 10.0,
+        "value": 10.0
+      },
+      "34": {
+        "name": "Sidechain preamp 0",
+        "def": 1.0,
+        "value": 0.841395378112793
+      },
+      "35": {
+        "name": "Sidechain custom lo-cut 0",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "36": {
+        "name": "Sidechain custom hi-cut 0",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "37": {
+        "name": "Sidechain lo-cut frequency 0",
+        "def": 10.0,
+        "value": 10.0
+      },
+      "38": {
+        "name": "Sidechain hi-cut frequency 0",
+        "def": 40.0,
+        "value": 40.0
+      },
+      "39": {
+        "name": "Compression mode 0",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "40": {
+        "name": "Compressor enable 0",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "41": {
+        "name": "Solo band 0",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "42": {
+        "name": "Mute band 0",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "43": {
+        "name": "Attack threshold 0",
+        "def": 0.2511900067329407,
+        "value": 0.2511900067329407
+      },
+      "44": {
+        "name": "Attack time 0",
+        "def": 20.0,
+        "value": 20.0
+      },
+      "45": {
+        "name": "Release threshold 0",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "46": {
+        "name": "Release time 0",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "47": {
+        "name": "Hold time 0",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "48": {
+        "name": "Ratio 0",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "49": {
+        "name": "Knee 0",
+        "def": 0.5011799931526184,
+        "value": 0.5011799931526184
+      },
+      "50": {
+        "name": "Boost threshold 0",
+        "def": 0.00025099999038502574,
+        "value": 0.00025099999038502574
+      },
+      "51": {
+        "name": "Boost signal amount 0",
+        "def": 1.9952600002288818,
+        "value": 1.9952600002288818
+      },
+      "52": {
+        "name": "Makeup gain 0",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "53": {
+        "name": "Hue  0",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "56": {
+        "name": "Sidechain mode 1",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "57": {
+        "name": "Sidechain lookahead 1",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "58": {
+        "name": "Sidechain reactivity 1",
+        "def": 10.0,
+        "value": 10.0
+      },
+      "59": {
+        "name": "Sidechain preamp 1",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "60": {
+        "name": "Sidechain custom lo-cut 1",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "61": {
+        "name": "Sidechain custom hi-cut 1",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "62": {
+        "name": "Sidechain lo-cut frequency 1",
+        "def": 40.0,
+        "value": 40.0
+      },
+      "63": {
+        "name": "Sidechain hi-cut frequency 1",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "64": {
+        "name": "Compression mode 1",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "65": {
+        "name": "Compressor enable 1",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "66": {
+        "name": "Solo band 1",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "67": {
+        "name": "Mute band 1",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "68": {
+        "name": "Attack threshold 1",
+        "def": 0.2511900067329407,
+        "value": 0.2511900067329407
+      },
+      "69": {
+        "name": "Attack time 1",
+        "def": 20.0,
+        "value": 20.0
+      },
+      "70": {
+        "name": "Release threshold 1",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "71": {
+        "name": "Release time 1",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "72": {
+        "name": "Hold time 1",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "73": {
+        "name": "Ratio 1",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "74": {
+        "name": "Knee 1",
+        "def": 0.5011799931526184,
+        "value": 0.5011799931526184
+      },
+      "75": {
+        "name": "Boost threshold 1",
+        "def": 0.00025099999038502574,
+        "value": 0.00025099999038502574
+      },
+      "76": {
+        "name": "Boost signal amount 1",
+        "def": 1.9952600002288818,
+        "value": 1.9952600002288818
+      },
+      "77": {
+        "name": "Makeup gain 1",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "78": {
+        "name": "Hue  1",
+        "def": 0.125,
+        "value": 0.125
+      },
+      "81": {
+        "name": "Sidechain mode 2",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "82": {
+        "name": "Sidechain lookahead 2",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "83": {
+        "name": "Sidechain reactivity 2",
+        "def": 10.0,
+        "value": 10.0
+      },
+      "84": {
+        "name": "Sidechain preamp 2",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "85": {
+        "name": "Sidechain custom lo-cut 2",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "86": {
+        "name": "Sidechain custom hi-cut 2",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "87": {
+        "name": "Sidechain lo-cut frequency 2",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "88": {
+        "name": "Sidechain hi-cut frequency 2",
+        "def": 252.0,
+        "value": 252.0
+      },
+      "89": {
+        "name": "Compression mode 2",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "90": {
+        "name": "Compressor enable 2",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "91": {
+        "name": "Solo band 2",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "92": {
+        "name": "Mute band 2",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "93": {
+        "name": "Attack threshold 2",
+        "def": 0.2511900067329407,
+        "value": 0.2511900067329407
+      },
+      "94": {
+        "name": "Attack time 2",
+        "def": 20.0,
+        "value": 20.0
+      },
+      "95": {
+        "name": "Release threshold 2",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "96": {
+        "name": "Release time 2",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "97": {
+        "name": "Hold time 2",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "98": {
+        "name": "Ratio 2",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "99": {
+        "name": "Knee 2",
+        "def": 0.5011799931526184,
+        "value": 0.5011799931526184
+      },
+      "100": {
+        "name": "Boost threshold 2",
+        "def": 0.00025099999038502574,
+        "value": 0.00025099999038502574
+      },
+      "101": {
+        "name": "Boost signal amount 2",
+        "def": 1.9952600002288818,
+        "value": 1.9952600002288818
+      },
+      "102": {
+        "name": "Makeup gain 2",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "103": {
+        "name": "Hue  2",
+        "def": 0.25,
+        "value": 0.25
+      },
+      "106": {
+        "name": "Sidechain mode 3",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "107": {
+        "name": "Sidechain lookahead 3",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "108": {
+        "name": "Sidechain reactivity 3",
+        "def": 10.0,
+        "value": 10.0
+      },
+      "109": {
+        "name": "Sidechain preamp 3",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "110": {
+        "name": "Sidechain custom lo-cut 3",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "111": {
+        "name": "Sidechain custom hi-cut 3",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "112": {
+        "name": "Sidechain lo-cut frequency 3",
+        "def": 252.0,
+        "value": 252.0
+      },
+      "113": {
+        "name": "Sidechain hi-cut frequency 3",
+        "def": 632.0,
+        "value": 632.0
+      },
+      "114": {
+        "name": "Compression mode 3",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "115": {
+        "name": "Compressor enable 3",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "116": {
+        "name": "Solo band 3",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "117": {
+        "name": "Mute band 3",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "118": {
+        "name": "Attack threshold 3",
+        "def": 0.2511900067329407,
+        "value": 0.2511900067329407
+      },
+      "119": {
+        "name": "Attack time 3",
+        "def": 20.0,
+        "value": 20.0
+      },
+      "120": {
+        "name": "Release threshold 3",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "121": {
+        "name": "Release time 3",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "122": {
+        "name": "Hold time 3",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "123": {
+        "name": "Ratio 3",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "124": {
+        "name": "Knee 3",
+        "def": 0.5011799931526184,
+        "value": 0.5011799931526184
+      },
+      "125": {
+        "name": "Boost threshold 3",
+        "def": 0.00025099999038502574,
+        "value": 0.00025099999038502574
+      },
+      "126": {
+        "name": "Boost signal amount 3",
+        "def": 1.9952600002288818,
+        "value": 1.9952600002288818
+      },
+      "127": {
+        "name": "Makeup gain 3",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "128": {
+        "name": "Hue  3",
+        "def": 0.375,
+        "value": 0.375
+      },
+      "131": {
+        "name": "Sidechain mode 4",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "132": {
+        "name": "Sidechain lookahead 4",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "133": {
+        "name": "Sidechain reactivity 4",
+        "def": 10.0,
+        "value": 10.0
+      },
+      "134": {
+        "name": "Sidechain preamp 4",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "135": {
+        "name": "Sidechain custom lo-cut 4",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "136": {
+        "name": "Sidechain custom hi-cut 4",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "137": {
+        "name": "Sidechain lo-cut frequency 4",
+        "def": 632.0,
+        "value": 632.0
+      },
+      "138": {
+        "name": "Sidechain hi-cut frequency 4",
+        "def": 1587.0,
+        "value": 1587.0
+      },
+      "139": {
+        "name": "Compression mode 4",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "140": {
+        "name": "Compressor enable 4",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "141": {
+        "name": "Solo band 4",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "142": {
+        "name": "Mute band 4",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "143": {
+        "name": "Attack threshold 4",
+        "def": 0.2511900067329407,
+        "value": 0.2511900067329407
+      },
+      "144": {
+        "name": "Attack time 4",
+        "def": 20.0,
+        "value": 20.0
+      },
+      "145": {
+        "name": "Release threshold 4",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "146": {
+        "name": "Release time 4",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "147": {
+        "name": "Hold time 4",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "148": {
+        "name": "Ratio 4",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "149": {
+        "name": "Knee 4",
+        "def": 0.5011799931526184,
+        "value": 0.5011799931526184
+      },
+      "150": {
+        "name": "Boost threshold 4",
+        "def": 0.00025099999038502574,
+        "value": 0.00025099999038502574
+      },
+      "151": {
+        "name": "Boost signal amount 4",
+        "def": 1.9952600002288818,
+        "value": 1.9952600002288818
+      },
+      "152": {
+        "name": "Makeup gain 4",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "153": {
+        "name": "Hue  4",
+        "def": 0.5,
+        "value": 0.5
+      },
+      "156": {
+        "name": "Sidechain mode 5",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "157": {
+        "name": "Sidechain lookahead 5",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "158": {
+        "name": "Sidechain reactivity 5",
+        "def": 10.0,
+        "value": 10.0
+      },
+      "159": {
+        "name": "Sidechain preamp 5",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "160": {
+        "name": "Sidechain custom lo-cut 5",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "161": {
+        "name": "Sidechain custom hi-cut 5",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "162": {
+        "name": "Sidechain lo-cut frequency 5",
+        "def": 1587.0,
+        "value": 1587.0
+      },
+      "163": {
+        "name": "Sidechain hi-cut frequency 5",
+        "def": 3984.0,
+        "value": 3984.0
+      },
+      "164": {
+        "name": "Compression mode 5",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "165": {
+        "name": "Compressor enable 5",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "166": {
+        "name": "Solo band 5",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "167": {
+        "name": "Mute band 5",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "168": {
+        "name": "Attack threshold 5",
+        "def": 0.2511900067329407,
+        "value": 0.2511900067329407
+      },
+      "169": {
+        "name": "Attack time 5",
+        "def": 20.0,
+        "value": 20.0
+      },
+      "170": {
+        "name": "Release threshold 5",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "171": {
+        "name": "Release time 5",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "172": {
+        "name": "Hold time 5",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "173": {
+        "name": "Ratio 5",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "174": {
+        "name": "Knee 5",
+        "def": 0.5011799931526184,
+        "value": 0.5011799931526184
+      },
+      "175": {
+        "name": "Boost threshold 5",
+        "def": 0.00025099999038502574,
+        "value": 0.00025099999038502574
+      },
+      "176": {
+        "name": "Boost signal amount 5",
+        "def": 1.9952600002288818,
+        "value": 1.9952600002288818
+      },
+      "177": {
+        "name": "Makeup gain 5",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "178": {
+        "name": "Hue  5",
+        "def": 0.625,
+        "value": 0.625
+      },
+      "181": {
+        "name": "Sidechain mode 6",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "182": {
+        "name": "Sidechain lookahead 6",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "183": {
+        "name": "Sidechain reactivity 6",
+        "def": 10.0,
+        "value": 10.0
+      },
+      "184": {
+        "name": "Sidechain preamp 6",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "185": {
+        "name": "Sidechain custom lo-cut 6",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "186": {
+        "name": "Sidechain custom hi-cut 6",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "187": {
+        "name": "Sidechain lo-cut frequency 6",
+        "def": 3984.0,
+        "value": 3984.0
+      },
+      "188": {
+        "name": "Sidechain hi-cut frequency 6",
+        "def": 10000.0,
+        "value": 10000.0
+      },
+      "189": {
+        "name": "Compression mode 6",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "190": {
+        "name": "Compressor enable 6",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "191": {
+        "name": "Solo band 6",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "192": {
+        "name": "Mute band 6",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "193": {
+        "name": "Attack threshold 6",
+        "def": 0.2511900067329407,
+        "value": 0.2511900067329407
+      },
+      "194": {
+        "name": "Attack time 6",
+        "def": 20.0,
+        "value": 20.0
+      },
+      "195": {
+        "name": "Release threshold 6",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "196": {
+        "name": "Release time 6",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "197": {
+        "name": "Hold time 6",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "198": {
+        "name": "Ratio 6",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "199": {
+        "name": "Knee 6",
+        "def": 0.5011799931526184,
+        "value": 0.5011799931526184
+      },
+      "200": {
+        "name": "Boost threshold 6",
+        "def": 0.00025099999038502574,
+        "value": 0.00025099999038502574
+      },
+      "201": {
+        "name": "Boost signal amount 6",
+        "def": 1.9952600002288818,
+        "value": 1.9952600002288818
+      },
+      "202": {
+        "name": "Makeup gain 6",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "203": {
+        "name": "Hue  6",
+        "def": 0.75,
+        "value": 0.75
+      },
+      "206": {
+        "name": "Sidechain mode 7",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "207": {
+        "name": "Sidechain lookahead 7",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "208": {
+        "name": "Sidechain reactivity 7",
+        "def": 10.0,
+        "value": 10.0
+      },
+      "209": {
+        "name": "Sidechain preamp 7",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "210": {
+        "name": "Sidechain custom lo-cut 7",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "211": {
+        "name": "Sidechain custom hi-cut 7",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "212": {
+        "name": "Sidechain lo-cut frequency 7",
+        "def": 10000.0,
+        "value": 10000.0
+      },
+      "213": {
+        "name": "Sidechain hi-cut frequency 7",
+        "def": 20000.0,
+        "value": 20000.0
+      },
+      "214": {
+        "name": "Compression mode 7",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "215": {
+        "name": "Compressor enable 7",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "216": {
+        "name": "Solo band 7",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "217": {
+        "name": "Mute band 7",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "218": {
+        "name": "Attack threshold 7",
+        "def": 0.2511900067329407,
+        "value": 0.2511900067329407
+      },
+      "219": {
+        "name": "Attack time 7",
+        "def": 20.0,
+        "value": 20.0
+      },
+      "220": {
+        "name": "Release threshold 7",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "221": {
+        "name": "Release time 7",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "222": {
+        "name": "Hold time 7",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "223": {
+        "name": "Ratio 7",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "224": {
+        "name": "Knee 7",
+        "def": 0.5011799931526184,
+        "value": 0.5011799931526184
+      },
+      "225": {
+        "name": "Boost threshold 7",
+        "def": 0.00025099999038502574,
+        "value": 0.00025099999038502574
+      },
+      "226": {
+        "name": "Boost signal amount 7",
+        "def": 1.9952600002288818,
+        "value": 1.9952600002288818
+      },
+      "227": {
+        "name": "Makeup gain 7",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "228": {
+        "name": "Hue  7",
+        "def": 0.875,
+        "value": 0.875
+      }
+    }
+  },
+  {
+    "name": "Plujain-Ramp Live Aigu",
+    "label": "http://plujain/plugins/ramp_live",
+    "is_active": false,
+    "volume": 1.0,
+    "drywet": 1.0,
+    "n_param": 22,
+    "params": {
+      "0": {
+        "name": "Active",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "1": {
+        "name": "Mode",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "2": {
+        "name": "Enter Threshold",
+        "def": -40.0,
+        "value": -40.0
+      },
+      "3": {
+        "name": "Leave Threshold",
+        "def": -65.0,
+        "value": -65.0
+      },
+      "4": {
+        "name": "Pre Start",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "5": {
+        "name": "Pre Start Units",
+        "def": 2.0,
+        "value": 2.0
+      },
+      "6": {
+        "name": "Beat Offset",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "7": {
+        "name": "Sync Tempo",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "8": {
+        "name": "Host BPM",
+        "def": 120.0,
+        "value": 112.0
+      },
+      "9": {
+        "name": "Tempo",
+        "def": 120.0,
+        "value": 120.0
+      },
+      "10": {
+        "name": "Division",
+        "def": 11.0,
+        "value": 11.0
+      },
+      "11": {
+        "name": "Max Duration",
+        "def": 8.0,
+        "value": 8.0
+      },
+      "12": {
+        "name": "Half Speed",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "13": {
+        "name": "Double Speed",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "14": {
+        "name": "Attack",
+        "def": 5.0,
+        "value": 5.0
+      },
+      "15": {
+        "name": "Shape",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "16": {
+        "name": "Depth",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "17": {
+        "name": "Volume",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "18": {
+        "name": "Speed Effect 1",
+        "def": 0.5,
+        "value": 0.5
+      },
+      "19": {
+        "name": "Speed Effect 1 Volume",
+        "def": -80.0,
+        "value": -80.0
+      },
+      "20": {
+        "name": "Speed Effect 2",
+        "def": 2.0,
+        "value": 2.0
+      },
+      "21": {
+        "name": "Speed Effect 2 Volume",
+        "def": -80.0,
+        "value": -80.0
+      }
+    }
+  },
+  {
+    "name": "Plujain-Ramp Live Bass",
+    "label": "http://plujain/plugins/ramp_live",
+    "is_active": false,
+    "volume": 1.0,
+    "drywet": 1.0,
+    "n_param": 22,
+    "params": {
+      "0": {
+        "name": "Active",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "1": {
+        "name": "Mode",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "2": {
+        "name": "Enter Threshold",
+        "def": -40.0,
+        "value": -40.0
+      },
+      "3": {
+        "name": "Leave Threshold",
+        "def": -65.0,
+        "value": -65.0
+      },
+      "4": {
+        "name": "Pre Start",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "5": {
+        "name": "Pre Start Units",
+        "def": 2.0,
+        "value": 2.0
+      },
+      "6": {
+        "name": "Beat Offset",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "7": {
+        "name": "Sync Tempo",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "8": {
+        "name": "Host BPM",
+        "def": 120.0,
+        "value": 112.0
+      },
+      "9": {
+        "name": "Tempo",
+        "def": 120.0,
+        "value": 120.0
+      },
+      "10": {
+        "name": "Division",
+        "def": 11.0,
+        "value": 11.0
+      },
+      "11": {
+        "name": "Max Duration",
+        "def": 8.0,
+        "value": 8.0
+      },
+      "12": {
+        "name": "Half Speed",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "13": {
+        "name": "Double Speed",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "14": {
+        "name": "Attack",
+        "def": 5.0,
+        "value": 5.0
+      },
+      "15": {
+        "name": "Shape",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "16": {
+        "name": "Depth",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "17": {
+        "name": "Volume",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "18": {
+        "name": "Speed Effect 1",
+        "def": 0.5,
+        "value": 0.5
+      },
+      "19": {
+        "name": "Speed Effect 1 Volume",
+        "def": -80.0,
+        "value": -80.0
+      },
+      "20": {
+        "name": "Speed Effect 2",
+        "def": 2.0,
+        "value": 2.0
+      },
+      "21": {
+        "name": "Speed Effect 2 Volume",
+        "def": -80.0,
+        "value": -80.0
+      }
+    }
+  },
+  {
+    "name": "LSP Artistic Delay Stereo",
+    "label": "http://lsp-plug.in/plugins/lv2/art_delay_stereo",
+    "is_active": true,
+    "volume": 1.0,
+    "drywet": 1.0,
+    "n_param": 736,
+    "params": {
+      "0": {
+        "name": "Enabled",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "1": {
+        "name": "Delay line selector",
+        "def": 0.0,
+        "value": 2.0
+      },
+      "2": {
+        "name": "Maximum possible delay selector",
+        "def": 3.0,
+        "value": 3.0
+      },
+      "3": {
+        "name": "Input left channel panorama",
+        "def": -100.0,
+        "value": -100.0
+      },
+      "4": {
+        "name": "Input right channel panorama",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "5": {
+        "name": "Dry amount",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "6": {
+        "name": "Wet amount",
+        "def": 1.0,
+        "value": 0.21762971580028534
+      },
+      "7": {
+        "name": "Dry enable",
+        "def": 1.0,
+        "value": 0.0
+      },
+      "8": {
+        "name": "Wet enable",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "9": {
+        "name": "Mono output",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "10": {
+        "name": "Feedback",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "11": {
+        "name": "Feedback gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "12": {
+        "name": "Output gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "15": {
+        "name": "Tempo 0",
+        "def": 120.0,
+        "value": 112.0
+      },
+      "16": {
+        "name": "Tempo 0 ratio",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "17": {
+        "name": "Tempo0 sync",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "19": {
+        "name": "Tempo 1",
+        "def": 120.0,
+        "value": 120.0
+      },
+      "20": {
+        "name": "Tempo 1 ratio",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "21": {
+        "name": "Tempo1 sync",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "23": {
+        "name": "Tempo 2",
+        "def": 120.0,
+        "value": 120.0
+      },
+      "24": {
+        "name": "Tempo 2 ratio",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "25": {
+        "name": "Tempo2 sync",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "27": {
+        "name": "Tempo 3",
+        "def": 120.0,
+        "value": 120.0
+      },
+      "28": {
+        "name": "Tempo 3 ratio",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "29": {
+        "name": "Tempo3 sync",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "31": {
+        "name": "Tempo 4",
+        "def": 120.0,
+        "value": 120.0
+      },
+      "32": {
+        "name": "Tempo 4 ratio",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "33": {
+        "name": "Tempo4 sync",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "35": {
+        "name": "Tempo 5",
+        "def": 120.0,
+        "value": 120.0
+      },
+      "36": {
+        "name": "Tempo 5 ratio",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "37": {
+        "name": "Tempo5 sync",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "39": {
+        "name": "Tempo 6",
+        "def": 120.0,
+        "value": 120.0
+      },
+      "40": {
+        "name": "Tempo 6 ratio",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "41": {
+        "name": "Tempo6 sync",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "43": {
+        "name": "Tempo 7",
+        "def": 120.0,
+        "value": 120.0
+      },
+      "44": {
+        "name": "Tempo 7 ratio",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "45": {
+        "name": "Tempo7 sync",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "47": {
+        "name": "Delay 0 on",
+        "def": 0.0,
+        "value": 1.0
+      },
+      "48": {
+        "name": "Delay 0 solo",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "49": {
+        "name": "Delay 0 mute",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "50": {
+        "name": "Delay 0 reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "51": {
+        "name": "Delay 0 reference multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "52": {
+        "name": "Delay 0 tempo reference",
+        "def": 0.0,
+        "value": 1.0
+      },
+      "53": {
+        "name": "Delay 0 bar fraction",
+        "def": 1.0,
+        "value": 0.1666666716337204
+      },
+      "54": {
+        "name": "Delay 0 bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "55": {
+        "name": "Delay 0 bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "56": {
+        "name": "Delay 0 fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "57": {
+        "name": "Delay 0 denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "58": {
+        "name": "Delay 0 time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "59": {
+        "name": "Equalizer 0 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "60": {
+        "name": "Delay 0 low-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "61": {
+        "name": "Delay 0 low-cut frequency",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "62": {
+        "name": "Delay 0 high-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "63": {
+        "name": "Delay 0 high-cut frequency",
+        "def": 8000.0,
+        "value": 8000.0
+      },
+      "64": {
+        "name": "Delay 0 sub-bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "65": {
+        "name": "Delay 0 bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "66": {
+        "name": "Delay 0 middle",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "67": {
+        "name": "Delay 0 presence",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "68": {
+        "name": "Delay 0 treble",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "69": {
+        "name": "Delay 0 left channel panorama",
+        "def": -100.0,
+        "value": -100.0
+      },
+      "70": {
+        "name": "Delay 0 right channel panorama",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "71": {
+        "name": "Delay 0 gain",
+        "def": 1.0,
+        "value": 0.446683794260025
+      },
+      "72": {
+        "name": "Delay 0 hue",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "73": {
+        "name": "Delay 0 feedback enable",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "74": {
+        "name": "Delay 0 feedback gain",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "75": {
+        "name": "Delay 0 feedback tempo reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "76": {
+        "name": "Delay 0 feedback bar fraction",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "77": {
+        "name": "Delay 0 feedback bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "78": {
+        "name": "Delay 0 feedback bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "79": {
+        "name": "Delay 0 feedback fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "80": {
+        "name": "Delay 0 feedback denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "81": {
+        "name": "Delay 0 feedback time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "90": {
+        "name": "Delay 1 on",
+        "def": 0.0,
+        "value": 1.0
+      },
+      "91": {
+        "name": "Delay 1 solo",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "92": {
+        "name": "Delay 1 mute",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "93": {
+        "name": "Delay 1 reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "94": {
+        "name": "Delay 1 reference multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "95": {
+        "name": "Delay 1 tempo reference",
+        "def": 0.0,
+        "value": 1.0
+      },
+      "96": {
+        "name": "Delay 1 bar fraction",
+        "def": 1.0,
+        "value": 0.25
+      },
+      "97": {
+        "name": "Delay 1 bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "98": {
+        "name": "Delay 1 bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "99": {
+        "name": "Delay 1 fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "100": {
+        "name": "Delay 1 denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "101": {
+        "name": "Delay 1 time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "102": {
+        "name": "Equalizer 1 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "103": {
+        "name": "Delay 1 low-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "104": {
+        "name": "Delay 1 low-cut frequency",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "105": {
+        "name": "Delay 1 high-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "106": {
+        "name": "Delay 1 high-cut frequency",
+        "def": 8000.0,
+        "value": 8000.0
+      },
+      "107": {
+        "name": "Delay 1 sub-bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "108": {
+        "name": "Delay 1 bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "109": {
+        "name": "Delay 1 middle",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "110": {
+        "name": "Delay 1 presence",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "111": {
+        "name": "Delay 1 treble",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "112": {
+        "name": "Delay 1 left channel panorama",
+        "def": -100.0,
+        "value": -100.0
+      },
+      "113": {
+        "name": "Delay 1 right channel panorama",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "114": {
+        "name": "Delay 1 gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "115": {
+        "name": "Delay 1 hue",
+        "def": 0.0625,
+        "value": 0.0625
+      },
+      "116": {
+        "name": "Delay 1 feedback enable",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "117": {
+        "name": "Delay 1 feedback gain",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "118": {
+        "name": "Delay 1 feedback tempo reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "119": {
+        "name": "Delay 1 feedback bar fraction",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "120": {
+        "name": "Delay 1 feedback bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "121": {
+        "name": "Delay 1 feedback bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "122": {
+        "name": "Delay 1 feedback fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "123": {
+        "name": "Delay 1 feedback denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "124": {
+        "name": "Delay 1 feedback time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "133": {
+        "name": "Delay 2 on",
+        "def": 0.0,
+        "value": 1.0
+      },
+      "134": {
+        "name": "Delay 2 solo",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "135": {
+        "name": "Delay 2 mute",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "136": {
+        "name": "Delay 2 reference",
+        "def": 0.0,
+        "value": 1.0
+      },
+      "137": {
+        "name": "Delay 2 reference multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "138": {
+        "name": "Delay 2 tempo reference",
+        "def": 0.0,
+        "value": 1.0
+      },
+      "139": {
+        "name": "Delay 2 bar fraction",
+        "def": 1.0,
+        "value": 0.25
+      },
+      "140": {
+        "name": "Delay 2 bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "141": {
+        "name": "Delay 2 bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "142": {
+        "name": "Delay 2 fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "143": {
+        "name": "Delay 2 denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "144": {
+        "name": "Delay 2 time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "145": {
+        "name": "Equalizer 2 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "146": {
+        "name": "Delay 2 low-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "147": {
+        "name": "Delay 2 low-cut frequency",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "148": {
+        "name": "Delay 2 high-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "149": {
+        "name": "Delay 2 high-cut frequency",
+        "def": 8000.0,
+        "value": 8000.0
+      },
+      "150": {
+        "name": "Delay 2 sub-bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "151": {
+        "name": "Delay 2 bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "152": {
+        "name": "Delay 2 middle",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "153": {
+        "name": "Delay 2 presence",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "154": {
+        "name": "Delay 2 treble",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "155": {
+        "name": "Delay 2 left channel panorama",
+        "def": -100.0,
+        "value": -100.0
+      },
+      "156": {
+        "name": "Delay 2 right channel panorama",
+        "def": 100.0,
+        "value": -17.0
+      },
+      "157": {
+        "name": "Delay 2 gain",
+        "def": 1.0,
+        "value": 0.33496561646461487
+      },
+      "158": {
+        "name": "Delay 2 hue",
+        "def": 0.125,
+        "value": 0.125
+      },
+      "159": {
+        "name": "Delay 2 feedback enable",
+        "def": 0.0,
+        "value": 1.0
+      },
+      "160": {
+        "name": "Delay 2 feedback gain",
+        "def": 0.0,
+        "value": 0.11816801875829697
+      },
+      "161": {
+        "name": "Delay 2 feedback tempo reference",
+        "def": 0.0,
+        "value": 1.0
+      },
+      "162": {
+        "name": "Delay 2 feedback bar fraction",
+        "def": 1.0,
+        "value": 0.25
+      },
+      "163": {
+        "name": "Delay 2 feedback bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "164": {
+        "name": "Delay 2 feedback bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "165": {
+        "name": "Delay 2 feedback fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "166": {
+        "name": "Delay 2 feedback denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "167": {
+        "name": "Delay 2 feedback time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "176": {
+        "name": "Delay 3 on",
+        "def": 0.0,
+        "value": 1.0
+      },
+      "177": {
+        "name": "Delay 3 solo",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "178": {
+        "name": "Delay 3 mute",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "179": {
+        "name": "Delay 3 reference",
+        "def": 0.0,
+        "value": 2.0
+      },
+      "180": {
+        "name": "Delay 3 reference multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "181": {
+        "name": "Delay 3 tempo reference",
+        "def": 0.0,
+        "value": 1.0
+      },
+      "182": {
+        "name": "Delay 3 bar fraction",
+        "def": 1.0,
+        "value": 0.25
+      },
+      "183": {
+        "name": "Delay 3 bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "184": {
+        "name": "Delay 3 bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "185": {
+        "name": "Delay 3 fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "186": {
+        "name": "Delay 3 denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "187": {
+        "name": "Delay 3 time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "188": {
+        "name": "Equalizer 3 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "189": {
+        "name": "Delay 3 low-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "190": {
+        "name": "Delay 3 low-cut frequency",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "191": {
+        "name": "Delay 3 high-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "192": {
+        "name": "Delay 3 high-cut frequency",
+        "def": 8000.0,
+        "value": 8000.0
+      },
+      "193": {
+        "name": "Delay 3 sub-bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "194": {
+        "name": "Delay 3 bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "195": {
+        "name": "Delay 3 middle",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "196": {
+        "name": "Delay 3 presence",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "197": {
+        "name": "Delay 3 treble",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "198": {
+        "name": "Delay 3 left channel panorama",
+        "def": -100.0,
+        "value": -100.0
+      },
+      "199": {
+        "name": "Delay 3 right channel panorama",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "200": {
+        "name": "Delay 3 gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "201": {
+        "name": "Delay 3 hue",
+        "def": 0.1875,
+        "value": 0.1875
+      },
+      "202": {
+        "name": "Delay 3 feedback enable",
+        "def": 0.0,
+        "value": 1.0
+      },
+      "203": {
+        "name": "Delay 3 feedback gain",
+        "def": 0.0,
+        "value": 0.31441229581832886
+      },
+      "204": {
+        "name": "Delay 3 feedback tempo reference",
+        "def": 0.0,
+        "value": 1.0
+      },
+      "205": {
+        "name": "Delay 3 feedback bar fraction",
+        "def": 1.0,
+        "value": 0.25
+      },
+      "206": {
+        "name": "Delay 3 feedback bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "207": {
+        "name": "Delay 3 feedback bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "208": {
+        "name": "Delay 3 feedback fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "209": {
+        "name": "Delay 3 feedback denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "210": {
+        "name": "Delay 3 feedback time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "219": {
+        "name": "Delay 4 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "220": {
+        "name": "Delay 4 solo",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "221": {
+        "name": "Delay 4 mute",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "222": {
+        "name": "Delay 4 reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "223": {
+        "name": "Delay 4 reference multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "224": {
+        "name": "Delay 4 tempo reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "225": {
+        "name": "Delay 4 bar fraction",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "226": {
+        "name": "Delay 4 bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "227": {
+        "name": "Delay 4 bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "228": {
+        "name": "Delay 4 fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "229": {
+        "name": "Delay 4 denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "230": {
+        "name": "Delay 4 time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "231": {
+        "name": "Equalizer 4 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "232": {
+        "name": "Delay 4 low-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "233": {
+        "name": "Delay 4 low-cut frequency",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "234": {
+        "name": "Delay 4 high-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "235": {
+        "name": "Delay 4 high-cut frequency",
+        "def": 8000.0,
+        "value": 8000.0
+      },
+      "236": {
+        "name": "Delay 4 sub-bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "237": {
+        "name": "Delay 4 bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "238": {
+        "name": "Delay 4 middle",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "239": {
+        "name": "Delay 4 presence",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "240": {
+        "name": "Delay 4 treble",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "241": {
+        "name": "Delay 4 left channel panorama",
+        "def": -100.0,
+        "value": -100.0
+      },
+      "242": {
+        "name": "Delay 4 right channel panorama",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "243": {
+        "name": "Delay 4 gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "244": {
+        "name": "Delay 4 hue",
+        "def": 0.25,
+        "value": 0.25
+      },
+      "245": {
+        "name": "Delay 4 feedback enable",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "246": {
+        "name": "Delay 4 feedback gain",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "247": {
+        "name": "Delay 4 feedback tempo reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "248": {
+        "name": "Delay 4 feedback bar fraction",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "249": {
+        "name": "Delay 4 feedback bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "250": {
+        "name": "Delay 4 feedback bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "251": {
+        "name": "Delay 4 feedback fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "252": {
+        "name": "Delay 4 feedback denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "253": {
+        "name": "Delay 4 feedback time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "262": {
+        "name": "Delay 5 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "263": {
+        "name": "Delay 5 solo",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "264": {
+        "name": "Delay 5 mute",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "265": {
+        "name": "Delay 5 reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "266": {
+        "name": "Delay 5 reference multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "267": {
+        "name": "Delay 5 tempo reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "268": {
+        "name": "Delay 5 bar fraction",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "269": {
+        "name": "Delay 5 bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "270": {
+        "name": "Delay 5 bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "271": {
+        "name": "Delay 5 fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "272": {
+        "name": "Delay 5 denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "273": {
+        "name": "Delay 5 time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "274": {
+        "name": "Equalizer 5 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "275": {
+        "name": "Delay 5 low-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "276": {
+        "name": "Delay 5 low-cut frequency",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "277": {
+        "name": "Delay 5 high-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "278": {
+        "name": "Delay 5 high-cut frequency",
+        "def": 8000.0,
+        "value": 8000.0
+      },
+      "279": {
+        "name": "Delay 5 sub-bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "280": {
+        "name": "Delay 5 bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "281": {
+        "name": "Delay 5 middle",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "282": {
+        "name": "Delay 5 presence",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "283": {
+        "name": "Delay 5 treble",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "284": {
+        "name": "Delay 5 left channel panorama",
+        "def": -100.0,
+        "value": -100.0
+      },
+      "285": {
+        "name": "Delay 5 right channel panorama",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "286": {
+        "name": "Delay 5 gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "287": {
+        "name": "Delay 5 hue",
+        "def": 0.3125,
+        "value": 0.3125
+      },
+      "288": {
+        "name": "Delay 5 feedback enable",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "289": {
+        "name": "Delay 5 feedback gain",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "290": {
+        "name": "Delay 5 feedback tempo reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "291": {
+        "name": "Delay 5 feedback bar fraction",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "292": {
+        "name": "Delay 5 feedback bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "293": {
+        "name": "Delay 5 feedback bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "294": {
+        "name": "Delay 5 feedback fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "295": {
+        "name": "Delay 5 feedback denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "296": {
+        "name": "Delay 5 feedback time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "305": {
+        "name": "Delay 6 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "306": {
+        "name": "Delay 6 solo",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "307": {
+        "name": "Delay 6 mute",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "308": {
+        "name": "Delay 6 reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "309": {
+        "name": "Delay 6 reference multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "310": {
+        "name": "Delay 6 tempo reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "311": {
+        "name": "Delay 6 bar fraction",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "312": {
+        "name": "Delay 6 bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "313": {
+        "name": "Delay 6 bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "314": {
+        "name": "Delay 6 fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "315": {
+        "name": "Delay 6 denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "316": {
+        "name": "Delay 6 time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "317": {
+        "name": "Equalizer 6 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "318": {
+        "name": "Delay 6 low-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "319": {
+        "name": "Delay 6 low-cut frequency",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "320": {
+        "name": "Delay 6 high-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "321": {
+        "name": "Delay 6 high-cut frequency",
+        "def": 8000.0,
+        "value": 8000.0
+      },
+      "322": {
+        "name": "Delay 6 sub-bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "323": {
+        "name": "Delay 6 bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "324": {
+        "name": "Delay 6 middle",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "325": {
+        "name": "Delay 6 presence",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "326": {
+        "name": "Delay 6 treble",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "327": {
+        "name": "Delay 6 left channel panorama",
+        "def": -100.0,
+        "value": -100.0
+      },
+      "328": {
+        "name": "Delay 6 right channel panorama",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "329": {
+        "name": "Delay 6 gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "330": {
+        "name": "Delay 6 hue",
+        "def": 0.375,
+        "value": 0.375
+      },
+      "331": {
+        "name": "Delay 6 feedback enable",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "332": {
+        "name": "Delay 6 feedback gain",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "333": {
+        "name": "Delay 6 feedback tempo reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "334": {
+        "name": "Delay 6 feedback bar fraction",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "335": {
+        "name": "Delay 6 feedback bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "336": {
+        "name": "Delay 6 feedback bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "337": {
+        "name": "Delay 6 feedback fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "338": {
+        "name": "Delay 6 feedback denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "339": {
+        "name": "Delay 6 feedback time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "348": {
+        "name": "Delay 7 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "349": {
+        "name": "Delay 7 solo",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "350": {
+        "name": "Delay 7 mute",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "351": {
+        "name": "Delay 7 reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "352": {
+        "name": "Delay 7 reference multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "353": {
+        "name": "Delay 7 tempo reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "354": {
+        "name": "Delay 7 bar fraction",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "355": {
+        "name": "Delay 7 bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "356": {
+        "name": "Delay 7 bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "357": {
+        "name": "Delay 7 fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "358": {
+        "name": "Delay 7 denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "359": {
+        "name": "Delay 7 time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "360": {
+        "name": "Equalizer 7 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "361": {
+        "name": "Delay 7 low-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "362": {
+        "name": "Delay 7 low-cut frequency",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "363": {
+        "name": "Delay 7 high-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "364": {
+        "name": "Delay 7 high-cut frequency",
+        "def": 8000.0,
+        "value": 8000.0
+      },
+      "365": {
+        "name": "Delay 7 sub-bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "366": {
+        "name": "Delay 7 bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "367": {
+        "name": "Delay 7 middle",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "368": {
+        "name": "Delay 7 presence",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "369": {
+        "name": "Delay 7 treble",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "370": {
+        "name": "Delay 7 left channel panorama",
+        "def": -100.0,
+        "value": -100.0
+      },
+      "371": {
+        "name": "Delay 7 right channel panorama",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "372": {
+        "name": "Delay 7 gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "373": {
+        "name": "Delay 7 hue",
+        "def": 0.4375,
+        "value": 0.4375
+      },
+      "374": {
+        "name": "Delay 7 feedback enable",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "375": {
+        "name": "Delay 7 feedback gain",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "376": {
+        "name": "Delay 7 feedback tempo reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "377": {
+        "name": "Delay 7 feedback bar fraction",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "378": {
+        "name": "Delay 7 feedback bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "379": {
+        "name": "Delay 7 feedback bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "380": {
+        "name": "Delay 7 feedback fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "381": {
+        "name": "Delay 7 feedback denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "382": {
+        "name": "Delay 7 feedback time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "391": {
+        "name": "Delay 8 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "392": {
+        "name": "Delay 8 solo",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "393": {
+        "name": "Delay 8 mute",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "394": {
+        "name": "Delay 8 reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "395": {
+        "name": "Delay 8 reference multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "396": {
+        "name": "Delay 8 tempo reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "397": {
+        "name": "Delay 8 bar fraction",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "398": {
+        "name": "Delay 8 bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "399": {
+        "name": "Delay 8 bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "400": {
+        "name": "Delay 8 fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "401": {
+        "name": "Delay 8 denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "402": {
+        "name": "Delay 8 time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "403": {
+        "name": "Equalizer 8 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "404": {
+        "name": "Delay 8 low-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "405": {
+        "name": "Delay 8 low-cut frequency",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "406": {
+        "name": "Delay 8 high-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "407": {
+        "name": "Delay 8 high-cut frequency",
+        "def": 8000.0,
+        "value": 8000.0
+      },
+      "408": {
+        "name": "Delay 8 sub-bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "409": {
+        "name": "Delay 8 bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "410": {
+        "name": "Delay 8 middle",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "411": {
+        "name": "Delay 8 presence",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "412": {
+        "name": "Delay 8 treble",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "413": {
+        "name": "Delay 8 left channel panorama",
+        "def": -100.0,
+        "value": -100.0
+      },
+      "414": {
+        "name": "Delay 8 right channel panorama",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "415": {
+        "name": "Delay 8 gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "416": {
+        "name": "Delay 8 hue",
+        "def": 0.5,
+        "value": 0.5
+      },
+      "417": {
+        "name": "Delay 8 feedback enable",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "418": {
+        "name": "Delay 8 feedback gain",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "419": {
+        "name": "Delay 8 feedback tempo reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "420": {
+        "name": "Delay 8 feedback bar fraction",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "421": {
+        "name": "Delay 8 feedback bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "422": {
+        "name": "Delay 8 feedback bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "423": {
+        "name": "Delay 8 feedback fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "424": {
+        "name": "Delay 8 feedback denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "425": {
+        "name": "Delay 8 feedback time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "434": {
+        "name": "Delay 9 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "435": {
+        "name": "Delay 9 solo",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "436": {
+        "name": "Delay 9 mute",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "437": {
+        "name": "Delay 9 reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "438": {
+        "name": "Delay 9 reference multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "439": {
+        "name": "Delay 9 tempo reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "440": {
+        "name": "Delay 9 bar fraction",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "441": {
+        "name": "Delay 9 bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "442": {
+        "name": "Delay 9 bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "443": {
+        "name": "Delay 9 fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "444": {
+        "name": "Delay 9 denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "445": {
+        "name": "Delay 9 time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "446": {
+        "name": "Equalizer 9 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "447": {
+        "name": "Delay 9 low-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "448": {
+        "name": "Delay 9 low-cut frequency",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "449": {
+        "name": "Delay 9 high-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "450": {
+        "name": "Delay 9 high-cut frequency",
+        "def": 8000.0,
+        "value": 8000.0
+      },
+      "451": {
+        "name": "Delay 9 sub-bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "452": {
+        "name": "Delay 9 bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "453": {
+        "name": "Delay 9 middle",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "454": {
+        "name": "Delay 9 presence",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "455": {
+        "name": "Delay 9 treble",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "456": {
+        "name": "Delay 9 left channel panorama",
+        "def": -100.0,
+        "value": -100.0
+      },
+      "457": {
+        "name": "Delay 9 right channel panorama",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "458": {
+        "name": "Delay 9 gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "459": {
+        "name": "Delay 9 hue",
+        "def": 0.5625,
+        "value": 0.5625
+      },
+      "460": {
+        "name": "Delay 9 feedback enable",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "461": {
+        "name": "Delay 9 feedback gain",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "462": {
+        "name": "Delay 9 feedback tempo reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "463": {
+        "name": "Delay 9 feedback bar fraction",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "464": {
+        "name": "Delay 9 feedback bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "465": {
+        "name": "Delay 9 feedback bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "466": {
+        "name": "Delay 9 feedback fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "467": {
+        "name": "Delay 9 feedback denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "468": {
+        "name": "Delay 9 feedback time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "477": {
+        "name": "Delay 10 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "478": {
+        "name": "Delay 10 solo",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "479": {
+        "name": "Delay 10 mute",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "480": {
+        "name": "Delay 10 reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "481": {
+        "name": "Delay 10 reference multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "482": {
+        "name": "Delay 10 tempo reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "483": {
+        "name": "Delay 10 bar fraction",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "484": {
+        "name": "Delay 10 bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "485": {
+        "name": "Delay 10 bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "486": {
+        "name": "Delay 10 fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "487": {
+        "name": "Delay 10 denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "488": {
+        "name": "Delay 10 time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "489": {
+        "name": "Equalizer 10 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "490": {
+        "name": "Delay 10 low-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "491": {
+        "name": "Delay 10 low-cut frequency",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "492": {
+        "name": "Delay 10 high-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "493": {
+        "name": "Delay 10 high-cut frequency",
+        "def": 8000.0,
+        "value": 8000.0
+      },
+      "494": {
+        "name": "Delay 10 sub-bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "495": {
+        "name": "Delay 10 bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "496": {
+        "name": "Delay 10 middle",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "497": {
+        "name": "Delay 10 presence",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "498": {
+        "name": "Delay 10 treble",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "499": {
+        "name": "Delay 10 left channel panorama",
+        "def": -100.0,
+        "value": -100.0
+      },
+      "500": {
+        "name": "Delay 10 right channel panorama",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "501": {
+        "name": "Delay 10 gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "502": {
+        "name": "Delay 10 hue",
+        "def": 0.625,
+        "value": 0.625
+      },
+      "503": {
+        "name": "Delay 10 feedback enable",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "504": {
+        "name": "Delay 10 feedback gain",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "505": {
+        "name": "Delay 10 feedback tempo reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "506": {
+        "name": "Delay 10 feedback bar fraction",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "507": {
+        "name": "Delay 10 feedback bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "508": {
+        "name": "Delay 10 feedback bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "509": {
+        "name": "Delay 10 feedback fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "510": {
+        "name": "Delay 10 feedback denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "511": {
+        "name": "Delay 10 feedback time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "520": {
+        "name": "Delay 11 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "521": {
+        "name": "Delay 11 solo",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "522": {
+        "name": "Delay 11 mute",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "523": {
+        "name": "Delay 11 reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "524": {
+        "name": "Delay 11 reference multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "525": {
+        "name": "Delay 11 tempo reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "526": {
+        "name": "Delay 11 bar fraction",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "527": {
+        "name": "Delay 11 bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "528": {
+        "name": "Delay 11 bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "529": {
+        "name": "Delay 11 fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "530": {
+        "name": "Delay 11 denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "531": {
+        "name": "Delay 11 time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "532": {
+        "name": "Equalizer 11 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "533": {
+        "name": "Delay 11 low-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "534": {
+        "name": "Delay 11 low-cut frequency",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "535": {
+        "name": "Delay 11 high-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "536": {
+        "name": "Delay 11 high-cut frequency",
+        "def": 8000.0,
+        "value": 8000.0
+      },
+      "537": {
+        "name": "Delay 11 sub-bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "538": {
+        "name": "Delay 11 bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "539": {
+        "name": "Delay 11 middle",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "540": {
+        "name": "Delay 11 presence",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "541": {
+        "name": "Delay 11 treble",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "542": {
+        "name": "Delay 11 left channel panorama",
+        "def": -100.0,
+        "value": -100.0
+      },
+      "543": {
+        "name": "Delay 11 right channel panorama",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "544": {
+        "name": "Delay 11 gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "545": {
+        "name": "Delay 11 hue",
+        "def": 0.6875,
+        "value": 0.6875
+      },
+      "546": {
+        "name": "Delay 11 feedback enable",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "547": {
+        "name": "Delay 11 feedback gain",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "548": {
+        "name": "Delay 11 feedback tempo reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "549": {
+        "name": "Delay 11 feedback bar fraction",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "550": {
+        "name": "Delay 11 feedback bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "551": {
+        "name": "Delay 11 feedback bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "552": {
+        "name": "Delay 11 feedback fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "553": {
+        "name": "Delay 11 feedback denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "554": {
+        "name": "Delay 11 feedback time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "563": {
+        "name": "Delay 12 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "564": {
+        "name": "Delay 12 solo",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "565": {
+        "name": "Delay 12 mute",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "566": {
+        "name": "Delay 12 reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "567": {
+        "name": "Delay 12 reference multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "568": {
+        "name": "Delay 12 tempo reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "569": {
+        "name": "Delay 12 bar fraction",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "570": {
+        "name": "Delay 12 bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "571": {
+        "name": "Delay 12 bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "572": {
+        "name": "Delay 12 fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "573": {
+        "name": "Delay 12 denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "574": {
+        "name": "Delay 12 time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "575": {
+        "name": "Equalizer 12 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "576": {
+        "name": "Delay 12 low-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "577": {
+        "name": "Delay 12 low-cut frequency",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "578": {
+        "name": "Delay 12 high-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "579": {
+        "name": "Delay 12 high-cut frequency",
+        "def": 8000.0,
+        "value": 8000.0
+      },
+      "580": {
+        "name": "Delay 12 sub-bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "581": {
+        "name": "Delay 12 bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "582": {
+        "name": "Delay 12 middle",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "583": {
+        "name": "Delay 12 presence",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "584": {
+        "name": "Delay 12 treble",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "585": {
+        "name": "Delay 12 left channel panorama",
+        "def": -100.0,
+        "value": -100.0
+      },
+      "586": {
+        "name": "Delay 12 right channel panorama",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "587": {
+        "name": "Delay 12 gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "588": {
+        "name": "Delay 12 hue",
+        "def": 0.75,
+        "value": 0.75
+      },
+      "589": {
+        "name": "Delay 12 feedback enable",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "590": {
+        "name": "Delay 12 feedback gain",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "591": {
+        "name": "Delay 12 feedback tempo reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "592": {
+        "name": "Delay 12 feedback bar fraction",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "593": {
+        "name": "Delay 12 feedback bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "594": {
+        "name": "Delay 12 feedback bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "595": {
+        "name": "Delay 12 feedback fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "596": {
+        "name": "Delay 12 feedback denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "597": {
+        "name": "Delay 12 feedback time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "606": {
+        "name": "Delay 13 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "607": {
+        "name": "Delay 13 solo",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "608": {
+        "name": "Delay 13 mute",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "609": {
+        "name": "Delay 13 reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "610": {
+        "name": "Delay 13 reference multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "611": {
+        "name": "Delay 13 tempo reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "612": {
+        "name": "Delay 13 bar fraction",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "613": {
+        "name": "Delay 13 bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "614": {
+        "name": "Delay 13 bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "615": {
+        "name": "Delay 13 fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "616": {
+        "name": "Delay 13 denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "617": {
+        "name": "Delay 13 time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "618": {
+        "name": "Equalizer 13 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "619": {
+        "name": "Delay 13 low-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "620": {
+        "name": "Delay 13 low-cut frequency",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "621": {
+        "name": "Delay 13 high-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "622": {
+        "name": "Delay 13 high-cut frequency",
+        "def": 8000.0,
+        "value": 8000.0
+      },
+      "623": {
+        "name": "Delay 13 sub-bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "624": {
+        "name": "Delay 13 bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "625": {
+        "name": "Delay 13 middle",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "626": {
+        "name": "Delay 13 presence",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "627": {
+        "name": "Delay 13 treble",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "628": {
+        "name": "Delay 13 left channel panorama",
+        "def": -100.0,
+        "value": -100.0
+      },
+      "629": {
+        "name": "Delay 13 right channel panorama",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "630": {
+        "name": "Delay 13 gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "631": {
+        "name": "Delay 13 hue",
+        "def": 0.8125,
+        "value": 0.8125
+      },
+      "632": {
+        "name": "Delay 13 feedback enable",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "633": {
+        "name": "Delay 13 feedback gain",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "634": {
+        "name": "Delay 13 feedback tempo reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "635": {
+        "name": "Delay 13 feedback bar fraction",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "636": {
+        "name": "Delay 13 feedback bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "637": {
+        "name": "Delay 13 feedback bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "638": {
+        "name": "Delay 13 feedback fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "639": {
+        "name": "Delay 13 feedback denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "640": {
+        "name": "Delay 13 feedback time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "649": {
+        "name": "Delay 14 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "650": {
+        "name": "Delay 14 solo",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "651": {
+        "name": "Delay 14 mute",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "652": {
+        "name": "Delay 14 reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "653": {
+        "name": "Delay 14 reference multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "654": {
+        "name": "Delay 14 tempo reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "655": {
+        "name": "Delay 14 bar fraction",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "656": {
+        "name": "Delay 14 bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "657": {
+        "name": "Delay 14 bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "658": {
+        "name": "Delay 14 fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "659": {
+        "name": "Delay 14 denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "660": {
+        "name": "Delay 14 time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "661": {
+        "name": "Equalizer 14 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "662": {
+        "name": "Delay 14 low-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "663": {
+        "name": "Delay 14 low-cut frequency",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "664": {
+        "name": "Delay 14 high-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "665": {
+        "name": "Delay 14 high-cut frequency",
+        "def": 8000.0,
+        "value": 8000.0
+      },
+      "666": {
+        "name": "Delay 14 sub-bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "667": {
+        "name": "Delay 14 bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "668": {
+        "name": "Delay 14 middle",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "669": {
+        "name": "Delay 14 presence",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "670": {
+        "name": "Delay 14 treble",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "671": {
+        "name": "Delay 14 left channel panorama",
+        "def": -100.0,
+        "value": -100.0
+      },
+      "672": {
+        "name": "Delay 14 right channel panorama",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "673": {
+        "name": "Delay 14 gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "674": {
+        "name": "Delay 14 hue",
+        "def": 0.875,
+        "value": 0.875
+      },
+      "675": {
+        "name": "Delay 14 feedback enable",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "676": {
+        "name": "Delay 14 feedback gain",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "677": {
+        "name": "Delay 14 feedback tempo reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "678": {
+        "name": "Delay 14 feedback bar fraction",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "679": {
+        "name": "Delay 14 feedback bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "680": {
+        "name": "Delay 14 feedback bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "681": {
+        "name": "Delay 14 feedback fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "682": {
+        "name": "Delay 14 feedback denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "683": {
+        "name": "Delay 14 feedback time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "692": {
+        "name": "Delay 15 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "693": {
+        "name": "Delay 15 solo",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "694": {
+        "name": "Delay 15 mute",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "695": {
+        "name": "Delay 15 reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "696": {
+        "name": "Delay 15 reference multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "697": {
+        "name": "Delay 15 tempo reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "698": {
+        "name": "Delay 15 bar fraction",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "699": {
+        "name": "Delay 15 bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "700": {
+        "name": "Delay 15 bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "701": {
+        "name": "Delay 15 fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "702": {
+        "name": "Delay 15 denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "703": {
+        "name": "Delay 15 time addition",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "704": {
+        "name": "Equalizer 15 on",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "705": {
+        "name": "Delay 15 low-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "706": {
+        "name": "Delay 15 low-cut frequency",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "707": {
+        "name": "Delay 15 high-cut filter",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "708": {
+        "name": "Delay 15 high-cut frequency",
+        "def": 8000.0,
+        "value": 8000.0
+      },
+      "709": {
+        "name": "Delay 15 sub-bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "710": {
+        "name": "Delay 15 bass",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "711": {
+        "name": "Delay 15 middle",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "712": {
+        "name": "Delay 15 presence",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "713": {
+        "name": "Delay 15 treble",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "714": {
+        "name": "Delay 15 left channel panorama",
+        "def": -100.0,
+        "value": -100.0
+      },
+      "715": {
+        "name": "Delay 15 right channel panorama",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "716": {
+        "name": "Delay 15 gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "717": {
+        "name": "Delay 15 hue",
+        "def": 0.9375,
+        "value": 0.9375
+      },
+      "718": {
+        "name": "Delay 15 feedback enable",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "719": {
+        "name": "Delay 15 feedback gain",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "720": {
+        "name": "Delay 15 feedback tempo reference",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "721": {
+        "name": "Delay 15 feedback bar fraction",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "722": {
+        "name": "Delay 15 feedback bar denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "723": {
+        "name": "Delay 15 feedback bar multiplier",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "724": {
+        "name": "Delay 15 feedback fraction",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "725": {
+        "name": "Delay 15 feedback denominator",
+        "def": 4.0,
+        "value": 4.0
+      },
+      "726": {
+        "name": "Delay 15 feedback time addition",
+        "def": 0.0,
+        "value": 0.0
+      }
+    }
+  },
+  {
+    "name": "Ramp GuitBass",
+    "label": "http://plujain/plugins/ramp_live",
+    "is_active": true,
+    "volume": 1.0,
+    "drywet": 1.0,
+    "n_param": 22,
+    "params": {
+      "0": {
+        "name": "Active",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "1": {
+        "name": "Mode",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "2": {
+        "name": "Enter Threshold",
+        "def": -40.0,
+        "value": -40.0
+      },
+      "3": {
+        "name": "Leave Threshold",
+        "def": -65.0,
+        "value": -65.0
+      },
+      "4": {
+        "name": "Pre Start",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "5": {
+        "name": "Pre Start Units",
+        "def": 2.0,
+        "value": 2.0
+      },
+      "6": {
+        "name": "Beat Offset",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "7": {
+        "name": "Sync Tempo",
+        "def": 1.0,
+        "value": 0.0
+      },
+      "8": {
+        "name": "Host BPM",
+        "def": 120.0,
+        "value": 140.0
+      },
+      "9": {
+        "name": "Tempo",
+        "def": 120.0,
+        "value": 112.0
+      },
+      "10": {
+        "name": "Division",
+        "def": 11.0,
+        "value": 7.0
+      },
+      "11": {
+        "name": "Max Duration",
+        "def": 8.0,
+        "value": 1.780682921409607
+      },
+      "12": {
+        "name": "Half Speed",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "13": {
+        "name": "Double Speed",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "14": {
+        "name": "Attack",
+        "def": 5.0,
+        "value": 64.33999633789062
+      },
+      "15": {
+        "name": "Shape",
+        "def": 0.0,
+        "value": 3.43999981880188
+      },
+      "16": {
+        "name": "Depth",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "17": {
+        "name": "Volume",
+        "def": 0.0,
+        "value": -80.0
+      },
+      "18": {
+        "name": "Speed Effect 1",
+        "def": 0.5,
+        "value": 0.5
+      },
+      "19": {
+        "name": "Speed Effect 1 Volume",
+        "def": -80.0,
+        "value": 1.8799961805343628
+      },
+      "20": {
+        "name": "Speed Effect 2",
+        "def": 2.0,
+        "value": 0.25
+      },
+      "21": {
+        "name": "Speed Effect 2 Volume",
+        "def": -80.0,
+        "value": -80.0
+      }
+    }
+  },
+  {
+    "name": "ChannelB UseGuit",
+    "label": "http://plujain/plugins/channelb",
+    "is_active": true,
+    "volume": 1.0,
+    "drywet": 1.0,
+    "n_param": 7,
+    "params": {
+      "0": {
+        "name": "ChannelB",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "1": {
+        "name": "CrossLength AB",
+        "def": 50.0,
+        "value": 70.0
+      },
+      "2": {
+        "name": "fade units AB",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "3": {
+        "name": "Shape AB",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "4": {
+        "name": "CrossLength BA",
+        "def": 50.0,
+        "value": 50.0
+      },
+      "5": {
+        "name": "fade units BA",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "6": {
+        "name": "Shape BA",
+        "def": 0.0,
+        "value": 0.0
+      }
+    }
+  },
+  {
+    "name": "Ramp GuitSkank",
+    "label": "http://plujain/plugins/ramp_live",
+    "is_active": true,
+    "volume": 1.0,
+    "drywet": 1.0,
+    "n_param": 22,
+    "params": {
+      "0": {
+        "name": "Active",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "1": {
+        "name": "Mode",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "2": {
+        "name": "Enter Threshold",
+        "def": -40.0,
+        "value": -40.0
+      },
+      "3": {
+        "name": "Leave Threshold",
+        "def": -65.0,
+        "value": -65.0
+      },
+      "4": {
+        "name": "Pre Start",
+        "def": 0.0,
+        "value": 1.0
+      },
+      "5": {
+        "name": "Pre Start Units",
+        "def": 2.0,
+        "value": 2.0
+      },
+      "6": {
+        "name": "Beat Offset",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "7": {
+        "name": "Sync Tempo",
+        "def": 1.0,
+        "value": 0.0
+      },
+      "8": {
+        "name": "Host BPM",
+        "def": 120.0,
+        "value": 140.0
+      },
+      "9": {
+        "name": "Tempo",
+        "def": 120.0,
+        "value": 140.0
+      },
+      "10": {
+        "name": "Division",
+        "def": 11.0,
+        "value": 7.0
+      },
+      "11": {
+        "name": "Max Duration",
+        "def": 8.0,
+        "value": 0.5
+      },
+      "12": {
+        "name": "Half Speed",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "13": {
+        "name": "Double Speed",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "14": {
+        "name": "Attack",
+        "def": 5.0,
+        "value": 5.0
+      },
+      "15": {
+        "name": "Shape",
+        "def": 0.0,
+        "value": 0.019512195140123367
+      },
+      "16": {
+        "name": "Depth",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "17": {
+        "name": "Volume",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "18": {
+        "name": "Speed Effect 1",
+        "def": 0.5,
+        "value": 0.5
+      },
+      "19": {
+        "name": "Speed Effect 1 Volume",
+        "def": -80.0,
+        "value": -80.0
+      },
+      "20": {
+        "name": "Speed Effect 2",
+        "def": 2.0,
+        "value": 2.0
+      },
+      "21": {
+        "name": "Speed Effect 2 Volume",
+        "def": -80.0,
+        "value": -80.0
+      }
+    }
+  },
+  {
+    "name": "AC30 impulse",
+    "label": "http://lsp-plug.in/plugins/lv2/impulse_responses_mono",
+    "is_active": true,
+    "volume": 1.0,
+    "drywet": 1.0,
+    "n_param": 31,
+    "params": {
+      "0": {
+        "name": "Enabled",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "1": {
+        "name": "FFT size",
+        "def": 6.0,
+        "value": 6.0
+      },
+      "2": {
+        "name": "Dry amount",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "3": {
+        "name": "Wet amount",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "4": {
+        "name": "Output gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "5": {
+        "name": "Head cut",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "6": {
+        "name": "Tail cut",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "7": {
+        "name": "Fade in",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "8": {
+        "name": "Fade out",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "9": {
+        "name": "Impulse listen",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "12": {
+        "name": "Channel source",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "13": {
+        "name": "Makeup gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "15": {
+        "name": "Pre-delay",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "16": {
+        "name": "Wet post-process",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "17": {
+        "name": "Equalizer visibility",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "18": {
+        "name": "Low-cut mode",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "19": {
+        "name": "Low-cut frequency",
+        "def": 50.0,
+        "value": 50.0
+      },
+      "20": {
+        "name": "Band 50Hz gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "21": {
+        "name": "Band 107Hz gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "22": {
+        "name": "Band 227Hz gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "23": {
+        "name": "Band 484Hz gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "24": {
+        "name": "Band 1 kHz gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "25": {
+        "name": "Band 2.2 kHz gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "26": {
+        "name": "Band 4.7 kHz gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "27": {
+        "name": "Band 10 kHz gain",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "28": {
+        "name": "High-cut mode",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "29": {
+        "name": "High-cut frequency",
+        "def": 10000.0,
+        "value": 10000.0
+      }
+    }
+  },
+  {
+    "name": "ChannelB bassguit",
+    "label": "http://plujain/plugins/channelb",
+    "is_active": true,
+    "volume": 1.0,
+    "drywet": 1.0,
+    "n_param": 7,
+    "params": {
+      "0": {
+        "name": "ChannelB",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "1": {
+        "name": "CrossLength AB",
+        "def": 50.0,
+        "value": 50.0
+      },
+      "2": {
+        "name": "fade units AB",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "3": {
+        "name": "Shape AB",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "4": {
+        "name": "CrossLength BA",
+        "def": 50.0,
+        "value": 50.0
+      },
+      "5": {
+        "name": "fade units BA",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "6": {
+        "name": "Shape BA",
+        "def": 0.0,
+        "value": 0.0
+      }
+    }
+  },
+  {
+    "name": "Dragonfly Plate Reverb",
+    "label": "urn:dragonfly:plate",
+    "is_active": true,
+    "volume": 1.0,
+    "drywet": 0.0,
+    "n_param": 9,
+    "params": {
+      "0": {
+        "name": "Dry Level",
+        "def": 80.0,
+        "value": 70.5521469116211
+      },
+      "1": {
+        "name": "Wet Level",
+        "def": 20.0,
+        "value": 17.17791748046875
+      },
+      "2": {
+        "name": "Algorithm",
+        "def": 1.0,
+        "value": 1.0
+      },
+      "3": {
+        "name": "Width",
+        "def": 100.0,
+        "value": 100.0
+      },
+      "4": {
+        "name": "Predelay",
+        "def": 0.0,
+        "value": 0.0
+      },
+      "5": {
+        "name": "Decay",
+        "def": 0.4000000059604645,
+        "value": 0.4000000059604645
+      },
+      "6": {
+        "name": "Low Cut",
+        "def": 200.0,
+        "value": 200.0
+      },
+      "7": {
+        "name": "High Cut",
+        "def": 16000.0,
+        "value": 16000.0
+      },
+      "8": {
+        "name": "Dampen",
+        "def": 13000.0,
+        "value": 13000.0
+      }
+    }
+  },
+  {
+    "name": "InputGain",
+    "label": "audiogain",
+    "is_active": true,
+    "volume": 1.0,
+    "drywet": 1.0,
+    "n_param": 1,
+    "params": {
+      "0": {
+        "name": "Gain",
+        "def": 1.0,
+        "value": 1.0
+      }
+    }
+  }
+]

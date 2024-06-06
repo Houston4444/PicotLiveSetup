@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+from chansons.song_parameters import SongParameters
 from rmodule import RModule
 
 if TYPE_CHECKING:
@@ -20,5 +21,8 @@ class RandomListener(RModule):
     
     def stop(self):
         self.send('/stop')
+        
+    def set_song(self, song: SongParameters):
+        self.start()
 
             

@@ -2,21 +2,11 @@ from dataclasses import dataclass
 import time
 import random
 from typing import TYPE_CHECKING, Optional, Union
-import json
 from threading import Timer
 
-from mentat import Module
-from songs import Orage, SongParameters
+from songs import SongParameters
 from seq192_base import VeloSeq, Seq192Base
 from songs import SONGS
-from sooperlooper import SooperLooper
-
-if TYPE_CHECKING:
-    from main_engine import MainEngine
-    from non_multip import NonXtMultip
-
-
-
 
 
 @dataclass
@@ -26,8 +16,15 @@ class RandomGroup:
     cc: int
     
     def __post_init__(self):
-        self.playing_row_index = -1
         self.last_switch_time = 0.0
+        self.last_played_rows = list[int]()
+        
+    def max_memory(self) -> int:
+        if len(self.rows) <= 1:
+            return 0
+        if len(self.rows) <= 3:
+            return 1
+        return len(self.rows) - 2
 
 
 @dataclass
@@ -218,7 +215,7 @@ class Seq192(Seq192Base):
 
     def _demute_loops_from_kick(self):
         '''scene method'''
-        self.engine.wait_next_cycle()
+        self.engine.wait_next_beat()
         self.engine.modules['sooperlooper'].demute_all(kick=True)
 
     def start(self):
@@ -315,7 +312,8 @@ class Seq192(Seq192Base):
                     
             for random_gp in self._random_groups:
                 if len(random_gp.rows) >= 2 and random_gp.col in new_cols:
-                    random_gp.playing_row_index = 0
+                    random_gp.last_played_rows.clear()
+                    random_gp.last_played_rows.append(0)
                     self.send('/sequence/queue', 'on',
                               random_gp.col, random_gp.rows[0])
                     self.send('/sequence/queue', 'off',
@@ -464,7 +462,8 @@ class Seq192(Seq192Base):
 
                 for random_gp in self._random_groups:
                     if random_gp.col in cols:
-                        random_gp.playing_row_index = 0
+                        random_gp.last_played_rows.clear()
+                        random_gp.last_played_rows.append(0)
                         self.send('/sequence', 'on',
                                   random_gp.col, random_gp.rows[0])
 
@@ -488,17 +487,21 @@ class Seq192(Seq192Base):
         for random_gp in self._random_groups:
             if (len(random_gp.rows) <= 1
                     or random_gp.col not in cols
-                    or time.time() - random_gp.last_switch_time < 0.5
+                    or time.time() - random_gp.last_switch_time < 0.2
                     or (cc_num is not None and random_gp.cc != cc_num)):
                 continue
 
-            random_index = random_gp.playing_row_index
-            while random_index == random_gp.playing_row_index:
+            random_index = random.randint(0, len(random_gp.rows) - 1)
+            while random_index in random_gp.last_played_rows:
                 random_index = random.randint(0, len(random_gp.rows) - 1)
 
-            self.send('/sequence', 'off', random_gp.col,
-                      random_gp.rows[random_gp.playing_row_index])
+            if random_gp.last_played_rows:
+                self.send('/sequence', 'off', random_gp.col,
+                          random_gp.rows[random_gp.last_played_rows[-1]])
             self.send('/sequence', 'on', random_gp.col,
                       random_gp.rows[random_index])
-            random_gp.playing_row_index = random_index 
+
             random_gp.last_switch_time = time.time()
+            random_gp.last_played_rows.append(random_index)
+            while len(random_gp.last_played_rows) > random_gp.max_memory():
+                random_gp.last_played_rows.pop(0)

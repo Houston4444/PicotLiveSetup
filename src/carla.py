@@ -1,16 +1,12 @@
 
-from email.policy import default
 from enum import IntEnum
-from re import S
 from typing import TYPE_CHECKING, Any
 import time
-import threading
 import logging
 import json
 import liblo
 import os
 from pathlib import Path
-
 
 from rmodule import RModule
 from songs import MourirIdees, SongParameters, Orage
@@ -169,38 +165,65 @@ class _OscTcpServer(liblo.ServerThread):
         
         times_dict = dict[str, float]()
         times_dict['start'] = time.time()
+
         with open(preset_path, 'r') as f:
             in_list = json.load(f)
 
         times_dict['aft load json'] = time.time()
 
-        for i in range(len(in_list)):
-            pg_dict: dict = in_list[i]
+        # prepare the plugin list refound
+        pg_name_labels = list[tuple[str, str]]()
+        associations = dict[int, Plugin]()
+
+        for pg_dict in in_list:
+            pg_dict: dict
             pg_name = pg_dict.get('name', '')
             label = pg_dict.get('label', '')
-            n_param = pg_dict.get('n_param', 0)
-            is_active = pg_dict.get('is_active', True)
-            volume = pg_dict.get('volume', 1.0)
-            drywet = pg_dict.get('drywet', 1.0)
+            pg_name_labels.append((pg_name, label))
+        
+        # associate plugin n with name and label matching
+        for i in range(len(pg_name_labels)):
+            name, label = pg_name_labels[i]
+            for plugin in self.plugins:
+                if plugin in associations.values():
+                    continue
+                
+                if plugin.name == name and plugin.label == label:
+                    associations[i] = plugin
+                    break
+
+        # associate other plugins 
+        for i in range(len(pg_name_labels)):
+            if i in associations.keys():
+                continue
+            name, label = pg_name_labels[i]
+            for plugin in self.plugins:
+                if plugin in associations.values():
+                    continue
+                
+                if plugin.label == label:
+                    associations[i] = plugin
+                    break
+
+        for i in range(len(in_list)):
+            pg_dict: dict = in_list[i]
+            pg_name: str = pg_dict.get('name', '')
+            label: str = pg_dict.get('label', '')
+            n_param: int = pg_dict.get('n_param', 0)
+            is_active: bool = pg_dict.get('is_active', True)
+            volume: float = pg_dict.get('volume', 1.0)
+            drywet: float = pg_dict.get('drywet', 1.0)
             params: dict[int, float] = pg_dict.get('params', {})
 
-            if i >= len(self.plugins):
-                _logger.error(
-                    'The number of plugins in the preset is superior '
-                    'to the current number of carla plugins: '
-                    f'({len(in_list)} > {len(self.plugins)})')
-                break
-
-            plugin = self.get_plugin(i)
-            
-            if label != plugin.label:
-                _logger.error(
-                    f'json import, non matching plugin {i}:\n'
-                    f'  {label} != {plugin.label}')
+            plugin = associations.get(i)
+            if plugin is None:
+                _logger.warning(
+                    f'json import, no matching plugin for n {i}:\n'
+                    f'  {label}\n  {name}')
                 continue
 
             if n_param > plugin.n_param:
-                _logger.error(
+                _logger.warning(
                     f'more params saved than in current plugin {i}\n'
                     f'  {n_param} > {plugin.n_param}')
                 continue
@@ -212,43 +235,34 @@ class _OscTcpServer(liblo.ServerThread):
                     f'  {pg_name} -> {plugin.name}')
                 # not strong error, pass anyway
             
-            prepath = f'{self.PREPATH}/{i}'
+            prepath = f'{self.PREPATH}/{self.plugins.index(plugin)}'
 
             if is_active is not plugin.is_active:
                 self.carla_send(f'{prepath}/set_active', int(is_active))
+                plugin.is_active = is_active
             
             if volume != plugin.volume:
                 self.carla_send(f'{prepath}/set_volume', volume)
+                plugin.volume = volume
                 
             if drywet != plugin.drywet:
                 self.carla_send(f'{prepath}/set_volume', drywet)
+                plugin.drywet = drywet
 
-            if full:
-                for param_id_str, attrib_dict in params.items():
-                    try:
-                        param_id = int(param_id_str)
-                        value = float(attrib_dict.get('value'))
-                    except:
-                        _logger.warning(
-                            f'error parsing carla preset {preset_path}:'
-                            f'{param_id_str} or value are not int and float')
-                        continue
+            for param_id_str, attrib_dict in params.items():
+                try:
+                    param_id = int(param_id_str)
+                    value = float(attrib_dict.get('value'))
+                except:
+                    _logger.warning(
+                        f'error parsing carla preset {preset_path}:'
+                        f'{param_id_str} or value are not int and float')
+                    continue
 
-                    # if plugin.label == 'Delay Architect' and param_id == 0:
-                    #     self.carla_send(f'{prepath}/set_parameter_value', 0, 0.0)
-
-                    if value != plugin.params[param_id].value:
-                        self.carla_send(f'{prepath}/set_parameter_value',
-                                        param_id, value)
-                        plugin.params[param_id].value = value
-            else:
-                self.carla_send(f'{prepath}/reset_parameters')
-            
-                for param_id, attrib_dict in params.items():
-                    value = attrib_dict.get('value')
-                    if isinstance(value, float):
-                        self.carla_send(f'{prepath}/set_parameter_value',
-                                        int(param_id), value)
+                if value != plugin.params[param_id].value:
+                    self.carla_send(f'{prepath}/set_parameter_value',
+                                    param_id, value)
+                    plugin.params[param_id].value = value
 
         times_dict['final'] = time.time()
         for key, value in times_dict.items():
@@ -273,6 +287,20 @@ class _OscTcpServer(liblo.ServerThread):
             self.plugins[plugin_id].params[param_id].value = value
         except:
             _logger.warning(f'pas possib de send param {plugin_id} {param_id}')    
+
+    def set_param_str(self, plugin_name: str, param_name: str, value: float):
+        plg_index = 0
+        for plugin in self.plugins:
+            if plugin.name != plugin_name:
+                plg_index += 1
+                continue
+            
+            for param_index, param in plugin.params.items():
+                if param.name != param_name:
+                    continue
+                
+                self.send_param(plg_index, param_index, value)
+            break
 
     @liblo.make_method('/ctrl/info', 'iiiihiisssssss')
     def _plugin_info(self, path, args):
@@ -452,4 +480,7 @@ class Carla(RModule):
     
     def send_param(self, plugin_id: int, param_id: int, value: float):
         self.osc_tcp_server.send_param(plugin_id, param_id, value)
+        
+    def set_param_str(self, plugin_name: str, param_name: str, value: float):
+        self.osc_tcp_server.set_param_str(plugin_name, param_name, value)
         

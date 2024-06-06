@@ -1,6 +1,7 @@
 
 from chansons.song_parameters import SongParameters
 from chansons.orage import Orage
+from chansons.mourir_idees import MourirIdees
 
 
 class Radeaux(SongParameters):
@@ -20,10 +21,6 @@ class Euclyde7(SongParameters):
     seq_page = 9
     kick_snare_demute = False
 
-
-class MourirIdees(SongParameters):
-    average_tempo = 112
-    seq_page = 12
 
 class TestiSpace(SongParameters):
     average_tempo = 90

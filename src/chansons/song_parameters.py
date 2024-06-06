@@ -69,6 +69,11 @@ class SongParameters:
     def __repr__(self) -> str:
         return self.__class__.__name__
     
+    def wait(self, *args):
+        if REPETTE and not self._repette_started:
+            return
+        self.engine.wait(*args)
+    
     def start_main_scene(self, engine: 'MainEngine'):
         self.engine = engine
         
@@ -88,7 +93,6 @@ class SongParameters:
             f'{self.__repr__()}_{self._current_scene}', scene)
 
     def stop_main_scene(self):
-        print('STop la scene')
         if not self._scene_running:
             return
         
@@ -105,6 +109,7 @@ class SongParameters:
         self.engine.modules['sooperlooper'].mute_all()
         self.engine.stop_scene(f'{self.__repr__()}_{self._current_scene}')
 
+    @scene_method()
     def main_scene(self):
         '''scene method'''
         ...

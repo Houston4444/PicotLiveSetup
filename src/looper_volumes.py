@@ -6,7 +6,7 @@ class LoooperVolumes(RModule):
     def __init__(self, name, protocol=None, port=None, parent=None):
         super().__init__(name, protocol, port, parent)
     
-        self.strips = ('Loop0', 'Loop1', 'Loop2', 'Loop3')
+        self.strips = ('Loop0', 'Loop1', 'Loop2', 'Loop3', 'Loop4')
         for strip in self.strips:
             self.add_parameter(
                 f'{strip}_fader', 

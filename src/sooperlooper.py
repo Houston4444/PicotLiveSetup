@@ -68,3 +68,12 @@ class SooperLooper(RModule):
     def demute(self, loop_n: int, volume=0.0):
         self._demuted_loops |= 2**loop_n
         self.engine.modules['looper_volumes'].demute(f'Loop{loop_n}', volume)
+        
+    def trigger_all(self):
+        self.send('/sl/-1/hit', 'trigger')
+    
+    def set_sync_pos_all(self):
+        self.send('/sl/-1/hit', 'set_sync_pos')
+        
+    def reset_sync_pos_all(self):
+        self.send('/sl/-1/hit', 'reset_sync_pos')
