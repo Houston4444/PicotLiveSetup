@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 import time
 import random
-from typing import TYPE_CHECKING, Optional, Union
+from typing import Optional, Union
 from threading import Timer
 
 from songs import SongParameters
@@ -75,6 +75,8 @@ class Seq192(Seq192Base):
         
     def set_song(self, song: SongParameters):
         self._song = song
+        self.set_tempo(float(song.average_tempo))
+        self.clear_selection()
         self.send('/screenset', song.seq_page)
         self.send('/status/extended')
 
@@ -98,7 +100,8 @@ class Seq192(Seq192Base):
                     BaseBeatSeq(seq['col'], 0, seq['time']))
                 self._regular_seqs[seq['col']].append(seq['row'])
             
-            elif ' VEL' in seq['name'] and seq['name'].rpartition(' VEL')[2].isdigit():
+            elif (' VEL' in seq['name']
+                    and seq['name'].rpartition(' VEL')[2].isdigit()):
                 velo_max = int(seq['name'].rpartition(' VEL')[2])
                 if seq['col'] == last_vel_col:
                     velo_min = last_vel_max + 1
@@ -112,7 +115,8 @@ class Seq192(Seq192Base):
                 self._velo_seqs.append(
                     VeloSeq(seq['col'], seq['row'], velo_min, velo_max))
 
-            elif ' RD' in seq['name'] and seq['name'].rpartition(' RD')[2].isdigit():
+            elif (' RD' in seq['name']
+                    and seq['name'].rpartition(' RD')[2].isdigit()):
                 cc_num = 30 + int(seq['name'].rpartition(' RD')[2])
                 if (self._random_groups
                         and self._random_groups[-1].col == seq['col']
@@ -134,7 +138,8 @@ class Seq192(Seq192Base):
                             regular_x == 'X',
                             ends_x == 'X'))
             else:
-                self._regular_seqs[seq['col']].append(seq['row'])
+                col: int = seq['col']
+                self._regular_seqs[col].append(seq['row'])
                             
         if sequences:
             last_col = sequences[-1]['col']
@@ -221,8 +226,6 @@ class Seq192(Seq192Base):
     def start(self):
         self._beats_elapsed = 0.0
         self.send('/cursor', 0.0)
-        # self.send('/swing/reference', 8)
-        # self.send('/swing', 1)
         self.send('/play')
         self.engine.set_tempo(self._current_tempo)
         if self._base_beat_seqs:
@@ -251,9 +254,12 @@ class Seq192(Seq192Base):
             word = 'on' if velo_seq.vel_min <= velo <= velo_seq.vel_max else 'off'
             self.send('/sequence', word, velo_seq.col, velo_seq.row)
     
-    def set_big_sequence(self, big_sequence: int):
-        if big_sequence == self._big_sequence:
+    def set_big_sequence(self, big_sequence: int, force=False):
+        if not force and big_sequence == self._big_sequence:
             return
+        
+        if force:
+            self.clear_selection()
         
         ex_cols = self._get_cols_for_base_seqs(self._big_sequence)
         new_cols = self._get_cols_for_base_seqs(big_sequence)
@@ -261,7 +267,9 @@ class Seq192(Seq192Base):
         if not (ex_cols and new_cols):
             return
 
-        immediate = self._song.immediate_sequence_switch or not self._playing
+        immediate = (force
+                     or self._song.immediate_sequence_switch
+                     or not self._playing)
 
         if not immediate:
             beats_elapsed = self.engine.get_beats_elapsed()

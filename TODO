@@ -52,3 +52,9 @@ PR Carla No Jack Transport single client
 Attention: change song -> stop play
 
 cc -fPIC  -shared  -o src/timebase_master.so src/timebase_master.c
+
+
+Ardour que pour record (pas lancé dans la session)
+XTuner pas lancé par mentator
+Doublon de convolutions tzouras
+Mute au changement de morceau

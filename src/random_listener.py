@@ -23,6 +23,8 @@ class RandomListener(RModule):
         self.send('/stop')
         
     def set_song(self, song: SongParameters):
-        self.start()
+        self.stop()
+        # pass
+
 
             

@@ -1,13 +1,11 @@
 from enum import IntFlag, Enum
-import inspect
-import time
 from typing import TYPE_CHECKING
 import logging
-from chansons.song_parameters import SongParameters
 
 from rmodule import RModule
 from impact import Impact
 from songs import SONGS
+from enums import FsButton
 
 
 if TYPE_CHECKING:
@@ -15,17 +13,13 @@ if TYPE_CHECKING:
     from sooperlooper import SooperLooper
     from seq192 import Seq192
     from nsm_mentator import OptionalGui
+    from chansons.song_parameters import SongParameters
+    
 
 _logger = logging.getLogger(__name__)
 
 
-class FsButton(IntFlag):
-    NONE = 0x00
-    FS_B = 0x01
-    FS_1 = 0x02
-    FS_2 = 0x04
-    FS_3 = 0x08
-    FS_4 = 0x10
+
 
 
 class MultiAction(Enum):
@@ -40,9 +34,10 @@ class Vfs5Controls(Enum):
     SOOPERLOOPER = 1
     SEQ192_SEQUENCES = 2
     SONG = 3
+    SONG_TOOLS = 4
     
     def next(self) -> 'Vfs5Controls':
-        return Vfs5Controls(1 + self.value % 3)
+        return Vfs5Controls(1 + self.value % 4)
     
     @staticmethod
     def from_name(name: str) -> 'Vfs5Controls':
@@ -142,6 +137,11 @@ class Leonardo(RModule):
         elif fsb is FsButton.FS_4:
             self.engine.set_song(3)        
 
+    def _vfs5_control_song_tools(self, fsb: FsButton, fs_on: bool):
+        song: 'SongParameters' = SONGS[self.engine.song_index]
+        print('smmsmsmdc', song, fsb, fs_on)
+        song.vfs5_event(fsb, fs_on)
+
     def get_vfs5_control_name(self) -> str:
         return self._vfs5_controls.name
     
@@ -165,7 +165,9 @@ class Leonardo(RModule):
             self._vfs5_control_sequences(fsb, fs_on)
         elif self._vfs5_controls is Vfs5Controls.SONG:
             self._vfs5_control_songs(fsb, fs_on)
-            
+        elif self._vfs5_controls is Vfs5Controls.SONG_TOOLS:
+            self._vfs5_control_song_tools(fsb, fs_on)
+        
         if not self._pressed_buttons:
             self._multi_action = MultiAction.NONE
 

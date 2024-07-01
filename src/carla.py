@@ -120,6 +120,9 @@ class _OscTcpServer(liblo.ServerThread):
         time.sleep(0.0054)
 
     def save_preset(self, preset_path: Path, full=False):
+        for plugin in self.plugins:
+            print('choo', f'"{plugin.name}"', f'"{plugin.label}"')
+        
         out_list = list[dict[str, Any]]()
             
         for plugin in self.plugins:
@@ -215,6 +218,8 @@ class _OscTcpServer(liblo.ServerThread):
             drywet: float = pg_dict.get('drywet', 1.0)
             params: dict[int, float] = pg_dict.get('params', {})
 
+            print('carla treat plugin', pg_name)
+
             plugin = associations.get(i)
             if plugin is None:
                 _logger.warning(
@@ -259,6 +264,10 @@ class _OscTcpServer(liblo.ServerThread):
                         f'{param_id_str} or value are not int and float')
                     continue
 
+                if plugin.params.get(param_id) is None:
+                    plugin.params[param_id] = Param()
+                    _logger.warning('Creation of param from JSON load')
+
                 if value != plugin.params[param_id].value:
                     self.carla_send(f'{prepath}/set_parameter_value',
                                     param_id, value)
@@ -300,7 +309,14 @@ class _OscTcpServer(liblo.ServerThread):
                     continue
                 
                 self.send_param(plg_index, param_index, value)
+                break
+            else:
+                _logger.warning(
+                    f'Failed to find param named "{param_name}"'
+                    f' in plugin "{plugin_name}"')
             break
+        else:
+            _logger.warning(f'Failed to find plugin "{plugin_name}"')
 
     @liblo.make_method('/ctrl/info', 'iiiihiisssssss')
     def _plugin_info(self, path, args):

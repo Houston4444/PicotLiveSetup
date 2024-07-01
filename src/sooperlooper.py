@@ -12,6 +12,14 @@ class SooperLooper(RModule):
         self._demuted_loops = 0
         self._n_loops = 0
 
+    def route(self, address: str, args: list):
+        print('sooploop rev', address, args)
+        if address == '/loop_len':
+            # loop_len = args[2]
+            # print(loop_len)
+            self.engine.get_song().loop_len_recv(args[2])
+        
+
     def set_loop(self, loop: int):
         self._loop = loop
 
@@ -77,3 +85,7 @@ class SooperLooper(RModule):
         
     def reset_sync_pos_all(self):
         self.send('/sl/-1/hit', 'reset_sync_pos')
+        
+    def ask_loop_tempo(self, loop: int):
+        self.send(f'/sl/{loop}/get', 'loop_len',
+                  self.engine.osc_server.url, '/loop_len')

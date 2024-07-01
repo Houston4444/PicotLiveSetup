@@ -72,14 +72,13 @@ class OptionalGui(RModule):
         self.send('/raymentat_gui/current_song',
                   int(self.engine.song_index))
 
-    def set_big_sequence(self, big_sequence: int):
+    def set_big_sequence(self, big_sequence: int, force=False):
         self.send('/raymentat_gui/current_big_sequence', big_sequence)
 
     def set_vfs5_control(self, vfs5_controls: str):
         self.send('/raymentat_gui/current_vfs5_control', vfs5_controls)
         
     def set_carla_tcp_state(self, tcp_state: 'RegisterState'):
-        print('on envoie jusqua GUI', tcp_state.name)
         self.send('/raymentat_gui/carla_tcp_state', tcp_state.name)
 
     def set_tempo(self, bpm: float):
@@ -149,6 +148,9 @@ class NsmMentator(NsmClient):
                 if brother_id == 'el_mentato':
                     continue
 
+                if brother_id in ('Mixette', 'xtuner'):
+                    continue
+
                 if self.brothers[brother_id].is_running():
                     continue
                 
@@ -159,7 +161,6 @@ class NsmMentator(NsmClient):
         elif client_id == 'Carla_7':
             if event == 'ready':
                 self.engine.modules['carla'].register_tcp()
-                print('Hop go start TCP')
 
             elif event in ('stopped_by_server', 'stopped_by_itself',
                            'removed', 'stop_request'):

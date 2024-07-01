@@ -114,7 +114,8 @@ class MainEngine(Engine):
                 restart_dict = json.load(f)
 
             self.set_song(restart_dict['song_index'])
-            self.set_big_sequence(restart_dict['big_sequence'])
+            # self.set_big_sequence(restart_dict['big_sequence'])
+            self.set_big_sequence(0)
             self.modules['pedalboard'].change_vfs5_controls(
                 Vfs5Controls.from_name(restart_dict['arduino_mode']))
             
@@ -193,16 +194,22 @@ class MainEngine(Engine):
         if self.playing:
             self.stop_playing()
         
+        song.set_engine(self)
+        
         self.set_tempo(song.average_tempo)
-        self.set_big_sequence(0)
+        self.modules['seq192'].clear_selection()
+        self.set_big_sequence(0, force=True)
         
         for module in self.modules.values():
             if isinstance(module, RModule):
                 module.set_song(song)
 
-    def set_big_sequence(self, big_sequence: int):
+    def get_song(self) -> SongParameters:
+        return SONGS[self.song_index]
+
+    def set_big_sequence(self, big_sequence: int, force=False):
         self.big_sequence = big_sequence
 
         for module in self.modules.values():
             if isinstance(module, RModule):
-                module.set_big_sequence(big_sequence)
+                module.set_big_sequence(big_sequence, force=force)

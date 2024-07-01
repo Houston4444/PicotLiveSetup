@@ -1,8 +1,10 @@
 from enum import Enum
 from typing import TYPE_CHECKING, Callable, Optional
 
+
 if TYPE_CHECKING:
     from main_engine import MainEngine
+    from leonardo import FsButton
 
 REPETTE = True
 
@@ -56,6 +58,8 @@ class SongParameters:
     kick_spacing_beats = 1/4
     open_time_beats = 1/4
     kick_snare_demute = True
+    kick_velo_ratio = 1.0
+    drum_velocity = 100.0
     
     def __init__(self):
         self._repette_started = False
@@ -68,6 +72,9 @@ class SongParameters:
 
     def __repr__(self) -> str:
         return self.__class__.__name__
+    
+    def set_engine(self, engine: 'MainEngine'):
+        self.engine = engine
     
     def wait(self, *args):
         if REPETTE and not self._repette_started:
@@ -116,3 +123,12 @@ class SongParameters:
 
     def set_loop_looped(self):
         self._loop_louped = True
+        
+    def vfs5_event(self, fsb: 'FsButton', fs_on: bool):
+        ...
+        
+    def trigger_event(self):
+        ...
+        
+    def loop_len_recv(self, loop_len: float):
+        ...

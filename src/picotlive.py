@@ -18,6 +18,7 @@ from carla import Carla
 from songs import SONGS
 from nsm_mentator import NsmMentator, OptionalGui
 from main_engine import MainEngine
+from trigger import Trigger
 
 _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.DEBUG)
@@ -36,25 +37,15 @@ for module in (
         RandomListener('randomidi'),
         Hydrogen('hydrogen', protocol='osc', port=9000),
         LoooperVolumes('looper_volumes', protocol='osc', port=7781),
-        OsciTronix('oscitronix', protocol='osc', port=1761)
+        OsciTronix('oscitronix', protocol='osc', port=1761),
+        Trigger('trigger', protocol='midi')
         ):
     engine.add_module(module)
-
-print('ilenrest2')
 
 if os.getenv('NSM_URL'):
     engine.add_module(NsmMentator())
     engine.add_module(OptionalGui())
 
-print('sllkoook')
-
 engine.add_main_route()
-
-# engine.set_song(SONGS[0])
 engine.autorestart()
-
-print('choupppi')
-
 engine.start()
-
-print('finnnot')

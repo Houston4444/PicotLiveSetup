@@ -6,25 +6,25 @@ Pont
 # 12  A  _ Dm _
 
 Couplet
+# 0  Dm _ F  G
+# 4  Dm _ F  G
+# 8  Dm _ F  G
+# 12  A  _ Dm _
+
 # 16  Dm _ F  G
 # 20  Dm _ F  G
 # 24  Dm _ F  G
 # 28  A  _ Dm _
 
-# 32  Dm _ F  G
-# 36  Dm _ F  G
-# 40  Dm _ F  G
-# 44  A  _ Dm _
-
-# 48  Gm 4b
-# 52  C  4b
-# 56  F  8b
-# 64  A7 8b
+# 32  Gm 4b
+# 36  C  4b
+# 40  F  8b
+# 48  A7 8b
 
 refrain
-# 72  Dm _ A# _
-# 76  C  _ F  _
-# 80  A# _ A  _
-# 84  A  _ 
+# 56  Dm _ A# _
+# 60  C  _ F  _
+# 64  A# _ A  _
+# 68  A  _ 
 
-longueur 86
+longueur 70
