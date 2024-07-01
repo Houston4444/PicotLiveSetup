@@ -138,10 +138,9 @@ class MainEngine(Engine):
     
     def set_tempo(self, bpm: float):
         super().set_tempo(bpm)
-        self.modules['carla'].set_tempo(bpm)
-        self.modules['optional_gui'].set_tempo(bpm)
-        self.modules['hydrogen'].set_tempo(bpm)
-        # self.modules['seq192'].set_tempo(bpm)
+        for module in self.modules.values():
+            if isinstance(module, RModule):
+                module.set_tempo(bpm)
     
     def add_main_route(self):
         self.add_route(self._route)
@@ -195,9 +194,7 @@ class MainEngine(Engine):
             self.stop_playing()
         
         song.set_engine(self)
-        
         self.set_tempo(song.average_tempo)
-        self.modules['seq192'].clear_selection()
         self.set_big_sequence(0, force=True)
         
         for module in self.modules.values():

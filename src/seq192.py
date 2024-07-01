@@ -75,7 +75,6 @@ class Seq192(Seq192Base):
         
     def set_song(self, song: SongParameters):
         self._song = song
-        self.set_tempo(float(song.average_tempo))
         self.clear_selection()
         self.send('/screenset', song.seq_page)
         self.send('/status/extended')
@@ -163,7 +162,8 @@ class Seq192(Seq192Base):
         '''scene method'''
         for i in range(self._song.tempo_animation_len):
             self.wait(self._song.tempo_animation_unit, 'beat')
-            self.set_tempo(self._current_tempo + self._tempo_change_step)
+            self.engine.set_tempo(
+                self._current_tempo + self._tempo_change_step)
 
     def _change_big_sequence_later(self):
         '''scene method'''
@@ -243,7 +243,6 @@ class Seq192(Seq192Base):
     def set_tempo(self, tempo: float):
         self._current_tempo = tempo
         self.send('/bpm', tempo)
-        self.engine.set_tempo(tempo)
     
     def switch_velo_seqs(self, velo: int, big_sequence: int):
         cols = self._get_cols_for_base_seqs(big_sequence)
@@ -411,7 +410,7 @@ class Seq192(Seq192Base):
                 valid_bpm, bpm = self._get_bpm_from_average(bpm)
                 if valid_bpm:
                     new_tempo = mv_tempo * bpm + (1 - mv_tempo) * self._current_tempo
-                    self.set_tempo(new_tempo)
+                    self.engine.set_tempo(new_tempo)
             
             if restart_cycle:
                 beats_elapsed = self._beats_elapsed + self.engine.get_beats_elapsed()
@@ -446,7 +445,7 @@ class Seq192(Seq192Base):
             start_play = False
 
             if taps_for_tempo == 1:
-                self.set_tempo(aver_bpm)
+                self.engine.set_tempo(aver_bpm)
                 start_play = True
             else:
                 bpm = 60 / (kick_time - self._last_kick_hit)
@@ -457,7 +456,7 @@ class Seq192(Seq192Base):
                     self._n_taps_done = 1
 
                 if valid_bpm and self._n_taps_done >= taps_for_tempo:
-                    self.set_tempo(bpm)
+                    self.engine.set_tempo(bpm)
                     start_play = True
 
             if start_play:

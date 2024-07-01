@@ -10,6 +10,7 @@ from enums import FsButton
 
 class Marker(Marker):
     DEBUT = auto()
+    COUPLET_1 = auto()
     JUGEANT_QUIL = auto()
     SAINTS_JEANS = auto()
     SACRIFICE = auto()
@@ -46,7 +47,6 @@ class MourirIdees(SongParameters):
         self.scenes = [self.main_scene]
         
         self._tzou_drum_state = TzouDrumState.OFF
-        self._chanson_started = False
     
     def add_marker(self, marker: Marker):
         self._current_marker = marker
@@ -114,11 +114,8 @@ class MourirIdees(SongParameters):
         
         self.wait(16)
 
-        # self.loop_sl(ARPEGE_TZOU, 'down', 'record')
         self.loop_sls([ARPEGE_TZOU, RYTHME_TZOU, AIGUS, BASSE],
                       'down', 'record')
-        # self.loop_sl(ARPEGE_TZOU, 'hit', 'trigger')
-        # self.loop_sl(ARPEGE_TZOU, 'down', 'replace')
         soop.demute(ARPEGE_TZOU)
         soop.demute(AIGUS)
         
@@ -226,20 +223,25 @@ class MourirIdees(SongParameters):
         
         if fsb is FsButton.FS_2 and fs_on:
             if self._tzou_drum_state is TzouDrumState.OFF:
+                if START_MARKER is not Marker.DEBUT:
+                    # soop.ask_loop_tempo(TZOU_DRUM)
+                    return
+
                 soop.sl(TZOU_DRUM, 'down', 'record')
                 soop.demute(TZOU_DRUM)
                 self._tzou_drum_state = TzouDrumState.REC
                 self.engine.set_tempo(self.average_tempo)
                 self.engine.start_cycle()
-                print('yapoo', self.engine.tempo, self.engine)
             
             elif self._tzou_drum_state is TzouDrumState.REC:
                 soop.sl(TZOU_DRUM, 'up', 'record')
                 soop.ask_loop_tempo(TZOU_DRUM)
         
         elif fsb is FsButton.FS_3 and fs_on:
-            print('démarre la chanson')
-            self._chanson_started = True
+            if START_MARKER is not Marker.DEBUT:
+                soop.ask_loop_tempo(TZOU_DRUM)
+                return
+            
             self.engine.start_scene('la_chanson', self.la_chanson)
         
         elif fsb is FsButton.FS_4 and fs_on:
@@ -260,12 +262,17 @@ class MourirIdees(SongParameters):
             tempo *= 2.0
         
         self.change_tempo(tempo)
-        self.engine.start_cycle()
         
-    def change_tempo(self, tempo: float):        
+        if START_MARKER is not Marker.DEBUT:
+            self.engine.start_scene('la_chanson', self.la_chanson)
+        else:
+            self.engine.start_cycle()
+            
+        
+    def change_tempo(self, tempo: float):
+        self.engine.set_tempo(tempo)
+     
         carla = self.engine.modules['carla']
-        seq192 = self.engine.modules['seq192']
-        seq192.set_tempo(tempo)
         carla.set_param_str('LSP Artistic Delay Stereo', 'Tempo 0', tempo)
         carla.set_param_str('Plujain-Ramp Live Aigu', 'Tempo', tempo)
         carla.set_param_str('Ramp GuitBass', 'Tempo', tempo)
